@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import Map, {
   Marker,
@@ -102,6 +102,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   height = "500px",
   className = "",
 }) => {
+  const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
+
+  const handleMarkerClick = useCallback(
+    (point: MapPoint) => {
+      setSelectedPoint(selectedPoint?.id === point.id ? null : point);
+    },
+    [selectedPoint]
+  );
+
+  const handleMapClick = useCallback(() => {
+    setSelectedPoint(null);
+  }, []);
   return (
     <div className={`relative ${className}`} style={{ height }}>
       <Map
@@ -126,6 +138,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           ],
         }}
         attributionControl={false}
+        onClick={handleMapClick}
       >
         {/* Навигационные элементы управления */}
         <NavigationControl position="top-right" />
@@ -138,7 +151,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             longitude={point.coordinates[0]}
             latitude={point.coordinates[1]}
           >
-            <div className="cursor-pointer transform transition-all duration-200 hover:scale-110 group relative">
+            <div
+              className="cursor-pointer transform transition-all duration-200 hover:scale-110 group relative"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMarkerClick(point);
+              }}
+            >
               {/* Маркер в виде капли */}
               <div className="relative w-6 h-8">
                 {/* Основная капля */}
@@ -163,8 +182,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   }}
                 />
 
-                {/* Подсказка при наведении */}
-                <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                {/* Подсказка при нажатии */}
+                <div
+                  className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 transition-opacity duration-200 pointer-events-none z-10 ${
+                    selectedPoint?.id === point.id ? "opacity-100" : "opacity-0"
+                  }`}
+                >
                   <div className="bg-white rounded-lg shadow-lg p-3 min-w-[200px] border">
                     {point.image && (
                       <Image
@@ -248,7 +271,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           ))}
         </div>
         <div className="mt-3 pt-2 border-t text-xs text-gray-500">
-          Наведите на маркер для подробной информации
+          Кликните на маркер для подробной информации
         </div>
       </div>
     </div>
