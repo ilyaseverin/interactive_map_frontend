@@ -1,4 +1,4 @@
-import { MapPoint, PointFeature, CLUSTER_CONFIG } from "@/types/map";
+import { MapPoint, PointFeature } from "@/types/map";
 
 /**
  * Преобразует точки карты в GeoJSON формат для кластеризации
@@ -22,6 +22,7 @@ export const calculateViewportBounds = (
   latitude: number,
   zoom: number
 ) => {
+  // Более точный расчет границ viewport
   const lngRange = 180 / Math.pow(2, zoom);
   const latRange = 85 / Math.pow(2, zoom);
 
@@ -30,6 +31,29 @@ export const calculateViewportBounds = (
     latitude - latRange,
     longitude + lngRange,
     latitude + latRange,
+  ] as [number, number, number, number];
+};
+
+/**
+ * Вычисляет расширенные границы viewport с буферной зоной
+ */
+export const calculateBufferedViewportBounds = (
+  longitude: number,
+  latitude: number,
+  zoom: number,
+  bufferRatio: number = 0.5
+) => {
+  const bounds = calculateViewportBounds(longitude, latitude, zoom);
+  const [minLng, minLat, maxLng, maxLat] = bounds;
+
+  const lngBuffer = (maxLng - minLng) * bufferRatio;
+  const latBuffer = (maxLat - minLat) * bufferRatio;
+
+  return [
+    minLng - lngBuffer,
+    minLat - latBuffer,
+    maxLng + lngBuffer,
+    maxLat + latBuffer,
   ] as [number, number, number, number];
 };
 

@@ -13,7 +13,6 @@ import {
   MapPoint,
   ViewState,
   MapProps,
-  PointFeature,
   ClusterProperties,
   PointProperties,
   CLUSTER_CONFIG,
@@ -21,9 +20,8 @@ import {
 } from "@/types/map";
 import {
   pointsToGeoJSON,
-  calculateViewportBounds,
+  calculateBufferedViewportBounds,
   isSmallScreen,
-  getLegendItemCount,
 } from "@/utils/mapUtils";
 import MapMarker from "./markers/MapMarker";
 import ClusterMarker from "./markers/ClusterMarker";
@@ -120,19 +118,20 @@ const InteractiveMap: React.FC<MapProps> = ({
     return cluster;
   }, [points, enableClustering]);
 
-  // Получение кластеров для текущего viewport
+  // Получение кластеров для текущего viewport с буферной зоной
   const clusters = useMemo(() => {
     if (!supercluster || !enableClustering) {
       return pointsToGeoJSON(points);
     }
 
-    const bounds = calculateViewportBounds(
+    const bufferedBounds = calculateBufferedViewportBounds(
       viewState.longitude,
       viewState.latitude,
-      viewState.zoom
+      viewState.zoom,
+      1.0 // 100% буферная зона для лучшего отображения
     );
 
-    return supercluster.getClusters(bounds, Math.floor(viewState.zoom));
+    return supercluster.getClusters(bufferedBounds, Math.floor(viewState.zoom));
   }, [supercluster, viewState, points, enableClustering]);
 
   const handleMarkerClick = useCallback(
@@ -164,11 +163,15 @@ const InteractiveMap: React.FC<MapProps> = ({
   const handleMapClick = useCallback(() => {
     setSelectedPoint(null);
   }, []);
+
+  const handleViewStateChange = useCallback((evt: { viewState: ViewState }) => {
+    setViewState(evt.viewState);
+  }, []);
   return (
     <div className={`relative ${className}`} style={{ height }}>
       <Map
         {...viewState}
-        onMove={(evt) => setViewState(evt.viewState)}
+        onMove={handleViewStateChange}
         style={{ width: "100%", height: "100%" }}
         mapStyle={{
           version: 8,

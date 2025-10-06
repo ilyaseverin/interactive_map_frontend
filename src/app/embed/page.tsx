@@ -37,6 +37,7 @@ function EmbedMapContent() {
         height={height}
         enableClustering={clustering}
         showLoading={true}
+        className="w-full h-full"
       />
     </div>
   );
