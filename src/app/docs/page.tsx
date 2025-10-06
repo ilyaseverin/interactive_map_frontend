@@ -36,11 +36,46 @@ export default function DocsPage() {
 ></iframe>`;
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generateEmbedCode());
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = async (text: string) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        // Fallback для старых браузеров или HTTP
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Ошибка копирования:", err);
+      // Показываем уведомление пользователю
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      // Дополнительно показываем код в alert как fallback
+      alert("Код для копирования:\n\n" + text);
+    }
   };
+
+  const copyEmbedCode = () => copyToClipboard(generateEmbedCode());
+  const copyApiCode = () =>
+    copyToClipboard(`// Пример запроса
+fetch('/api/map-points')
+  .then(res => res.json())
+  .then(points => console.log(points));`);
+  const copyApiIdCode = () =>
+    copyToClipboard(`// Пример запроса
+fetch('/api/map-points?id=1')
+  .then(res => res.json())
+  .then(point => console.log(point));`);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -174,8 +209,13 @@ export default function DocsPage() {
                   <code>{generateEmbedCode()}</code>
                 </pre>
                 <button
-                  onClick={copyToClipboard}
-                  className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                  onClick={copyEmbedCode}
+                  className={`absolute top-2 right-2 px-3 py-1 rounded text-sm transition-colors ${
+                    copied
+                      ? "bg-green-500 text-white"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                  }`}
+                  disabled={copied}
                 >
                   {copied ? "✓ Скопировано" : "Копировать"}
                 </button>
@@ -288,9 +328,10 @@ export default function DocsPage() {
               <p className="text-sm text-gray-600 mb-2">
                 Получить все точки на карте
               </p>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto">
-                <pre className="text-xs">
-                  {`// Пример запроса
+              <div className="relative">
+                <div className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto">
+                  <pre className="text-xs">
+                    {`// Пример запроса
 fetch('/api/map-points')
   .then(res => res.json())
   .then(points => console.log(points));
@@ -305,7 +346,19 @@ fetch('/api/map-points')
     ...
   }
 ]`}
-                </pre>
+                  </pre>
+                </div>
+                <button
+                  onClick={copyApiCode}
+                  className={`absolute top-2 right-2 px-3 py-1 rounded text-sm transition-colors ${
+                    copied
+                      ? "bg-green-500 text-white"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                  }`}
+                  disabled={copied}
+                >
+                  {copied ? "✓ Скопировано" : "Копировать"}
+                </button>
               </div>
             </div>
 
@@ -322,9 +375,10 @@ fetch('/api/map-points')
               <p className="text-sm text-gray-600 mb-2">
                 Получить конкретную точку по ID
               </p>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto">
-                <pre className="text-xs">
-                  {`// Пример запроса
+              <div className="relative">
+                <div className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto">
+                  <pre className="text-xs">
+                    {`// Пример запроса
 fetch('/api/map-points?id=1')
   .then(res => res.json())
   .then(point => console.log(point));
@@ -336,7 +390,19 @@ fetch('/api/map-points?id=1')
   "coordinates": [37.6173, 55.7558],
   ...
 }`}
-                </pre>
+                  </pre>
+                </div>
+                <button
+                  onClick={copyApiIdCode}
+                  className={`absolute top-2 right-2 px-3 py-1 rounded text-sm transition-colors ${
+                    copied
+                      ? "bg-green-500 text-white"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                  }`}
+                  disabled={copied}
+                >
+                  {copied ? "✓ Скопировано" : "Копировать"}
+                </button>
               </div>
             </div>
           </div>
