@@ -3,17 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/supercluster": "^7.1.3",
     "maplibre-gl": "^5.8.0",
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-map-gl": "^8.0.4"
+    "react-map-gl": "^8.0.4",
+    "supercluster": "^8.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
