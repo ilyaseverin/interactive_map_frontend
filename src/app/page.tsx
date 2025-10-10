@@ -1,5 +1,33 @@
 import MapWithData from "@/components/MapWithData";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+// SEO мета-теги для главной страницы
+export const metadata: Metadata = {
+  title: "Главная",
+  description:
+    "Интерактивная карта России с автоматической кластеризацией точек. Исследуйте достопримечательности Москвы и других городов России. Встраивайте карту на свой сайт с помощью простого API.",
+  keywords: [
+    "карта России",
+    "интерактивная карта",
+    "достопримечательности Москвы",
+    "достопримечательности России",
+    "кластеризация карты",
+    "MapLibre",
+    "геолокация",
+    "карта городов",
+  ],
+  openGraph: {
+    title: "Интерактивная карта России с кластеризацией",
+    description:
+      "Исследуйте достопримечательности Москвы и других городов России с автоматическим кластерингом",
+    type: "website",
+    locale: "ru_RU",
+  },
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function Home() {
   return (
@@ -18,6 +46,12 @@ export default function Home() {
               </p>
             </div>
             <div className="flex space-x-4">
+              <Link
+                href="/news"
+                className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+              >
+                📰 Новости
+              </Link>
               <Link
                 href="/docs"
                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
