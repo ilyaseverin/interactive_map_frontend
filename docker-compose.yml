@@ -1,12 +1,21 @@
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      args:
+        - NEXT_PUBLIC_STRAPI_URL=${NEXT_PUBLIC_STRAPI_URL:-http://localhost:1337}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     container_name: nextjs_frontend
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - PORT=3000
       - HOSTNAME=0.0.0.0
+      # ВАЖНО: Укажите URL вашего Strapi API
+      # Для локального Strapi на хост-машине используйте host.docker.internal
+      # Для продакшена укажите реальный домен
+      - NEXT_PUBLIC_STRAPI_URL=${NEXT_PUBLIC_STRAPI_URL:-http://localhost:1337}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     ports:
       - "3000:3000"
     networks:
