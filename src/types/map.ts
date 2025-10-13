@@ -68,3 +68,10 @@ export const MARKER_COLORS = {
   ural: "#d97706",
   tatarstan: "#7c3aed",
 } as const;
+
+// Типы для Battle Glory фильтров
+export type BattleGloryFilterType =
+  | null
+  | "памятник/мемориал"
+  | "мемориальная доска"
+  | "воинское захоронение";

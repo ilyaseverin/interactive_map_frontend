@@ -2,18 +2,13 @@
 
 import { useState } from "react";
 import BattleGloryMapWithData from "@/components/BattleGloryMapWithData";
+import { BattleGloryFilterType } from "@/types/map";
 import Link from "next/link";
 
-type FilterType =
-  | null
-  | "памятник/мемориал"
-  | "мемориальная доска"
-  | "воинское захоронение";
-
 export default function Home() {
-  const [activeFilter, setActiveFilter] = useState<FilterType>(null);
+  const [activeFilter, setActiveFilter] = useState<BattleGloryFilterType>(null);
 
-  const handleFilterChange = (filter: FilterType) => {
+  const handleFilterChange = (filter: BattleGloryFilterType) => {
     setActiveFilter(filter);
   };
 
@@ -112,20 +107,20 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2 text-white">📡 API Endpoint</h4>
+              <h4 className="font-semibold mb-2 text-black">📡 API Endpoint</h4>
               <code className="text-sm bg-black bg-opacity-30 px-2 py-1 rounded text-white">
                 GET /api/battle-glory-points
               </code>
-              <p className="text-sm mt-2 text-white">
+              <p className="text-sm mt-2 text-black">
                 Получите все объекты Боевой Славы в JSON формате
               </p>
             </div>
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2 text-white">🔍 Фильтрация</h4>
+              <h4 className="font-semibold mb-2 text-black">🔍 Фильтрация</h4>
               <code className="text-sm bg-black bg-opacity-30 px-2 py-1 rounded text-white">
                 ?point_type=памятник/мемориал
               </code>
-              <p className="text-sm mt-2 text-white">
+              <p className="text-sm mt-2 text-black">
                 Фильтруйте объекты по типу и району
               </p>
             </div>

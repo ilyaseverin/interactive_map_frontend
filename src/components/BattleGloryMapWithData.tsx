@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import BattleGloryMap from "./BattleGloryMap";
 import { BattleGloryPoint, BattleGloryResponse } from "@/types/strapi";
+import { BattleGloryFilterType } from "@/types/map";
 
 interface BattleGloryMapWithDataProps {
   height?: string;
   className?: string;
   enableClustering?: boolean;
   showLoading?: boolean;
-  filterType?: string | null;
-  onFilterChange?: (filter: string | null) => void;
+  filterType?: BattleGloryFilterType;
+  onFilterChange?: (filter: BattleGloryFilterType) => void;
 }
 
 const BattleGloryMapWithData: React.FC<BattleGloryMapWithDataProps> = ({
