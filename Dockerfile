@@ -21,6 +21,12 @@ COPY . .
 # https://nextjs.org/docs/advanced-features/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Аргументы сборки для переменных окружения Next.js
+ARG NEXT_PUBLIC_STRAPI_URL
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_STRAPI_URL=${NEXT_PUBLIC_STRAPI_URL}
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+
 RUN npm run build
 
 # Образ для продакшена, скопируем все файлы и запустим next
