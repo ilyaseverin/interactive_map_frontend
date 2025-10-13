@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 
 // Функция для получения новостей из Strapi
 async function getNews(): Promise<NewsListResponse> {
-  const apiUrl = process.env.STRAPI_API_URL || "http://localhost:1337";
+  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
   try {
     const res = await fetch(
@@ -128,7 +128,7 @@ export default async function NewsPage() {
                 ? coverUrl.startsWith("http")
                   ? coverUrl
                   : `${
-                      process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+                      process.env.NEXT_PUBLIC_STRAPI_URL ||
                       "http://localhost:1337"
                     }${coverUrl}`
                 : null;

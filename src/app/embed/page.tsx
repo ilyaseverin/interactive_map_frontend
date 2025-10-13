@@ -1,19 +1,34 @@
 "use client";
 
-import { Suspense } from "react";
-import MapWithData from "@/components/MapWithData";
+import { Suspense, useState } from "react";
+import BattleGloryMapWithData from "@/components/BattleGloryMapWithData";
 import { useSearchParams } from "next/navigation";
+
+type FilterType =
+  | null
+  | "памятник/мемориал"
+  | "мемориальная доска"
+  | "воинское захоронение";
 
 function EmbedMapContent() {
   const searchParams = useSearchParams();
+  const [activeFilter, setActiveFilter] = useState<FilterType>(null);
 
   // Параметры из URL
   const width = searchParams.get("width") || "100%";
   const height = searchParams.get("height") || "600px";
-  const zoom = parseFloat(searchParams.get("zoom") || "4");
-  const longitude = parseFloat(searchParams.get("lng") || "37.6173");
-  const latitude = parseFloat(searchParams.get("lat") || "55.7558");
+  const zoom = parseFloat(searchParams.get("zoom") || "8");
+  const longitude = parseFloat(searchParams.get("lng") || "39.5703");
+  const latitude = parseFloat(searchParams.get("lat") || "52.6094");
   const clustering = searchParams.get("clustering") !== "false";
+  const pointType = searchParams.get("point_type") as FilterType;
+
+  // Используем фильтр из URL или состояние
+  const currentFilter = pointType || activeFilter;
+
+  const handleFilterChange = (filter: FilterType) => {
+    setActiveFilter(filter);
+  };
 
   return (
     <div
@@ -28,16 +43,13 @@ function EmbedMapContent() {
         overflow: "hidden",
       }}
     >
-      <MapWithData
-        initialViewState={{
-          longitude,
-          latitude,
-          zoom,
-        }}
+      <BattleGloryMapWithData
         height={height}
         enableClustering={clustering}
         showLoading={true}
         className="w-full h-full"
+        filterType={currentFilter}
+        onFilterChange={handleFilterChange}
       />
     </div>
   );

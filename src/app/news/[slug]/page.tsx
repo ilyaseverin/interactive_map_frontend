@@ -11,7 +11,7 @@ export const fetchCache = "force-no-store"; // Отключить fetch cache
 
 // Получить новость по slug (всегда без кэша)
 async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
-  const apiUrl = process.env.STRAPI_API_URL || "http://localhost:1337";
+  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
   try {
     const res = await fetch(
@@ -60,7 +60,7 @@ export async function generateMetadata({
     ? coverUrl.startsWith("http")
       ? coverUrl
       : `${
-          process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337"
+          process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
         }${coverUrl}`
     : undefined;
 
@@ -159,7 +159,7 @@ export default async function NewsItemPage({
     ? coverUrl.startsWith("http")
       ? coverUrl
       : `${
-          process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337"
+          process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
         }${coverUrl}`
     : null;
 
@@ -266,7 +266,7 @@ export default async function NewsItemPage({
                     const imageUrl = image.url.startsWith("http")
                       ? image.url
                       : `${
-                          process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+                          process.env.NEXT_PUBLIC_STRAPI_URL ||
                           "http://localhost:1337"
                         }${image.url}`;
 

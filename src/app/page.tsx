@@ -1,66 +1,53 @@
-import MapWithData from "@/components/MapWithData";
-import Link from "next/link";
-import type { Metadata } from "next";
+"use client";
 
-// SEO мета-теги для главной страницы
-export const metadata: Metadata = {
-  title: "Главная",
-  description:
-    "Интерактивная карта России с автоматической кластеризацией точек. Исследуйте достопримечательности Москвы и других городов России. Встраивайте карту на свой сайт с помощью простого API.",
-  keywords: [
-    "карта России",
-    "интерактивная карта",
-    "достопримечательности Москвы",
-    "достопримечательности России",
-    "кластеризация карты",
-    "MapLibre",
-    "геолокация",
-    "карта городов",
-  ],
-  openGraph: {
-    title: "Интерактивная карта России с кластеризацией",
-    description:
-      "Исследуйте достопримечательности Москвы и других городов России с автоматическим кластерингом",
-    type: "website",
-    locale: "ru_RU",
-  },
-  alternates: {
-    canonical: "/",
-  },
-};
+import { useState } from "react";
+import BattleGloryMapWithData from "@/components/BattleGloryMapWithData";
+import Link from "next/link";
+
+type FilterType =
+  | null
+  | "памятник/мемориал"
+  | "мемориальная доска"
+  | "воинское захоронение";
 
 export default function Home() {
+  const [activeFilter, setActiveFilter] = useState<FilterType>(null);
+
+  const handleFilterChange = (filter: FilterType) => {
+    setActiveFilter(filter);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Заголовок */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-gradient-to-r from-red-800 to-red-600 shadow-lg border-b border-red-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center flex-wrap gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Интерактивная карта с кластеризацией
+              <h1 className="text-3xl font-bold text-white">
+                Карта Боевой славы Липецкой области
               </h1>
-              <p className="mt-2 text-gray-600">
-                Исследуйте достопримечательности Москвы и других городов России
-                с автоматическим кластерингом
+              <p className="mt-2 text-red-100">
+                Памятники, мемориалы и места воинской славы времен Великой
+                Отечественной войны
               </p>
             </div>
             <div className="flex space-x-4">
               <Link
                 href="/news"
-                className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                className="px-4 py-2 bg-white text-red-600 rounded-lg hover:bg-red-50 transition-colors"
               >
                 📰 Новости
               </Link>
               <Link
                 href="/docs"
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-4 py-2 bg-white text-red-600 rounded-lg hover:bg-red-50 transition-colors"
               >
                 📚 Документация
               </Link>
               <Link
                 href="/embed"
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                className="px-4 py-2 bg-white text-red-600 rounded-lg hover:bg-red-50 transition-colors"
               >
                 🗺️ Встраивание
               </Link>
@@ -72,94 +59,89 @@ export default function Home() {
       {/* Основной контент */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <MapWithData height="600px" className="rounded-lg" />
+          <BattleGloryMapWithData
+            height="700px"
+            className="rounded-lg"
+            filterType={activeFilter}
+            onFilterChange={handleFilterChange}
+          />
         </div>
 
         {/* Дополнительная информация */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              🎯 Кластеризация точек
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-red-600"></span>
+              Памятники и мемориалы
             </h3>
             <p className="text-gray-600 text-sm">
-              При отдалении карты близкие достопримечательности автоматически
-              объединяются в кластеры с числом. Кликните на кластер для
-              раскрытия отдельных точек.
+              Объекты, увековечивающие память о погибших в годы Великой
+              Отечественной войны.
             </p>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              🔌 Встраивание на сайты
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-blue-600"></span>
+              Мемориальные доски
             </h3>
             <p className="text-gray-600 text-sm">
-              Легко встраивайте карту на любой сайт с помощью iframe. Публичное
-              API для доступа к данным карты.
+              Доски памяти, установленные в честь героев войны и значимых
+              событий.
             </p>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              🎨 Кастомизация
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-green-600"></span>
+              Воинские захоронения
             </h3>
             <p className="text-gray-600 text-sm">
-              Настраиваемые цвета, размеры, начальная позиция и уровень зума.
-              Включение/отключение кластеризации.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              ⚡ Производительность
-            </h3>
-            <p className="text-gray-600 text-sm">
-              Оптимизированная отрисовка для работы с большим количеством точек.
-              Плавная анимация и быстрая загрузка.
+              Места захоронения воинов, павших в годы Великой Отечественной
+              войны.
             </p>
           </div>
         </div>
 
         {/* API и встраивание */}
-        <div className="mt-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-8 text-white">
-          <h2 className="text-2xl font-bold mb-4">
-            Встройте карту на свой сайт
-          </h2>
+        <div className="mt-8 bg-gradient-to-r from-red-600 to-red-800 rounded-lg shadow-lg p-8 text-white">
+          <h2 className="text-2xl font-bold mb-4">API для разработчиков</h2>
           <p className="mb-6 text-white">
-            Используйте наше публичное API и систему встраивания для интеграции
-            интерактивной карты с кластеризацией на любой веб-ресурс.
+            Используйте наше публичное API для получения данных о памятниках и
+            мемориалах Липецкой области.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2 text-black">📡 API Endpoint</h4>
-              <code className="text-sm bg-black bg-opacity-30 px-2 py-1 rounded">
-                GET /api/map-points
+              <h4 className="font-semibold mb-2 text-white">📡 API Endpoint</h4>
+              <code className="text-sm bg-black bg-opacity-30 px-2 py-1 rounded text-white">
+                GET /api/battle-glory-points
               </code>
-              <p className="text-sm mt-2 text-black">
-                Получите все точки карты в JSON формате
+              <p className="text-sm mt-2 text-white">
+                Получите все объекты Боевой Славы в JSON формате
               </p>
             </div>
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <h4 className="font-semibold mb-2 text-black">🔗 Встраивание</h4>
-              <code className="text-sm bg-black bg-opacity-30 px-2 py-1 rounded">
-                /embed?lng=X&lat=Y&zoom=Z
+              <h4 className="font-semibold mb-2 text-white">🔍 Фильтрация</h4>
+              <code className="text-sm bg-black bg-opacity-30 px-2 py-1 rounded text-white">
+                ?point_type=памятник/мемориал
               </code>
-              <p className="text-sm mt-2 text-black">
-                Встройте карту с настраиваемыми параметрами
+              <p className="text-sm mt-2 text-white">
+                Фильтруйте объекты по типу и району
               </p>
             </div>
           </div>
           <div className="flex space-x-4">
             <Link
               href="/docs"
-              className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              className="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors"
             >
               Документация и примеры
             </Link>
             <a
-              href="/api/map-points"
+              href="/api/battle-glory-points"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+              className="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-colors"
             >
               Попробовать API
             </a>

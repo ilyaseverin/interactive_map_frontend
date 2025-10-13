@@ -96,3 +96,47 @@ export type NewsListResponse = StrapiResponse<NewsItem[]>;
 
 // Тип для одной новости
 export type NewsItemResponse = StrapiResponse<NewsItem>;
+
+// Типы для точек Боевой Славы
+export interface BattleGloryCoordinates {
+  lat: number;
+  lng: number;
+}
+
+export interface BattleGloryPoint {
+  id: number;
+  documentId: string;
+  title: string;
+  description: string;
+  point_type:
+    | "памятник/мемориал"
+    | "мемориальная доска"
+    | "воинское захоронение";
+  municipality: string;
+  address: string;
+  formatted_address: string;
+  coordinates: BattleGloryCoordinates;
+  region: string;
+  object_name: string;
+  geocoding_status: string;
+  original_number: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  image: StrapiImage | null;
+  preview_image: StrapiImage | null;
+  video: StrapiImage | null;
+}
+
+// Ответ API для точек Боевой Славы
+export interface BattleGloryResponse {
+  data: BattleGloryPoint[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
