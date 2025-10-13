@@ -10,7 +10,12 @@ import Supercluster from "supercluster";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { BattleGloryPoint } from "@/types/strapi";
-import { ViewState, ClusterProperties, CLUSTER_CONFIG } from "@/types/map";
+import {
+  ViewState,
+  ClusterProperties,
+  CLUSTER_CONFIG,
+  BattleGloryFilterType,
+} from "@/types/map";
 import { calculateBufferedViewportBounds } from "@/utils/mapUtils";
 import BattleGloryMarker from "./markers/BattleGloryMarker";
 import ClusterMarker from "./markers/ClusterMarker";
@@ -20,8 +25,8 @@ interface BattleGloryMapProps {
   height?: string;
   className?: string;
   enableClustering?: boolean;
-  filterType?: string | null;
-  onFilterChange?: (filter: string | null) => void;
+  filterType?: BattleGloryFilterType;
+  onFilterChange?: (filter: BattleGloryFilterType) => void;
 }
 
 // Центр Липецкой области

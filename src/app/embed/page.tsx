@@ -2,31 +2,23 @@
 
 import { Suspense, useState } from "react";
 import BattleGloryMapWithData from "@/components/BattleGloryMapWithData";
+import { BattleGloryFilterType } from "@/types/map";
 import { useSearchParams } from "next/navigation";
-
-type FilterType =
-  | null
-  | "памятник/мемориал"
-  | "мемориальная доска"
-  | "воинское захоронение";
 
 function EmbedMapContent() {
   const searchParams = useSearchParams();
-  const [activeFilter, setActiveFilter] = useState<FilterType>(null);
+  const [activeFilter, setActiveFilter] = useState<BattleGloryFilterType>(null);
 
   // Параметры из URL
   const width = searchParams.get("width") || "100%";
   const height = searchParams.get("height") || "600px";
-  const zoom = parseFloat(searchParams.get("zoom") || "8");
-  const longitude = parseFloat(searchParams.get("lng") || "39.5703");
-  const latitude = parseFloat(searchParams.get("lat") || "52.6094");
   const clustering = searchParams.get("clustering") !== "false";
-  const pointType = searchParams.get("point_type") as FilterType;
+  const pointType = searchParams.get("point_type") as BattleGloryFilterType;
 
   // Используем фильтр из URL или состояние
   const currentFilter = pointType || activeFilter;
 
-  const handleFilterChange = (filter: FilterType) => {
+  const handleFilterChange = (filter: BattleGloryFilterType) => {
     setActiveFilter(filter);
   };
 
