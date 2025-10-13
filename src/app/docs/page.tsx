@@ -10,9 +10,9 @@ export default function DocsPage() {
   }, []);
   const [copied, setCopied] = useState(false);
   const [embedCode, setEmbedCode] = useState({
-    lng: "37.6173",
-    lat: "55.7558",
-    zoom: "4",
+    lng: "39.5703",
+    lat: "52.6094",
+    zoom: "8",
     width: "100%",
     height: "600",
     clustering: true,
@@ -68,14 +68,14 @@ export default function DocsPage() {
   const copyEmbedCode = () => copyToClipboard(generateEmbedCode());
   const copyApiCode = () =>
     copyToClipboard(`// Пример запроса
-fetch('/api/map-points')
+fetch('/api/battle-glory-points')
   .then(res => res.json())
   .then(points => console.log(points));`);
   const copyApiIdCode = () =>
-    copyToClipboard(`// Пример запроса
-fetch('/api/map-points?id=1')
+    copyToClipboard(`// Пример запроса с фильтрацией
+fetch('/api/battle-glory-points?point_type=памятник/мемориал')
   .then(res => res.json())
-  .then(point => console.log(point));`);
+  .then(points => console.log(points));`);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -83,10 +83,10 @@ fetch('/api/map-points?id=1')
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-gray-900">
-            Документация по встраиванию карты
+            Документация карты Боевой Славы
           </h1>
           <p className="mt-2 text-gray-600">
-            Встройте интерактивную карту на свой сайт
+            API и встраивание карты памятников и мемориалов Липецкой области
           </p>
         </div>
       </header>
@@ -250,61 +250,61 @@ fetch('/api/map-points?id=1')
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Москва */}
+            {/* Липецк */}
             <button
               onClick={() =>
                 setEmbedCode({
-                  lng: "37.6173",
-                  lat: "55.7558",
-                  zoom: "10",
+                  lng: "39.5703",
+                  lat: "52.6094",
+                  zoom: "12",
                   width: "100%",
                   height: "600",
                   clustering: true,
                 })
               }
-              className="p-4 border border-gray-300 rounded-lg hover:border-blue-500 hover:shadow-md transition-all text-left"
+              className="p-4 border border-gray-300 rounded-lg hover:border-red-500 hover:shadow-md transition-all text-left"
             >
-              <h3 className="font-semibold text-gray-900">Москва</h3>
+              <h3 className="font-semibold text-gray-900">Липецк</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Центр Москвы с зумом 10
+                Центр Липецкой области
               </p>
             </button>
 
-            {/* Санкт-Петербург */}
+            {/* Елец */}
             <button
               onClick={() =>
                 setEmbedCode({
-                  lng: "30.3351",
-                  lat: "59.9311",
-                  zoom: "10",
+                  lng: "38.491781",
+                  lat: "52.626138",
+                  zoom: "12",
                   width: "100%",
                   height: "600",
                   clustering: true,
                 })
               }
-              className="p-4 border border-gray-300 rounded-lg hover:border-blue-500 hover:shadow-md transition-all text-left"
+              className="p-4 border border-gray-300 rounded-lg hover:border-red-500 hover:shadow-md transition-all text-left"
             >
-              <h3 className="font-semibold text-gray-900">Санкт-Петербург</h3>
-              <p className="text-sm text-gray-600 mt-1">Культурная столица</p>
+              <h3 className="font-semibold text-gray-900">Елец</h3>
+              <p className="text-sm text-gray-600 mt-1">Город воинской славы</p>
             </button>
 
-            {/* Вся Россия */}
+            {/* Вся область */}
             <button
               onClick={() =>
                 setEmbedCode({
-                  lng: "37.6173",
-                  lat: "55.7558",
-                  zoom: "3",
+                  lng: "39.5703",
+                  lat: "52.6094",
+                  zoom: "8",
                   width: "100%",
                   height: "600",
                   clustering: true,
                 })
               }
-              className="p-4 border border-gray-300 rounded-lg hover:border-blue-500 hover:shadow-md transition-all text-left"
+              className="p-4 border border-gray-300 rounded-lg hover:border-red-500 hover:shadow-md transition-all text-left"
             >
-              <h3 className="font-semibold text-gray-900">Вся Россия</h3>
+              <h3 className="font-semibold text-gray-900">Липецкая область</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Обзорная карта страны
+                Обзорная карта области
               </p>
             </button>
           </div>
@@ -323,29 +323,42 @@ fetch('/api/map-points?id=1')
                 <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded">
                   GET
                 </span>
-                <code className="text-sm text-gray-800">/api/map-points</code>
+                <code className="text-sm text-gray-800">
+                  /api/battle-glory-points
+                </code>
               </div>
               <p className="text-sm text-gray-600 mb-2">
-                Получить все точки на карте
+                Получить все объекты Боевой Славы
               </p>
               <div className="relative">
                 <div className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto">
                   <pre className="text-xs">
                     {`// Пример запроса
-fetch('/api/map-points')
+fetch('/api/battle-glory-points')
   .then(res => res.json())
   .then(points => console.log(points));
 
 // Ответ
-[
-  {
-    "id": "1",
-    "name": "Москва",
-    "coordinates": [37.6173, 55.7558],
-    "description": "Столица России",
-    ...
+{
+  "data": [
+    {
+      "id": 20,
+      "title": "Мемориальный комплекс на пл. Революции",
+      "point_type": "памятник/мемориал",
+      "municipality": "Елец",
+      "coordinates": {
+        "lat": 52.626138,
+        "lng": 38.491781
+      },
+      ...
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 317
+    }
   }
-]`}
+}`}
                   </pre>
                 </div>
                 <button
