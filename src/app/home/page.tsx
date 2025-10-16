@@ -7,79 +7,13 @@ import Calendar from "@/components/Calendar";
 import ProjectCard from "@/components/ProjectCard";
 import PartnerCard from "@/components/PartnerCard";
 import NewsCard from "@/components/NewsCard";
+import HeroSlider from "@/components/HeroSlider";
 
 export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[60px] mt-7 mb-12 lg:mb-[61px]">
-        <section className="relative w-full h-[500px] sm:h-[600px] lg:h-[735px] rounded-[20px] lg:rounded-[26px] overflow-visible">
-          {/* Hero Image Container */}
-          <div className="relative w-full h-[500px] sm:h-[600px] lg:h-[685px] rounded-[20px] lg:rounded-[26px] overflow-hidden shadow-[0_5px_12px_0_rgba(0,0,0,0.25)]">
-            {/* Background Image */}
-            <div className="absolute inset-0">
-              <Image
-                src="/images/hero-bg.png"
-                alt="Патриот Центр 48"
-                fill
-                className="object-cover"
-                priority
-              />
-              {/* Gradient Overlay - согласно Figma */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 96%)",
-                }}
-              />
-            </div>
-
-            {/* Content */}
-            <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-[102px] py-12 sm:py-24 lg:py-[265px]">
-              {/* Title */}
-              <h1 className="text-3xl sm:text-4xl lg:text-[64px] font-bold font-montserrat text-white leading-[1.25] mb-4 lg:mb-[19px]">
-                Патриот Центр 48
-              </h1>
-
-              {/* Description */}
-              <p className="text-base sm:text-xl lg:text-[32px] font-medium font-montserrat text-white leading-[1.5625] max-w-full lg:max-w-[1005px] mb-6 lg:mb-[34px]">
-                Региональный центр подготовки граждан Российской Федерации к
-                военной службе и военно-патриотического воспитания населения
-                Липецкой области
-              </p>
-
-              {/* CTA Button */}
-              <Link
-                href="/training"
-                className="inline-flex items-center justify-center gap-4 px-5 py-3 sm:px-6 sm:py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-base sm:text-lg lg:text-[20px] font-medium font-montserrat rounded-xl transition-colors shadow-lg hover:shadow-xl w-fit"
-              >
-                Хочу пройти подготовку
-              </Link>
-            </div>
-          </div>
-
-          {/* Slider Dots - внутри hero секции, согласно Figma */}
-          <div className="absolute bottom-0 lg:bottom-0 left-1/2 transform -translate-x-1/2 flex gap-3 lg:gap-[15px] z-20">
-            <button
-              className="w-4 h-4 lg:w-5 lg:h-5 rounded-full bg-[#D9D9D9] hover:bg-[#B0B0B0] transition-colors"
-              aria-label="Слайд 1"
-            />
-            <button
-              className="w-4 h-4 lg:w-5 lg:h-5 rounded-full bg-[#3B76AA] hover:bg-[#2C5F8A] transition-colors"
-              aria-label="Слайд 2"
-            />
-            <button
-              className="w-4 h-4 lg:w-5 lg:h-5 rounded-full bg-[#D9D9D9] hover:bg-[#B0B0B0] transition-colors"
-              aria-label="Слайд 3"
-            />
-            <button
-              className="w-4 h-4 lg:w-5 lg:h-5 rounded-full bg-[#D9D9D9] hover:bg-[#B0B0B0] transition-colors"
-              aria-label="Слайд 4"
-            />
-          </div>
-        </section>
-      </div>
+      <HeroSlider />
 
       {/* News Section - Full Width Background */}
       <section className="relative min-h-[1001px] mt-0">

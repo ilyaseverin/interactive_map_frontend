@@ -21,7 +21,10 @@ export default function ConditionalLayout({
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <main
+        className="min-h-screen overflow-x-hidden"
+        style={{ backgroundColor: "rgba(241, 242, 243, 1)" }}
+      >
         {children}
       </main>
       <Footer />
