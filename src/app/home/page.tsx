@@ -1,12 +1,9 @@
-import type { Metadata } from "next";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Главная - Патриот Центр 48",
-  description:
-    "Региональный центр подготовки граждан Российской Федерации к военной службе и военно-патриотического воспитания населения Липецкой области",
-};
+import CalendarCard from "@/components/CalendarCard";
+import Calendar from "@/components/Calendar";
 
 export default function HomePage() {
   return (
@@ -223,6 +220,65 @@ export default function HomePage() {
             >
               Ко всем новостям
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Calendar Section */}
+      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-[69px] py-12 lg:py-16">
+        {/* Section Title */}
+        <h2 className="text-center text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-12 lg:mb-16">
+          Календарь
+        </h2>
+
+        {/* Calendar and Events Grid */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-[43px] justify-center">
+          {/* Calendar Component */}
+          <Calendar
+            highlightedDates={[
+              new Date(2025, 0, 14), // 14 января
+              new Date(2025, 1, 23), // 23 февраля
+            ]}
+          />
+
+          {/* Events Grid */}
+          <div className="w-full lg:w-[938px] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-x-[28px] lg:gap-y-[31px]">
+            {/* Person of the Day */}
+            <CalendarCard
+              type="person"
+              icon="/images/calendar/person-icon.svg"
+              title="Человек дня"
+              description={`21 сентября 1895 года
+День рождения великого русского поэта Сергея Есенина`}
+            />
+
+            {/* Event of the Day */}
+            <CalendarCard
+              type="event"
+              icon="/images/calendar/event-icon-full.svg"
+              title="Событие дня"
+              backgroundImage="/images/calendar/event-bg.png"
+            />
+
+            {/* Movie of the Day */}
+            <CalendarCard
+              type="movie"
+              icon="/images/calendar/movie-icon.svg"
+              title="Фильм дня"
+              description={`Фильм дня
+Южный гром (1980)`}
+              backgroundImage="/images/calendar/movie-bg-7331c1.png"
+              gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)"
+            />
+
+            {/* Theme of the Day */}
+            <CalendarCard
+              type="theme"
+              icon="/images/calendar/theme-icon.svg"
+              title="Тема дня"
+              description={`Тема дня
+Победоносная Россия`}
+            />
           </div>
         </div>
       </section>

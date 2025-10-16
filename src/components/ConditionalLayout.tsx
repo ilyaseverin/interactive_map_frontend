@@ -21,7 +21,9 @@ export default function ConditionalLayout({
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50">{children}</main>
+      <main className="min-h-screen bg-gray-50 overflow-x-hidden">
+        {children}
+      </main>
       <Footer />
     </>
   );
