@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-[60px] mt-7 mb-12 lg:mb-[50px]">
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[60px] mt-7 mb-12 lg:mb-[61px]">
         <section className="relative w-full h-[500px] sm:h-[600px] lg:h-[735px] rounded-[20px] lg:rounded-[26px] overflow-visible">
           {/* Hero Image Container */}
           <div className="relative w-full h-[500px] sm:h-[600px] lg:h-[685px] rounded-[20px] lg:rounded-[26px] overflow-hidden shadow-[0_5px_12px_0_rgba(0,0,0,0.25)]">
@@ -82,7 +82,7 @@ export default function HomePage() {
       </div>
 
       {/* News Section - Full Width Background */}
-      <section className="relative min-h-[1001px] mt-[61px]">
+      <section className="relative min-h-[1001px] mt-0">
         {/* Background */}
         <div className="absolute inset-0">
           <Image
@@ -94,7 +94,7 @@ export default function HomePage() {
         </div>
 
         {/* Content - Constrained to max-width */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto py-12 px-6 lg:px-[69px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-[49px] pb-12 px-6 lg:px-[69px]">
           {/* Category Buttons */}
           <div className="flex justify-start lg:justify-end gap-4 mb-12">
             <button className="px-12 lg:px-[65px] py-4 bg-[#1D4E89] text-white text-lg lg:text-[22px] font-normal font-montserrat rounded-[9px] hover:bg-[#164070] transition-colors">
@@ -143,9 +143,9 @@ export default function HomePage() {
       </section>
 
       {/* Calendar Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-[144px] mt-[110px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[144px] mt-[110px] pb-12 lg:pb-16">
         {/* Section Title */}
-        <h2 className="text-center text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-12 lg:mb-16">
+        <h2 className="text-center text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-12 lg:mb-[72px]">
           Календарь
         </h2>
 
@@ -213,9 +213,9 @@ export default function HomePage() {
         </div>
 
         {/* Content Container with Backdrop Blur */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 py-[102px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 lg:px-[93px] pt-[102px] pb-[102px]">
           <div
-            className="w-full max-w-[1733px] mx-auto px-[47px] py-[72px] rounded-[15px]"
+            className="w-full max-w-[1733px] mx-auto px-6 lg:px-[47px] pt-12 lg:pt-[72px] pb-12 lg:pb-[66px] rounded-[15px]"
             style={{
               background: "rgba(255, 255, 255, 0.85)",
               backdropFilter: "blur(74px)",
@@ -337,7 +337,7 @@ export default function HomePage() {
             </div>
 
             {/* All Projects Button */}
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-[66px]">
               <Link
                 href="/projects"
                 className="inline-flex items-center justify-center gap-4 px-6 py-4 bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[24px] font-medium font-montserrat rounded-xl transition-colors leading-[1.219]"
@@ -351,14 +351,14 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-[42px] mt-[120px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[42px] mt-[120px] pb-12 lg:pb-16">
         {/* Section Title */}
-        <h2 className="text-center text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-12 lg:mb-16">
+        <h2 className="text-center text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-12 lg:mb-[72px]">
           Партнеры
         </h2>
 
         {/* Partners Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-[57px] max-w-[1836px] mx-auto justify-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-x-[57px] lg:gap-y-[0px] max-w-[1836px] mx-auto justify-items-center">
           <PartnerCard
             title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
             image="/images/partners/partner-bg.png"
@@ -399,14 +399,13 @@ export default function HomePage() {
         </div>
 
         {/* Content - Constrained to max-width */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto py-12">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-[108px] pb-12">
           {/* Form Container */}
           <div
             className="relative mx-auto"
             style={{
               width: "906px",
               height: "799px",
-              marginTop: "96px",
             }}
           >
             {/* Blur Background */}
