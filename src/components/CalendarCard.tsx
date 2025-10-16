@@ -86,13 +86,13 @@ interface BlueShadowProps {
 
 const BlueShadow = ({ position }: BlueShadowProps) => (
   <div
-    className={`absolute ${SHADOW_DIMENSIONS.width} ${SHADOW_DIMENSIONS.height} bg-[rgba(33,66,95,0.5)] blur-[84px]`}
+    className={`absolute ${SHADOW_DIMENSIONS.width} ${SHADOW_DIMENSIONS.height} bg-[rgba(33,66,95,0.3)] blur-[84px]`}
     style={{ left: `${position.left}px`, top: `${position.top}px` }}
   />
 );
 
 const SecondaryBlur = () => (
-  <div className="absolute left-[40px] top-[28px] w-[374px] h-[253px] bg-[#1D4E89] blur-[74px] rounded-[15px]" />
+  <div className="absolute left-[40px] top-[28px] w-[374px] h-[253px] bg-[rgba(29,78,137,0.6)] blur-[74px] rounded-[15px]" />
 );
 
 interface BackgroundImageProps {
@@ -223,7 +223,7 @@ export default function CalendarCard({
 
       {/* Контейнер карточки */}
       <div
-        className={`relative bg-white rounded-[15px] w-full lg:w-[455px] h-full shadow-lg overflow-hidden transition-transform group-hover:scale-[1.02] ${containerPadding}`}
+        className={`relative bg-white rounded-[15px] w-full lg:w-[455px] h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform group-hover:scale-[1.02] ${containerPadding}`}
       >
         {/* Фоновое изображение */}
         {backgroundImage && (

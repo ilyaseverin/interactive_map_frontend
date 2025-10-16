@@ -69,7 +69,7 @@ export default function Calendar({
       <div className="absolute left-[45px] top-[57px] w-[567px] h-[564px] bg-[#1D4E89] rounded-[15px] blur-[104px] opacity-100" />
 
       {/* Calendar Container */}
-      <div className="relative bg-white rounded-[15px] w-full h-[647px] shadow-lg px-[45px] py-[35px]">
+      <div className="relative bg-white rounded-[15px] w-full h-[647px] px-[45px] py-[35px]">
         {/* Month Header */}
         <div className="flex items-center justify-between mb-[49px]">
           <button
