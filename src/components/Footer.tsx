@@ -95,7 +95,89 @@ export default function Footer() {
       {/* Адаптивная версия для экранов <1920px */}
       <div className="block 2xl:hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Мобильная версия (до sm) */}
+          <div className="flex flex-col items-center gap-5 sm:hidden">
+            {/* Логотип */}
+            <Image
+              src="/images/footer-logo-392dd2.png"
+              alt="Патриот Центр 48"
+              width={153}
+              height={140}
+              className="object-contain"
+            />
+
+            {/* Описание */}
+            <div className="w-[209px]">
+              <p className="text-xs font-normal font-montserrat text-[#222222] leading-[1.219] text-left">
+                Региональный центр подготовки граждан Российской Федерации к
+                военной службе и военно-патриотического воспитания населения
+                Липецкой области
+              </p>
+            </div>
+
+            {/* Блок с контактами - gap 12px */}
+            <div className="flex flex-col items-center gap-3">
+              {/* Телефоны */}
+              <div className="w-[209px]">
+                <p className="text-xs font-normal font-montserrat text-[#222222] leading-[1.219] text-left whitespace-pre-line">
+                  {`Контактные номера телефонов:
+8(4742) 74-69-23 - Директор
+8(4742) 74-68-54 - Заместитель директора
+8(4742) 74-68-54; 8(4742) 22-78-24`}
+                </p>
+              </div>
+
+              {/* Контакты */}
+              <div className="w-[210px]">
+                <p className="text-xs font-normal font-montserrat text-[#21425F] leading-[1.219] text-left whitespace-pre-line">
+                  {`Контактная информация:
+г. Липецк, ул. Советская, д. 7
+Сайт: патриот48.рф
+Эл. почта: cpv48@mail.ru`}
+                </p>
+              </div>
+            </div>
+
+            {/* Социальные сети */}
+            <div className="flex gap-[11px]">
+              <Link
+                href="https://vk.com/patriot48"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-70 transition-opacity"
+              >
+                <Image
+                  src="/images/social-vk-1718c2.png"
+                  alt="ВКонтакте"
+                  width={47}
+                  height={47}
+                  className="object-contain"
+                />
+              </Link>
+              <Link
+                href="https://t.me/patriot48"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-70 transition-opacity"
+              >
+                <Image
+                  src="/images/social-telegram.png"
+                  alt="Telegram"
+                  width={47}
+                  height={47}
+                  className="object-contain"
+                />
+              </Link>
+            </div>
+
+            {/* Копирайт */}
+            <p className="text-[10px] font-normal font-montserrat text-[#222222] leading-[1.219]">
+              (с) Все права организации защищены
+            </p>
+          </div>
+
+          {/* Планшеты и больше (от sm) */}
+          <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Логотип и описание */}
             <div className="md:col-span-2 lg:col-span-1">
               <Image

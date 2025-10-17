@@ -64,17 +64,19 @@ export default function Calendar({
   };
 
   return (
-    <div className={`relative w-full lg:w-[650px] flex-shrink-0 ${className}`}>
-      {/* Blue Shadow */}
-      <div className="absolute left-[45px] top-[57px] w-[567px] h-[564px] bg-[#1D4E89] rounded-[15px] blur-[104px] opacity-100" />
+    <div
+      className={`relative w-full sm:w-[276px] lg:w-[650px] flex-shrink-0 ${className}`}
+    >
+      {/* Blue Shadow - только для десктопа */}
+      <div className="hidden lg:block absolute left-[45px] top-[57px] w-[567px] h-[564px] bg-[#1D4E89] rounded-[15px] blur-[104px] opacity-100" />
 
       {/* Calendar Container */}
-      <div className="relative bg-white rounded-[15px] w-full h-[647px] px-[45px] py-[35px]">
+      <div className="relative bg-white rounded-[15px] w-full min-h-[328px] sm:min-h-[328px] lg:h-[647px] px-[10px] sm:px-[10px] lg:px-[45px] py-[18px] sm:py-[18px] lg:py-[35px] overflow-hidden">
         {/* Month Header */}
-        <div className="flex items-center justify-between mb-[49px]">
+        <div className="flex items-center justify-between mb-[15px] sm:mb-[15px] lg:mb-[49px]">
           <button
             onClick={handlePrevMonth}
-            className="w-[46px] h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
+            className="w-[25px] h-[25px] sm:w-[34px] sm:h-[33px] lg:w-[46px] lg:h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="Предыдущий месяц"
           >
             <Image
@@ -82,14 +84,15 @@ export default function Calendar({
               alt="Предыдущий месяц"
               width={46}
               height={48}
+              className="w-full h-full object-contain"
             />
           </button>
-          <h3 className="text-[22px] font-bold font-montserrat text-black capitalize">
+          <h3 className="text-[12px] sm:text-[12px] lg:text-[22px] font-bold font-montserrat text-black capitalize leading-none">
             {format(currentMonth, "LLLL yyyy", { locale: ru })}
           </h3>
           <button
             onClick={handleNextMonth}
-            className="w-[46px] h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
+            className="w-[25px] h-[25px] sm:w-[36px] sm:h-[33px] lg:w-[46px] lg:h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="Следующий месяц"
           >
             <Image
@@ -97,29 +100,39 @@ export default function Calendar({
               alt="Следующий месяц"
               width={46}
               height={48}
+              className="w-full h-full object-contain"
             />
           </button>
         </div>
 
         {/* Calendar Grid */}
-        <div className="w-full max-w-[560px] mx-auto">
+        <div className="w-full max-w-[256px] sm:max-w-[256px] lg:max-w-[560px] mx-auto">
           {/* Weekday Headers */}
-          <div className="grid grid-cols-7 mb-[43px]">
-            {weekDays.map((day, index) => (
-              <div
-                key={day}
-                className="text-[22px] font-normal font-montserrat text-[#121212] text-center leading-[30px]"
-                style={{
-                  width: index === 6 ? "80px" : index === 0 ? "78px" : "80px",
-                }}
-              >
-                {day}
-              </div>
-            ))}
+          <div className="grid grid-cols-7 gap-[5px] sm:gap-[5px] lg:gap-0 mb-[4px] sm:mb-[4px] lg:mb-[43px]">
+            {weekDays.map((day, index) => {
+              // Мобильные ширины: ПН=36px, ВС=32px, остальные=30-31px
+              const mobileWidth =
+                index === 0
+                  ? "w-[36px]"
+                  : index === 6
+                  ? "w-[32px]"
+                  : "w-[30px] sm:w-[31px]";
+              // Десктопные ширины: ПН=78px, ВС=80px, остальные=80px
+              const desktopWidth = index === 0 ? "lg:w-[78px]" : "lg:w-[80px]";
+
+              return (
+                <div
+                  key={day}
+                  className={`text-[10px] sm:text-[10px] lg:text-[22px] font-normal font-montserrat text-[#121212] text-center leading-[30px] ${mobileWidth} ${desktopWidth}`}
+                >
+                  {day}
+                </div>
+              );
+            })}
           </div>
 
           {/* Calendar Days - 5 weeks */}
-          <div className="space-y-[51px]">
+          <div className="space-y-[13px] sm:space-y-[13px] lg:space-y-[51px]">
             {Array.from({ length: 5 }).map((_, weekIndex) => {
               const weekStart = weekIndex * 7;
               const weekDates = dates.slice(weekStart, weekStart + 7);
@@ -132,42 +145,48 @@ export default function Calendar({
               }
 
               return (
-                <div key={weekIndex} className="grid grid-cols-7">
+                <div
+                  key={weekIndex}
+                  className="grid grid-cols-7 gap-0 sm:gap-0 lg:gap-0"
+                >
                   {weekDates.map((date, dayIndex) => {
                     const isCurrentMonth = isSameMonth(date, currentMonth);
                     const isCurrentDay = isToday(date);
                     const hasEvent = isHighlighted(date);
 
+                    // Мобильные ширины: ПН=36px, ВС=32px, остальные=31px
+                    const mobileWidth =
+                      dayIndex === 0
+                        ? "w-[36px]"
+                        : dayIndex === 6
+                        ? "w-[32px]"
+                        : "w-[31px]";
+                    // Десктопные ширины: ПН=78px, ВС=80px, остальные=80px
+                    const desktopWidth =
+                      dayIndex === 0 ? "lg:w-[78px]" : "lg:w-[80px]";
+
                     return (
                       <div
                         key={dayIndex}
-                        className="relative flex items-center justify-center h-[30px]"
-                        style={{
-                          width:
-                            dayIndex === 6
-                              ? "80px"
-                              : dayIndex === 0
-                              ? "78px"
-                              : "80px",
-                        }}
+                        className={`relative flex items-center justify-center h-[30px] ${mobileWidth} ${desktopWidth}`}
                       >
                         {/* Event indicator (gray circle) */}
                         {hasEvent && !isCurrentDay && (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-[58px] h-[58px] rounded-full bg-[#C7D1DB]" />
+                            <div className="w-[29px] h-[29px] sm:w-[29px] sm:h-[29px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C7D1DB]" />
                           </div>
                         )}
 
                         {/* Today indicator (red circle) */}
                         {isCurrentDay && (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-[58px] h-[58px] rounded-full bg-[#C62828]" />
+                            <div className="w-[29px] h-[29px] sm:w-[29px] sm:h-[29px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C62828]" />
                           </div>
                         )}
 
                         {/* Date number */}
                         <span
-                          className={`relative z-10 text-[22px] font-normal font-montserrat leading-[30px] ${
+                          className={`relative z-10 text-[15px] sm:text-[15px] lg:text-[22px] font-normal font-montserrat leading-[30px] ${
                             isCurrentMonth ? "text-[#121212]" : "text-[#C5C5C5]"
                           }`}
                         >

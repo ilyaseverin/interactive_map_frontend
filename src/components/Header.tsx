@@ -91,24 +91,56 @@ export default function Header() {
 
       {/* Адаптивная версия для экранов <1920px */}
       <div className="block 2xl:hidden">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-4 lg:py-6">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-[18px] sm:py-4 lg:py-6">
           <div className="flex items-center justify-between">
             {/* Логотип и название */}
-            <Link href="/" className="flex items-center gap-3 lg:gap-4">
+            <Link
+              href="/"
+              className="flex items-center gap-2 sm:gap-3 lg:gap-4"
+            >
               <Image
                 src="/images/logo-392dd2.png"
                 alt="Патриот Центр 48"
-                width={70}
-                height={64}
-                className="object-contain lg:w-[90px] lg:h-[82px]"
+                width={49}
+                height={45}
+                className="object-contain sm:w-[70px] sm:h-[64px] lg:w-[90px] lg:h-[82px]"
               />
-              <h1 className="text-lg sm:text-xl lg:text-2xl font-normal font-montserrat text-black whitespace-nowrap">
+              <h1 className="text-sm sm:text-lg lg:text-2xl font-normal font-montserrat text-black whitespace-nowrap">
                 Патриот Центр 48
               </h1>
             </Link>
 
-            {/* Кнопки */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            {/* Бургер меню */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-1 hover:bg-gray-100 rounded-lg transition-colors lg:hidden"
+              aria-label="Меню"
+            >
+              <svg
+                className="w-[27px] h-[16px] sm:w-6 sm:h-6"
+                fill="none"
+                stroke="#030303"
+                viewBox="0 0 27 16"
+                strokeWidth={3}
+              >
+                {mobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 3L24 13M3 13l21-10"
+                  />
+                ) : (
+                  <>
+                    <path strokeLinecap="round" d="M0 0h27" />
+                    <path strokeLinecap="round" d="M0 8h27" />
+                    <path strokeLinecap="round" d="M0 16h27" />
+                  </>
+                )}
+              </svg>
+            </button>
+
+            {/* Кнопки для больших экранов */}
+            <div className="hidden lg:flex items-center gap-3">
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -121,36 +153,6 @@ export default function Header() {
                   height={32}
                   className="object-contain"
                 />
-              </button>
-
-              {/* Бургер меню */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors lg:hidden"
-                aria-label="Меню"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  {mobileMenuOpen ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  )}
-                </svg>
               </button>
             </div>
           </div>

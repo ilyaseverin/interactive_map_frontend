@@ -16,7 +16,7 @@ export default function HomePage() {
       <HeroSlider />
 
       {/* News Section - Full Width Background */}
-      <section className="relative min-h-[1001px] mt-0">
+      <section className="relative min-h-[1368px] sm:min-h-[1001px] mt-0">
         {/* Background */}
         <div className="absolute inset-0">
           <Image
@@ -28,19 +28,19 @@ export default function HomePage() {
         </div>
 
         {/* Content - Constrained to max-width */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-[49px] pb-12 px-6 lg:px-[69px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-8 sm:pt-[49px] pb-12 px-4 sm:px-6 lg:px-[69px]">
           {/* Category Buttons */}
-          <div className="flex justify-start lg:justify-end gap-4 mb-12">
-            <button className="px-12 lg:px-[65px] py-4 bg-[#1D4E89] text-white text-lg lg:text-[22px] font-normal font-montserrat rounded-[9px] hover:bg-[#164070] transition-colors">
+          <div className="flex flex-row justify-center sm:justify-start lg:justify-end gap-[6px] sm:gap-4 mb-8 sm:mb-12">
+            <button className="h-[40px] px-[25px] py-[10px] sm:px-12 sm:py-4 sm:h-auto bg-[#1D4E89] text-[#FFFEFE] text-[12px] sm:text-lg lg:text-[22px] font-normal font-montserrat rounded-[8px] sm:rounded-[9px] hover:bg-[#164070] transition-colors leading-[2.5] flex items-center justify-center">
               Главные
             </button>
-            <button className="px-12 lg:px-[65px] py-4 bg-white text-[#1D4E89] text-lg lg:text-[22px] font-normal font-montserrat rounded-[9px] border border-[#1D4E89] hover:bg-gray-50 transition-colors">
+            <button className="h-[40px] w-[117px] px-[25px] py-[10px] sm:px-12 sm:py-4 sm:h-auto sm:w-auto bg-white text-[#1D4E89] text-[12px] sm:text-lg lg:text-[22px] font-normal font-montserrat rounded-[8px] sm:rounded-[9px] border border-[#1D4E89] hover:bg-gray-50 transition-colors leading-[2.5] flex items-center justify-center">
               Региональные
             </button>
           </div>
 
           {/* News Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
+          <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8 sm:mb-12">
             <NewsCard
               image="/images/news/news-1.png"
               date="19.09.2025"
@@ -68,7 +68,7 @@ export default function HomePage() {
           <div className="flex justify-center lg:justify-end">
             <Link
               href="/news"
-              className="inline-flex items-center justify-center px-6 py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-[22px] font-medium font-montserrat rounded-xl transition-colors shadow-lg"
+              className="inline-flex items-center justify-center h-[40px] sm:h-auto px-[25px] py-[10px] sm:px-6 sm:py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-[12px] sm:text-[22px] font-medium font-montserrat rounded-lg sm:rounded-xl transition-colors shadow-lg"
             >
               Ко всем новостям
             </Link>
@@ -77,14 +77,14 @@ export default function HomePage() {
       </section>
 
       {/* Calendar Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[144px] mt-[110px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[144px] mt-16 sm:mt-[110px] pb-12 lg:pb-16">
         {/* Section Title */}
-        <h2 className="text-center text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-12 lg:mb-[72px]">
+        <h2 className="text-center text-xl sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-8 sm:mb-12 lg:mb-[72px]">
           Календарь
         </h2>
 
         {/* Calendar and Events Grid */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-[43px] justify-center">
+        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-[43px] justify-center">
           {/* Calendar Component */}
           <Calendar
             highlightedDates={[
@@ -94,7 +94,7 @@ export default function HomePage() {
           />
 
           {/* Events Grid */}
-          <div className="w-full lg:w-[938px] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-x-[28px] lg:gap-y-[31px]">
+          <div className="w-full lg:w-[938px] flex flex-col sm:grid sm:grid-cols-2 gap-3 sm:gap-6 lg:gap-x-[28px] lg:gap-y-[31px]">
             {/* Person of the Day */}
             <CalendarCard
               type="person"
@@ -135,7 +135,7 @@ export default function HomePage() {
       </section>
 
       {/* Projects Section - Full Width Background */}
-      <section className="relative w-full min-h-[1405px] mt-[167px]">
+      <section className="relative w-full min-h-[1426px] sm:min-h-[1405px] mt-[100px] sm:mt-[167px]">
         {/* Background */}
         <div className="absolute inset-0">
           <Image
@@ -147,23 +147,23 @@ export default function HomePage() {
         </div>
 
         {/* Content Container with Backdrop Blur */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 lg:px-[93px] pt-[102px] pb-[102px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[93px] pt-12 sm:pt-[102px] pb-12 sm:pb-[102px]">
           <div
-            className="w-full max-w-[1733px] mx-auto px-6 lg:px-[47px] pt-12 lg:pt-[72px] pb-12 lg:pb-[66px] rounded-[15px]"
+            className="w-full max-w-[287px] sm:max-w-[1733px] mx-auto px-6 lg:px-[47px] pt-12 lg:pt-[72px] pb-12 lg:pb-[66px] rounded-[15px]"
             style={{
               background: "rgba(255, 255, 255, 0.85)",
               backdropFilter: "blur(74px)",
             }}
           >
             {/* Section Title */}
-            <h2 className="text-center text-[48px] font-semibold font-montserrat text-black leading-[1.167] mb-[56px]">
+            <h2 className="text-center text-lg sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black leading-[1.167] mb-8 sm:mb-[56px]">
               Наши проекты
             </h2>
 
             {/* Projects Grid - точное позиционирование из Figma */}
-            <div className="w-full max-w-[1639px] mx-auto mb-[66px]">
+            <div className="w-full max-w-[1639px] mx-auto mb-8 sm:mb-[66px]">
               {/* Mobile: Flex layout */}
-              <div className="flex flex-col gap-6 lg:hidden">
+              <div className="flex flex-col gap-4 sm:gap-6 lg:hidden">
                 <ProjectCard
                   title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
                   date="27.09.2025"
@@ -274,8 +274,7 @@ export default function HomePage() {
             <div className="flex justify-center mt-[66px]">
               <Link
                 href="/projects"
-                className="inline-flex items-center justify-center gap-4 px-6 py-4 bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[24px] font-medium font-montserrat rounded-xl transition-colors leading-[1.219]"
-                style={{ width: "394px", height: "55px" }}
+                className="inline-flex items-center justify-center gap-4 w-[240px] sm:w-[394px] h-[40px] sm:h-[55px] px-[25px] py-[10px] sm:px-6 sm:py-4 bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[12px] sm:text-[24px] font-medium font-montserrat rounded-lg sm:rounded-xl transition-colors leading-[1.219]"
               >
                 Ко всем проектам
               </Link>
@@ -285,14 +284,14 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[42px] mt-[120px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
         {/* Section Title */}
-        <h2 className="text-center text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-12 lg:mb-[72px]">
+        <h2 className="text-center text-lg sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-8 sm:mb-12 lg:mb-[72px]">
           Партнеры
         </h2>
 
         {/* Partners Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-x-[57px] lg:gap-y-[0px] max-w-[1836px] mx-auto justify-items-center">
+        <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-x-[57px] lg:gap-y-[0px] max-w-[1836px] mx-auto justify-items-center">
           <PartnerCard
             title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
             image="/images/partners/partner-bg.png"
@@ -321,7 +320,7 @@ export default function HomePage() {
       </section>
 
       {/* Contact Form Section - Full Width Background */}
-      <section className="relative w-full min-h-[1026px] mt-[159px]">
+      <section className="relative w-full min-h-[492px] sm:min-h-[1026px] mt-[100px] sm:mt-[159px]">
         {/* Background */}
         <div className="absolute inset-0">
           <Image
@@ -333,159 +332,61 @@ export default function HomePage() {
         </div>
 
         {/* Content - Constrained to max-width */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-[108px] pb-12">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-[32px] sm:pt-[108px] pb-12 px-6 sm:px-0">
           {/* Form Container */}
-          <div
-            className="relative mx-auto"
-            style={{
-              width: "906px",
-              height: "799px",
-            }}
-          >
+          <div className="relative mx-auto w-full max-w-[271px] sm:max-w-[906px] h-auto sm:h-[799px]">
             {/* Blur Background */}
-            <div
-              className="absolute"
-              style={{
-                left: "43px",
-                top: "150px",
-                width: "821px",
-                height: "624px",
-                backgroundColor: "rgba(74, 74, 74, 0.7)",
-                filter: "blur(84px)",
-                zIndex: 0,
-              }}
-            />
+            <div className="absolute left-[13px] sm:left-[43px] top-[92px] sm:top-[150px] w-[246px] sm:w-[821px] h-[384px] sm:h-[624px] bg-[rgba(74,74,74,0.7)] blur-[84px] z-0" />
 
             {/* White Card */}
-            <div
-              className="absolute bg-white rounded-[19px]"
-              style={{
-                left: "0px",
-                top: "0px",
-                width: "906px",
-                height: "799px",
-                zIndex: 10,
-              }}
-            >
+            <div className="relative bg-white rounded-[19px] w-full max-w-[271px] sm:max-w-[906px] h-auto sm:h-[799px] z-10 p-[30px] sm:p-0">
               {/* Title */}
-              <h2
-                className="absolute text-[48px] font-bold font-montserrat text-black"
-                style={{
-                  left: "177px",
-                  top: "60px",
-                  width: "551px",
-                  lineHeight: "1.219em",
-                }}
-              >
+              <h2 className="text-lg sm:text-[48px] font-bold font-montserrat text-black text-center sm:text-left leading-[1.219] mb-6 sm:mb-0 sm:absolute sm:left-[177px] sm:top-[60px] sm:w-[551px]">
                 Задайте свой вопрос
               </h2>
 
-              {/* Name Field */}
-              <div
-                className="absolute"
-                style={{
-                  left: "203px",
-                  top: "163px",
-                  width: "500px",
-                  height: "107px",
-                }}
-              >
-                <label
-                  className="absolute text-[24px] font-normal font-montserrat text-[#2C2C2C]"
-                  style={{
-                    left: "23.29px",
-                    top: "0px",
-                    lineHeight: "1.219em",
-                  }}
-                >
-                  Имя
-                </label>
-                <input
-                  type="text"
-                  placeholder="Иван"
-                  className="absolute w-[500px] h-[67px] bg-[#EDEDED] rounded-[12px] text-[24px] font-normal font-montserrat text-[#979797] px-[27px] outline-none focus:ring-2 focus:ring-[#C62828]"
-                  style={{
-                    left: "0px",
-                    top: "40px",
-                    lineHeight: "1.219em",
-                  }}
-                />
-              </div>
+              {/* Form Fields Container */}
+              <div className="flex flex-col gap-5 sm:gap-0">
+                {/* Name Field */}
+                <div className="sm:absolute sm:left-[203px] sm:top-[163px] sm:w-[500px]">
+                  <label className="block text-xs sm:text-[24px] font-normal font-montserrat text-[#2C2C2C] leading-[1.219] mb-1 sm:mb-0 sm:absolute sm:left-[23.29px] sm:top-0">
+                    Имя
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Иван"
+                    className="w-full sm:w-[500px] h-[50px] sm:h-[67px] bg-[#EDEDED] rounded-[12px] text-xs sm:text-[24px] font-normal font-montserrat text-[#979797] px-4 sm:px-[27px] outline-none focus:ring-2 focus:ring-[#C62828] leading-[1.219] sm:absolute sm:left-0 sm:top-[40px]"
+                  />
+                </div>
 
-              {/* Email Field */}
-              <div
-                className="absolute"
-                style={{
-                  left: "203px",
-                  top: "302px",
-                  width: "500px",
-                  height: "107px",
-                }}
-              >
-                <label
-                  className="absolute text-[24px] font-normal font-montserrat text-[#2C2C2C]"
-                  style={{
-                    left: "23.29px",
-                    top: "0px",
-                    lineHeight: "1.219em",
-                  }}
-                >
-                  Эл. почта
-                </label>
-                <input
-                  type="email"
-                  placeholder="example@yandex.ru"
-                  className="absolute w-[500px] h-[67px] bg-[#EDEDED] rounded-[12px] text-[24px] font-normal font-montserrat text-[#979797] px-[27px] outline-none focus:ring-2 focus:ring-[#C62828]"
-                  style={{
-                    left: "0px",
-                    top: "40px",
-                    lineHeight: "1.219em",
-                  }}
-                />
-              </div>
+                {/* Email Field */}
+                <div className="sm:absolute sm:left-[203px] sm:top-[302px] sm:w-[500px]">
+                  <label className="block text-xs sm:text-[24px] font-normal font-montserrat text-[#2C2C2C] leading-[1.219] mb-1 sm:mb-0 sm:absolute sm:left-[23.29px] sm:top-0">
+                    Эл. почта
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="example@yandex.ru"
+                    className="w-full sm:w-[500px] h-[50px] sm:h-[67px] bg-[#EDEDED] rounded-[12px] text-xs sm:text-[24px] font-normal font-montserrat text-[#979797] px-4 sm:px-[27px] outline-none focus:ring-2 focus:ring-[#C62828] leading-[1.219] sm:absolute sm:left-0 sm:top-[40px]"
+                  />
+                </div>
 
-              {/* Question Field */}
-              <div
-                className="absolute"
-                style={{
-                  left: "203px",
-                  top: "442px",
-                  width: "500px",
-                  height: "188px",
-                }}
-              >
-                <label
-                  className="absolute text-[24px] font-normal font-montserrat text-[#2C2C2C]"
-                  style={{
-                    left: "23.2px",
-                    top: "0px",
-                    lineHeight: "1.219em",
-                  }}
-                >
-                  Ваш вопрос
-                </label>
-                <textarea
-                  placeholder="Введите вопрос"
-                  className="absolute w-[500px] h-[148px] bg-[#EDEDED] rounded-[12px] text-[24px] font-normal font-montserrat text-[#979797] px-[27px] py-[19px] outline-none focus:ring-2 focus:ring-[#C62828] resize-none"
-                  style={{
-                    left: "0px",
-                    top: "40px",
-                    lineHeight: "1.219em",
-                  }}
-                />
-              </div>
+                {/* Question Field */}
+                <div className="sm:absolute sm:left-[203px] sm:top-[442px] sm:w-[500px]">
+                  <label className="block text-xs sm:text-[24px] font-normal font-montserrat text-[#2C2C2C] leading-[1.219] mb-1 sm:mb-0 sm:absolute sm:left-[23.2px] sm:top-0">
+                    Ваш вопрос
+                  </label>
+                  <textarea
+                    placeholder="Введите вопрос"
+                    className="w-full sm:w-[500px] h-[88px] sm:h-[148px] bg-[#EDEDED] rounded-[12px] text-xs sm:text-[24px] font-normal font-montserrat text-[#979797] px-4 sm:px-[27px] py-3 sm:py-[19px] outline-none focus:ring-2 focus:ring-[#C62828] resize-none leading-[1.219] sm:absolute sm:left-0 sm:top-[40px]"
+                  />
+                </div>
 
-              {/* Submit Button */}
-              <button
-                className="absolute w-[500px] h-[63px] bg-[#C62828] hover:bg-[#B71C1C] rounded-[12px] text-[22px] font-medium font-montserrat text-[#EDF3F7] transition-colors"
-                style={{
-                  left: "203px",
-                  top: "676px",
-                  lineHeight: "1.219em",
-                }}
-              >
-                Отправить
-              </button>
+                {/* Submit Button */}
+                <button className="w-full sm:w-[500px] h-[47px] sm:h-[63px] bg-[#C62828] hover:bg-[#B71C1C] rounded-[12px] text-xs sm:text-[22px] font-medium font-montserrat text-[#EDF3F7] transition-colors leading-[1.219] mt-2 sm:mt-0 sm:absolute sm:left-[203px] sm:top-[676px]">
+                  Отправить
+                </button>
+              </div>
             </div>
           </div>
         </div>

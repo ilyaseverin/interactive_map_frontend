@@ -22,11 +22,23 @@ export default function ProjectCard({
   const getSizeClasses = () => {
     switch (size) {
       case "large":
-        return "lg:w-[657px]";
+        return "max-w-[240px] sm:max-w-[657px] mx-auto";
       case "xlarge":
-        return "lg:w-[724px]";
+        return "max-w-[240px] sm:max-w-[724px] mx-auto";
       default:
-        return "lg:w-[422px]";
+        return "max-w-[240px] sm:max-w-[422px] mx-auto";
+    }
+  };
+
+  // Высота карточек на мобильных (из Figma): large=149px, medium=240px, xlarge=232px
+  const getMobileHeight = () => {
+    switch (size) {
+      case "large":
+        return "h-[149px]";
+      case "xlarge":
+        return "h-[232px]";
+      default:
+        return "h-[240px]";
     }
   };
 
@@ -56,7 +68,7 @@ export default function ProjectCard({
   return (
     <Link
       href={href}
-      className={`relative group overflow-hidden rounded-[15px] ${getSizeClasses()} h-[411px] w-full block`}
+      className={`relative group overflow-hidden rounded-[15px] ${getSizeClasses()} ${getMobileHeight()} sm:h-[411px] w-full block`}
     >
       {/* Background Image */}
       <div className="absolute inset-0">
@@ -81,37 +93,66 @@ export default function ProjectCard({
       <div className="relative z-10 h-full">
         {/* Date - только для large и xlarge */}
         {isLargeCard && date && (
-          <p
-            className="absolute text-[20px] font-semibold font-montserrat text-white leading-[1.219]"
-            style={{ left: textPos.dateX || textPos.x, top: textPos.dateY }}
-          >
-            {date}
-          </p>
+          <>
+            {/* Mobile positioning */}
+            <p className="sm:hidden absolute left-[13.4px] top-[98.88px] text-[9px] font-semibold font-montserrat text-white leading-[1.219]">
+              {date}
+            </p>
+            {/* Desktop positioning */}
+            <p
+              className="hidden sm:block absolute text-[20px] font-semibold font-montserrat text-white leading-[1.219]"
+              style={{
+                left: textPos.dateX || textPos.x,
+                top: textPos.dateY,
+              }}
+            >
+              {date}
+            </p>
+          </>
         )}
 
         {/* Title */}
-        <h3
-          className={`absolute text-[24px] font-semibold font-montserrat text-white leading-[1.219] ${
-            size === "large" ? "uppercase" : ""
-          }`}
-          style={{
-            left: textPos.x,
-            top: isLargeCard ? textPos.titleY : textPos.y,
-            maxWidth:
-              size === "xlarge"
-                ? "579px"
-                : size === "large"
-                ? "418px"
-                : "347px",
-          }}
-        >
-          {title}
-        </h3>
+        <>
+          {/* Mobile positioning */}
+          <h3
+            className={`sm:hidden absolute left-[13.39px] top-[111.15px] text-[10px] font-semibold font-montserrat text-white leading-[1.219] ${
+              size === "large" ? "uppercase" : ""
+            }`}
+            style={{
+              maxWidth:
+                size === "large"
+                  ? "172.02px"
+                  : size === "xlarge"
+                  ? "177px"
+                  : "177px",
+            }}
+          >
+            {title}
+          </h3>
+          {/* Desktop positioning */}
+          <h3
+            className={`hidden sm:block absolute text-[24px] font-semibold font-montserrat text-white leading-[1.219] ${
+              size === "large" ? "uppercase" : ""
+            }`}
+            style={{
+              left: textPos.x,
+              top: isLargeCard ? textPos.titleY : textPos.y,
+              maxWidth:
+                size === "xlarge"
+                  ? "579px"
+                  : size === "large"
+                  ? "418px"
+                  : "347px",
+            }}
+          >
+            {title}
+          </h3>
+        </>
 
         {/* Description - только для xlarge */}
         {description && size === "xlarge" && (
           <p
-            className="absolute text-[24px] font-normal font-montserrat text-white leading-[1.219] max-w-[613px]"
+            className="hidden sm:block absolute text-[24px] font-normal font-montserrat text-white leading-[1.219] max-w-[613px]"
             style={{ left: textPos.x, top: textPos.descY }}
           >
             {description}

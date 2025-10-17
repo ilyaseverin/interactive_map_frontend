@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
-import type { Swiper as SwiperType } from "swiper";
 
 // Import Swiper styles
 import "swiper/css";
@@ -56,8 +55,8 @@ const slides: HeroSlide[] = [
 
 export default function HeroSlider() {
   return (
-    <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-0 mt-7 mb-12 lg:mb-[61px]">
-      <section className="w-full">
+    <div className="w-full max-w-[1800px] mx-auto pl-[19px] pr-[19px] sm:px-6 lg:px-0 mt-4 sm:mt-7 mb-8 sm:mb-12 lg:mb-[61px]">
+      <section className="w-full max-w-[282px] sm:max-w-full mx-0 sm:mx-auto">
         {/* Swiper Container */}
         <Swiper
           modules={[Pagination, Autoplay, EffectFade]}
@@ -72,7 +71,7 @@ export default function HeroSlider() {
             disableOnInteraction: false,
           }}
           loop={true}
-          className="hero-swiper w-full h-[500px] sm:h-[600px] lg:h-[685px] rounded-[20px] lg:rounded-[26px] shadow-[0_5px_12px_0_rgba(0,0,0,0.25)]"
+          className="hero-swiper w-full h-[471px] sm:h-[600px] lg:h-[685px] rounded-[20px] lg:rounded-[26px] shadow-[0_5px_12px_0_rgba(0,0,0,0.25)]"
         >
           {slides.map((slide, index) => (
             <SwiperSlide key={index}>
@@ -98,24 +97,48 @@ export default function HeroSlider() {
                 </div>
 
                 {/* Content */}
-                <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-[102px] py-12 sm:py-24 lg:py-[265px]">
-                  {/* Title */}
-                  <h1 className="text-3xl sm:text-4xl lg:text-[64px] font-bold font-montserrat text-white leading-[1.25] mb-4 lg:mb-[19px]">
-                    {slide.title}
-                  </h1>
+                <div className="relative z-10 h-full flex flex-col px-5 sm:px-12 lg:px-[102px]">
+                  {/* Mobile Layout (до sm) */}
+                  <div className="sm:hidden absolute left-[20px] top-[210px] w-[242px]">
+                    {/* Title */}
+                    <h1 className="text-[20px] font-bold font-montserrat text-white leading-[1.22] mb-[16px]">
+                      {slide.title}
+                    </h1>
 
-                  {/* Description */}
-                  <p className="text-base sm:text-xl lg:text-[32px] font-medium font-montserrat text-white leading-[1.5625] max-w-full lg:max-w-[1005px] mb-6 lg:mb-[34px]">
-                    {slide.description}
-                  </p>
+                    {/* Description */}
+                    <p className="text-[12px] font-medium font-montserrat text-white leading-[1.5] w-[241px] mb-[44px]">
+                      {slide.description}
+                    </p>
 
-                  {/* CTA Button */}
-                  <Link
-                    href={slide.ctaLink}
-                    className="inline-flex items-center justify-center gap-4 px-5 py-3 sm:px-6 sm:py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-base sm:text-lg lg:text-[20px] font-medium font-montserrat rounded-[12px] transition-colors shadow-lg hover:shadow-xl w-fit"
-                  >
-                    {slide.ctaText}
-                  </Link>
+                    {/* CTA Button */}
+                    <Link
+                      href={slide.ctaLink}
+                      className="inline-flex items-center justify-center gap-4 w-[231px] h-[40px] px-[25px] py-[10px] bg-[#C62828] hover:bg-[#B71C1C] text-white text-[12px] font-medium font-montserrat rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                    >
+                      {slide.ctaText}
+                    </Link>
+                  </div>
+
+                  {/* Desktop Layout (sm и выше) */}
+                  <div className="hidden sm:flex flex-col justify-center h-full py-[265px]">
+                    {/* Title */}
+                    <h1 className="text-4xl lg:text-[64px] font-bold font-montserrat text-white leading-[1.22] mb-4 lg:mb-[19px]">
+                      {slide.title}
+                    </h1>
+
+                    {/* Description */}
+                    <p className="text-xl lg:text-[32px] font-medium font-montserrat text-white leading-[1.5] lg:max-w-[1005px] mb-6 lg:mb-[34px]">
+                      {slide.description}
+                    </p>
+
+                    {/* CTA Button */}
+                    <Link
+                      href={slide.ctaLink}
+                      className="inline-flex items-center justify-center gap-4 px-6 py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-lg lg:text-[20px] font-medium font-montserrat rounded-[12px] transition-colors shadow-lg hover:shadow-xl w-fit"
+                    >
+                      {slide.ctaText}
+                    </Link>
+                  </div>
                 </div>
               </div>
             </SwiperSlide>

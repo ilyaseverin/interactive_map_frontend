@@ -18,10 +18,21 @@ export default function PartnerCard({
   vkText,
 }: PartnerCardProps) {
   return (
-    <article className="relative w-[574px] h-[695px]">
+    <article className="relative w-full max-w-[251px] sm:max-w-[574px] mx-auto h-[304px] sm:h-[695px]">
       {/* Rectangle 157 - Blur Background */}
       <div
         className="absolute bg-[#1D4E89] rounded-[15px]"
+        style={{
+          left: "10px",
+          top: "17px",
+          width: "230px",
+          height: "274px",
+          filter: "blur(25px)",
+          zIndex: 0,
+        }}
+      />
+      <div
+        className="hidden sm:block absolute bg-[#1D4E89] rounded-[15px]"
         style={{
           left: "22px",
           top: "39px",
@@ -33,49 +44,21 @@ export default function PartnerCard({
       />
 
       {/* Rectangle 158 - Image (Top Part) */}
-      <div
-        className="absolute rounded-t-[15px] overflow-hidden"
-        style={{
-          left: "0px",
-          top: "0px",
-          width: "574px",
-          height: "384px",
-          zIndex: 20,
-        }}
-      >
+      <div className="absolute rounded-t-[15px] overflow-hidden left-0 top-0 w-full h-[168px] sm:w-[574px] sm:h-[384px] z-20">
         <Image
           src={image}
           alt={title}
-          width={574}
-          height={384}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
           unoptimized
         />
       </div>
 
       {/* Rectangle 159 - White Card (Bottom Part) */}
-      <div
-        className="absolute bg-white rounded-b-[15px]"
-        style={{
-          left: "0px",
-          top: "384px",
-          width: "574px",
-          height: "311px",
-          boxShadow: "0px 3px 14px 0px rgba(0, 0, 0, 0.08)",
-          zIndex: 10,
-        }}
-      />
+      <div className="absolute bg-white rounded-b-[15px] left-0 top-[168px] sm:top-[384px] w-full sm:w-[574px] h-[136px] sm:h-[311px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] z-10" />
 
       {/* Title Text */}
-      <h3
-        className="absolute w-[481px] text-[18px] font-bold font-montserrat text-black"
-        style={{
-          left: "59px",
-          top: "426px",
-          lineHeight: "1.556em",
-          zIndex: 30,
-        }}
-      >
+      <h3 className="absolute w-[210px] sm:w-[481px] text-[10px] sm:text-[18px] font-bold font-montserrat text-black left-[19px] sm:left-[59px] top-[177px] sm:top-[426px] leading-[1.22] sm:leading-[1.556] z-30">
         {title}
       </h3>
 
@@ -84,15 +67,10 @@ export default function PartnerCard({
         href={websiteUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute flex items-center gap-4 group"
-        style={{
-          left: "59px",
-          top: "532px",
-          zIndex: 30,
-        }}
+        className="absolute flex items-center gap-2 sm:gap-4 group left-[19px] sm:left-[59px] top-[234px] sm:top-[532px] z-30"
       >
         {/* Icon */}
-        <div className="w-[53px] h-[53px] relative flex-shrink-0">
+        <div className="w-[23px] h-[23px] sm:w-[53px] sm:h-[53px] relative flex-shrink-0">
           <Image
             src="/images/partners/link-icon.png"
             alt="Website"
@@ -102,7 +80,7 @@ export default function PartnerCard({
         </div>
 
         {/* Text */}
-        <span className="text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219em]">
+        <span className="text-[8px] sm:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219]">
           {websiteText}
         </span>
       </a>
@@ -112,15 +90,10 @@ export default function PartnerCard({
         href={vkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute flex items-center gap-[11px] group"
-        style={{
-          left: "59px",
-          top: "595px",
-          zIndex: 30,
-        }}
+        className="absolute flex items-center gap-2 sm:gap-[11px] group left-[19px] sm:left-[59px] top-[260px] sm:top-[595px] z-30"
       >
         {/* Icon */}
-        <div className="w-[58px] h-[58px] relative flex-shrink-0">
+        <div className="w-[25px] h-[25px] sm:w-[58px] sm:h-[58px] relative flex-shrink-0">
           <Image
             src="/images/partners/vk-icon.png"
             alt="VK"
@@ -130,7 +103,7 @@ export default function PartnerCard({
         </div>
 
         {/* Text */}
-        <span className="text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219em]">
+        <span className="text-[8px] sm:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219]">
           {vkText}
         </span>
       </a>

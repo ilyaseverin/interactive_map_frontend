@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
 interface NewsCardProps {
   image: string;
@@ -17,52 +18,107 @@ export default function NewsCard({
   href,
 }: NewsCardProps) {
   return (
-    <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-[574px] h-[698px] relative">
-      {/* Изображение: position (11, 11), size 552×331 */}
-      <div className="absolute left-[11px] top-[11px] w-[552px] h-[331px] rounded-[15px] overflow-hidden">
-        <Image src={image} alt={title} fill className="object-cover" />
+    <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full max-w-[286px] sm:max-w-[574px] mx-auto relative min-h-[379px] sm:min-h-[698px]">
+      {/* Mobile Layout - Column with gap */}
+      <div className="flex flex-col py-[22px] px-[19px] gap-[5px] sm:hidden">
+        {/* 1. Заголовок - fill width, max 2 lines */}
+        <h3
+          className="text-[12px] font-bold font-montserrat text-black leading-[1.219]"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {title}
+        </h3>
+
+        {/* 2. Дата - fixed 51x20, text aligned right inside */}
+        <time className="w-[51px] h-[20px] text-[10px] font-normal font-montserrat text-black leading-[2] text-right">
+          {date}
+        </time>
+
+        {/* 3. Изображение - fixed 240x143 */}
+        <div className="relative w-[240px] h-[143px] rounded-[15px] overflow-hidden mx-auto">
+          <Image src={image} alt={title} fill className="object-cover" />
+        </div>
+
+        {/* 4. Описание - fill width, max 5 lines */}
+        <p
+          className="text-[12px] font-normal font-montserrat text-black leading-[1.219]"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {description}
+        </p>
+
+        {/* 5. Кнопка - fixed 239x40 */}
+        <Link
+          href={href}
+          className="inline-flex items-center justify-center w-[240px] h-[40px] px-[25px] py-[10px] border border-[#1D4E89] text-[#1D4E89] text-[12px] font-normal font-montserrat rounded-lg hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap mt-[5px]"
+        >
+          Читать подробнее..
+        </Link>
       </div>
 
-      {/* Дата: position (483, 356), size 80×23 */}
-      <time className="absolute left-[483px] top-[356px] text-[14px] font-normal font-montserrat text-black leading-[1.429]">
-        {date}
-      </time>
+      {/* Desktop Layout - Absolute positioning */}
+      <div className="hidden sm:block">
+        {/* Изображение */}
+        <div className="absolute left-[11px] top-[11px] w-[552px] h-[331px] rounded-[15px] overflow-hidden">
+          <Image src={image} alt={title} fill className="object-cover" />
+        </div>
 
-      {/* Заголовок: position (48, 379), size 443×63 */}
-      <h3
-        className="absolute left-[48px] top-[379px] w-[443px] text-[18px] font-bold font-montserrat text-black leading-[1.556]"
-        style={{
-          display: "-webkit-box",
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {title}
-      </h3>
+        {/* Дата */}
+        <time className="absolute left-[483px] top-[356px] text-[14px] font-normal font-montserrat text-black leading-[1.429]">
+          {date}
+        </time>
 
-      {/* Описание: position (49, 458), size 487×138 */}
-      <p
-        className="absolute left-[49px] top-[458px] w-[487px] text-[18px] font-normal font-montserrat text-black leading-[1.556]"
-        style={{
-          display: "-webkit-box",
-          WebkitLineClamp: 4,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {description}
-      </p>
+        {/* Заголовок */}
+        <h3
+          className="absolute left-[48px] top-[379px] w-[443px] text-[18px] font-bold font-montserrat text-black leading-[1.556]"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {title}
+        </h3>
 
-      {/* Кнопка: position (48, 599), size 249×63 */}
-      <Link
-        href={href}
-        className="absolute left-[48px] top-[599px] inline-flex items-center justify-center w-[249px] h-[63px] px-[24px] py-[16px] border border-[#1D4E89] text-[#1D4E89] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap gap-[16px]"
-      >
-        Читать подробнее..
-      </Link>
+        {/* Описание */}
+        <p
+          className="absolute left-[49px] top-[458px] w-[487px] text-[18px] font-normal font-montserrat text-black leading-[1.556]"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {description}
+        </p>
+
+        {/* Кнопка */}
+        <Link
+          href={href}
+          className="absolute left-[48px] top-[599px] inline-flex items-center justify-center w-[249px] h-[63px] px-[24px] py-[16px] border border-[#1D4E89] text-[#1D4E89] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap gap-[16px]"
+        >
+          Читать подробнее..
+        </Link>
+      </div>
+
+      {/* Spacer for desktop absolute positioning */}
+      <div className="hidden sm:block h-[698px]" />
     </article>
   );
 }
