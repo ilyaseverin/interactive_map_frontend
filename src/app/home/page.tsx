@@ -149,7 +149,7 @@ export default function HomePage() {
         {/* Content Container with Backdrop Blur */}
         <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[93px] pt-12 sm:pt-[102px] pb-12 sm:pb-[102px]">
           <div
-            className="w-full max-w-[287px] sm:max-w-[1733px] mx-auto px-6 lg:px-[47px] pt-12 lg:pt-[72px] pb-12 lg:pb-[66px] rounded-[15px]"
+            className="w-full sm:max-w-[1733px] mx-auto px-6 lg:px-[47px] pt-12 lg:pt-[72px] pb-12 lg:pb-[66px] rounded-[15px]"
             style={{
               background: "rgba(255, 255, 255, 0.85)",
               backdropFilter: "blur(74px)",
@@ -284,7 +284,7 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-[34px] sm:px-6 lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
         {/* Section Title */}
         <h2 className="text-center text-lg sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-8 sm:mb-12 lg:mb-[72px]">
           Партнеры

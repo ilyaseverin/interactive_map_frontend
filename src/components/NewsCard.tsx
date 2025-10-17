@@ -18,7 +18,7 @@ export default function NewsCard({
   href,
 }: NewsCardProps) {
   return (
-    <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full max-w-[286px] sm:max-w-[574px] mx-auto relative min-h-[379px] sm:min-h-[698px]">
+    <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full sm:max-w-[574px] mx-auto relative sm:min-h-[698px]">
       {/* Mobile Layout - Column with gap */}
       <div className="flex flex-col py-[22px] px-[19px] gap-[5px] sm:hidden">
         {/* 1. Заголовок - fill width, max 2 lines */}
@@ -35,13 +35,13 @@ export default function NewsCard({
           {title}
         </h3>
 
-        {/* 2. Дата - fixed 51x20, text aligned right inside */}
-        <time className="w-[51px] h-[20px] text-[10px] font-normal font-montserrat text-black leading-[2] text-right">
+        {/* 2. Дата - адаптивная ширина, text aligned right */}
+        <time className="text-[10px] font-normal font-montserrat text-black leading-[2] text-right self-start">
           {date}
         </time>
 
-        {/* 3. Изображение - fixed 240x143 */}
-        <div className="relative w-[240px] h-[143px] rounded-[15px] overflow-hidden mx-auto">
+        {/* 3. Изображение - адаптивная ширина с фиксированным aspect ratio */}
+        <div className="relative w-full aspect-[240/143] rounded-[15px] overflow-hidden">
           <Image src={image} alt={title} fill className="object-cover" />
         </div>
 
@@ -59,10 +59,10 @@ export default function NewsCard({
           {description}
         </p>
 
-        {/* 5. Кнопка - fixed 239x40 */}
+        {/* 5. Кнопка - адаптивная ширина */}
         <Link
           href={href}
-          className="inline-flex items-center justify-center w-[240px] h-[40px] px-[25px] py-[10px] border border-[#1D4E89] text-[#1D4E89] text-[12px] font-normal font-montserrat rounded-lg hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap mt-[5px]"
+          className="inline-flex items-center justify-center w-full h-[40px] px-[25px] py-[10px] border border-[#1D4E89] text-[#1D4E89] text-[12px] font-normal font-montserrat rounded-lg hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap mt-[5px]"
         >
           Читать подробнее..
         </Link>
