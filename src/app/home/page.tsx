@@ -78,59 +78,131 @@ export default function HomePage() {
       </section>
 
       {/* Calendar Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[144px] mt-16 sm:mt-[110px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-4 md:px-6 lg:px-[144px] mt-16 md:mt-[110px] lg:mt-[110px] pb-12 lg:pb-16">
         {/* Section Title */}
-        <h2 className="text-center text-xl sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-8 sm:mb-12 lg:mb-[72px]">
+        <h2 className="text-center text-xl md:text-[30px] lg:text-[48px] font-semibold font-montserrat text-black mb-8 md:mb-[71px] lg:mb-[72px]">
           Календарь
         </h2>
 
-        {/* Calendar and Events Grid */}
-        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-[43px] justify-center">
+        {/* Calendar and Events Grid - адаптивный с переносом */}
+        <div className="flex flex-col lg:flex-row lg:flex-wrap gap-6 lg:gap-[43px] justify-center items-center lg:items-start">
           {/* Calendar Component */}
-          <Calendar
-            highlightedDates={[
-              new Date(2025, 0, 14), // 14 января
-              new Date(2025, 1, 23), // 23 февраля
-            ]}
-          />
+          <div className="w-full md:w-auto lg:flex-1 lg:min-w-[650px] flex-shrink-0 flex justify-center">
+            <Calendar
+              highlightedDates={[
+                new Date(2025, 0, 14), // 14 января
+                new Date(2025, 1, 23), // 23 февраля
+              ]}
+            />
+          </div>
 
-          {/* Events Grid */}
-          <div className="w-full lg:w-[938px] flex flex-col sm:grid sm:grid-cols-2 gap-3 sm:gap-6 lg:gap-x-[28px] lg:gap-y-[31px]">
-            {/* Person of the Day */}
-            <CalendarCard
-              type="person"
-              icon="/images/calendar/person-icon.svg"
-              title="Человек дня"
-              description={`21 сентября 1895 года
+          {/* Events Grid - адаптивный layout */}
+          <div className="w-full lg:w-[938px] lg:flex-shrink-0">
+            {/* Mobile: Column layout */}
+            <div className="flex flex-col md:hidden gap-3">
+              <CalendarCard
+                type="person"
+                icon="/images/calendar/person-icon.svg"
+                title="Человек дня"
+                description={`21 сентября 1895 года
 День рождения великого русского поэта Сергея Есенина`}
-            />
-
-            {/* Event of the Day */}
-            <CalendarCard
-              type="event"
-              icon="/images/calendar/event-icon-full.svg"
-              title="Событие дня"
-              backgroundImage="/images/calendar/event-bg.png"
-            />
-
-            {/* Movie of the Day */}
-            <CalendarCard
-              type="movie"
-              icon="/images/calendar/movie-icon.svg"
-              title="Фильм дня"
-              description={`Фильм дня
+              />
+              <CalendarCard
+                type="event"
+                icon="/images/calendar/event-icon-full.svg"
+                title="Событие дня"
+                backgroundImage="/images/calendar/event-bg.png"
+              />
+              <CalendarCard
+                type="movie"
+                icon="/images/calendar/movie-icon.svg"
+                title="Фильм дня"
+                description={`Фильм дня
 Южный гром (1980)`}
-              backgroundImage="/images/calendar/movie-bg-7331c1.png"
-            />
-
-            {/* Theme of the Day */}
-            <CalendarCard
-              type="theme"
-              icon="/images/calendar/theme-icon.svg"
-              title="Тема дня"
-              description={`Тема дня
+                backgroundImage="/images/calendar/movie-bg-7331c1.png"
+                gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)"
+              />
+              <CalendarCard
+                type="theme"
+                icon="/images/calendar/theme-icon.svg"
+                title="Тема дня"
+                description={`Тема дня
 Победоносная Россия`}
-            />
+              />
+            </div>
+
+            {/* Tablet: Custom layout - точное позиционирование из Figma */}
+            <div className="hidden md:block lg:hidden relative w-[650px] h-[529px] mx-auto">
+              {/* Row 1: Человек дня + Событие дня */}
+              <div className="flex gap-[18px] mb-[24px]">
+                <CalendarCard
+                  type="person"
+                  icon="/images/calendar/person-icon.svg"
+                  title="Человек дня"
+                  description={`21 сентября 1895 года
+День рождения великого русского поэта Сергея Есенина`}
+                />
+                <CalendarCard
+                  type="event"
+                  icon="/images/calendar/event-icon-full.svg"
+                  title="Событие дня"
+                  backgroundImage="/images/calendar/event-bg.png"
+                />
+              </div>
+
+              {/* Row 2: Фильм дня + Тема дня */}
+              <div className="flex gap-[18px]">
+                <CalendarCard
+                  type="movie"
+                  icon="/images/calendar/movie-icon.svg"
+                  title="Фильм дня"
+                  description={`Фильм дня
+Южный гром (1980)`}
+                  backgroundImage="/images/calendar/movie-bg-7331c1.png"
+                  gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)"
+                />
+                <CalendarCard
+                  type="theme"
+                  icon="/images/calendar/theme-icon.svg"
+                  title="Тема дня"
+                  description={`Тема дня
+Победоносная Россия`}
+                />
+              </div>
+            </div>
+
+            {/* Desktop: Grid layout */}
+            <div className="hidden lg:grid grid-cols-2 gap-x-[28px] gap-y-[31px]">
+              <CalendarCard
+                type="person"
+                icon="/images/calendar/person-icon.svg"
+                title="Человек дня"
+                description={`21 сентября 1895 года
+День рождения великого русского поэта Сергея Есенина`}
+              />
+              <CalendarCard
+                type="event"
+                icon="/images/calendar/event-icon-full.svg"
+                title="Событие дня"
+                backgroundImage="/images/calendar/event-bg.png"
+              />
+              <CalendarCard
+                type="movie"
+                icon="/images/calendar/movie-icon.svg"
+                title="Фильм дня"
+                description={`Фильм дня
+Южный гром (1980)`}
+                backgroundImage="/images/calendar/movie-bg-7331c1.png"
+                gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)"
+              />
+              <CalendarCard
+                type="theme"
+                icon="/images/calendar/theme-icon.svg"
+                title="Тема дня"
+                description={`Тема дня
+Победоносная Россия`}
+              />
+            </div>
           </div>
         </div>
       </section>

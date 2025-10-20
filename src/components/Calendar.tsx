@@ -65,18 +65,18 @@ export default function Calendar({
 
   return (
     <div
-      className={`relative w-full sm:w-[276px] lg:w-[650px] flex-shrink-0 ${className}`}
+      className={`relative w-full md:w-[650px] lg:w-[938px] 2xl:w-full lg:min-w-[650px] lg:max-w-[938px] flex-shrink-0 ${className}`}
     >
-      {/* Blue Shadow - только для десктопа */}
-      <div className="hidden lg:block absolute left-[45px] top-[57px] w-[567px] h-[564px] bg-[#1D4E89] rounded-[15px] blur-[104px] opacity-100" />
+      {/* Blue Shadow - только для планшета и десктопа */}
+      <div className="hidden md:block absolute left-[24px] top-[35px] md:w-[604px] md:h-[586px] lg:w-[567px] lg:h-[564px] bg-[#1D4E89] md:bg-[rgba(103,103,103,0.9)] lg:bg-[#1D4E89] rounded-[15px] blur-[84px] md:blur-[84px] lg:blur-[104px] opacity-100" />
 
       {/* Calendar Container */}
-      <div className="relative bg-white rounded-[15px] w-full min-h-[328px] sm:min-h-[328px] lg:h-[647px] px-[10px] sm:px-[10px] lg:px-[45px] py-[18px] sm:py-[18px] lg:py-[35px] overflow-hidden">
+      <div className="relative bg-white rounded-[15px] w-full min-h-[328px] md:h-[647px] lg:h-[647px] px-[10px] md:px-[45px] lg:px-[45px] py-[18px] md:py-[35px] lg:py-[35px] overflow-hidden">
         {/* Month Header */}
-        <div className="flex items-center justify-between mb-[15px] sm:mb-[15px] lg:mb-[49px]">
+        <div className="flex items-center justify-between mb-[15px] md:mb-[49px] lg:mb-[49px]">
           <button
             onClick={handlePrevMonth}
-            className="w-[25px] h-[25px] sm:w-[34px] sm:h-[33px] lg:w-[46px] lg:h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
+            className="w-[25px] h-[25px] md:w-[46px] md:h-[48px] lg:w-[46px] lg:h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="Предыдущий месяц"
           >
             <Image
@@ -87,12 +87,12 @@ export default function Calendar({
               className="w-full h-full object-contain"
             />
           </button>
-          <h3 className="text-[12px] sm:text-[12px] lg:text-[22px] font-bold font-montserrat text-black capitalize leading-none">
+          <h3 className="text-[12px] md:text-[22px] lg:text-[22px] font-bold font-montserrat text-black capitalize leading-none">
             {format(currentMonth, "LLLL yyyy", { locale: ru })}
           </h3>
           <button
             onClick={handleNextMonth}
-            className="w-[25px] h-[25px] sm:w-[36px] sm:h-[33px] lg:w-[46px] lg:h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
+            className="w-[25px] h-[25px] md:w-[46px] md:h-[48px] lg:w-[46px] lg:h-[48px] hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="Следующий месяц"
           >
             <Image
@@ -106,24 +106,17 @@ export default function Calendar({
         </div>
 
         {/* Calendar Grid */}
-        <div className="w-full max-w-[256px] sm:max-w-[256px] lg:max-w-[560px] mx-auto">
+        <div className="w-full mx-auto">
           {/* Weekday Headers */}
-          <div className="grid grid-cols-7 gap-[5px] sm:gap-[5px] lg:gap-0 mb-[4px] sm:mb-[4px] lg:mb-[43px]">
+          <div className="grid grid-cols-7 gap-0 mb-[4px] md:mb-[43px] lg:mb-[43px]">
             {weekDays.map((day, index) => {
-              // Мобильные ширины: ПН=36px, ВС=32px, остальные=30-31px
-              const mobileWidth =
-                index === 0
-                  ? "w-[36px]"
-                  : index === 6
-                  ? "w-[32px]"
-                  : "w-[30px] sm:w-[31px]";
-              // Десктопные ширины: ПН=78px, ВС=80px, остальные=80px
-              const desktopWidth = index === 0 ? "lg:w-[78px]" : "lg:w-[80px]";
+              // Планшетные ширины: ПН=78px, остальные=80px
+              const tabletWidth = index === 0 ? "md:w-[78px]" : "md:w-[80px]";
 
               return (
                 <div
                   key={day}
-                  className={`text-[10px] sm:text-[10px] lg:text-[22px] font-normal font-montserrat text-[#121212] text-center leading-[30px] ${mobileWidth} ${desktopWidth}`}
+                  className={`text-[10px] md:text-[22px] lg:text-[22px] font-normal font-montserrat text-[#121212] text-center leading-[30px] ${tabletWidth}`}
                 >
                   {day}
                 </div>
@@ -132,7 +125,7 @@ export default function Calendar({
           </div>
 
           {/* Calendar Days - 5 weeks */}
-          <div className="space-y-[13px] sm:space-y-[13px] lg:space-y-[51px]">
+          <div className="space-y-[13px] md:space-y-[51px] lg:space-y-[51px]">
             {Array.from({ length: 5 }).map((_, weekIndex) => {
               const weekStart = weekIndex * 7;
               const weekDates = dates.slice(weekStart, weekStart + 7);
@@ -154,39 +147,32 @@ export default function Calendar({
                     const isCurrentDay = isToday(date);
                     const hasEvent = isHighlighted(date);
 
-                    // Мобильные ширины: ПН=36px, ВС=32px, остальные=31px
-                    const mobileWidth =
-                      dayIndex === 0
-                        ? "w-[36px]"
-                        : dayIndex === 6
-                        ? "w-[32px]"
-                        : "w-[31px]";
-                    // Десктопные ширины: ПН=78px, ВС=80px, остальные=80px
-                    const desktopWidth =
-                      dayIndex === 0 ? "lg:w-[78px]" : "lg:w-[80px]";
+                    // Планшетные ширины: ПН=78px, остальные=80px
+                    const tabletWidth =
+                      dayIndex === 0 ? "md:w-[78px]" : "md:w-[80px]";
 
                     return (
                       <div
                         key={dayIndex}
-                        className={`relative flex items-center justify-center h-[30px] ${mobileWidth} ${desktopWidth}`}
+                        className={`relative flex items-center justify-center h-[30px] ${tabletWidth}`}
                       >
                         {/* Event indicator (gray circle) */}
                         {hasEvent && !isCurrentDay && (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-[29px] h-[29px] sm:w-[29px] sm:h-[29px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C7D1DB]" />
+                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C7D1DB]" />
                           </div>
                         )}
 
                         {/* Today indicator (red circle) */}
                         {isCurrentDay && (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-[29px] h-[29px] sm:w-[29px] sm:h-[29px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C62828]" />
+                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C62828]" />
                           </div>
                         )}
 
                         {/* Date number */}
                         <span
-                          className={`relative z-10 text-[15px] sm:text-[15px] lg:text-[22px] font-normal font-montserrat leading-[30px] ${
+                          className={`relative z-10 text-[15px] md:text-[22px] lg:text-[22px] font-normal font-montserrat leading-[30px] ${
                             isCurrentMonth ? "text-[#121212]" : "text-[#C5C5C5]"
                           }`}
                         >
