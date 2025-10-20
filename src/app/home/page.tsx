@@ -164,7 +164,7 @@ export default function HomePage() {
             {/* Projects Grid - точное позиционирование из Figma */}
             <div className="w-full max-w-[1639px] mx-auto mb-8 sm:mb-[66px]">
               {/* Mobile: Flex layout */}
-              <div className="flex flex-col gap-4 sm:gap-6 lg:hidden">
+              <div className="flex flex-col gap-4 md:hidden">
                 <ProjectCard
                   title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
                   date="27.09.2025"
@@ -202,71 +202,104 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Desktop: Absolute positioning - точные координаты из Figma */}
-              <div className="hidden lg:block">
-                {/* First Row */}
-                <div className="relative h-[411px] mb-[20px]">
-                  {/* Project 1 - Large (x: 39) */}
-                  <div className="absolute left-[39px] top-0">
-                    <ProjectCard
-                      title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
-                      date="27.09.2025"
-                      image="/images/projects/project-1-2351d1.png"
-                      href="/projects/1"
-                      size="large"
-                    />
-                  </div>
+              {/* Tablet: Grid layout */}
+              <div className="hidden md:grid lg:hidden grid-cols-2 gap-x-6 gap-y-6">
+                <ProjectCard
+                  title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
+                  date="27.09.2025"
+                  image="/images/projects/project-1-2351d1.png"
+                  href="/projects/1"
+                  size="large"
+                />
+                <ProjectCard
+                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                  image="/images/projects/project-2.png"
+                  href="/projects/2"
+                />
+                <ProjectCard
+                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                  image="/images/projects/project-2.png"
+                  href="/projects/3"
+                />
+                <ProjectCard
+                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                  image="/images/projects/project-2.png"
+                  href="/projects/4"
+                />
+                <ProjectCard
+                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                  image="/images/projects/project-2.png"
+                  href="/projects/5"
+                />
+                <ProjectCard
+                  title="Областной конкурс патриотической песни"
+                  date="30.08.2025"
+                  description="На территории Липецкой области с 30 августа по 12 октября 2025 года стартовал приём заявок на областной конкурс патриотической песни."
+                  image="/images/projects/project-6-58ced6.png"
+                  href="/projects/6"
+                  size="xlarge"
+                />
+              </div>
 
-                  {/* Project 2 - Medium (x: 731.84) */}
-                  <div className="absolute left-[732px] top-0">
-                    <ProjectCard
-                      title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                      image="/images/projects/project-2.png"
-                      href="/projects/2"
-                    />
-                  </div>
-
-                  {/* Project 3 - Medium (x: 1178.68) */}
-                  <div className="absolute left-[1179px] top-0">
-                    <ProjectCard
-                      title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                      image="/images/projects/project-2.png"
-                      href="/projects/3"
-                    />
-                  </div>
+              {/* Desktop: Adaptive flex layout - адаптивное позиционирование */}
+              <div className="hidden lg:flex flex-row flex-wrap gap-[20px] justify-center">
+                {/* Project 1 - Large */}
+                <div className="flex-shrink-0">
+                  <ProjectCard
+                    title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
+                    date="27.09.2025"
+                    image="/images/projects/project-1-2351d1.png"
+                    href="/projects/1"
+                    size="large"
+                  />
                 </div>
 
-                {/* Second Row */}
-                <div className="relative h-[411px]">
-                  {/* Project 4 - Medium (x: 0) */}
-                  <div className="absolute left-0 top-0">
-                    <ProjectCard
-                      title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                      image="/images/projects/project-2.png"
-                      href="/projects/4"
-                    />
-                  </div>
+                {/* Project 2 - Medium */}
+                <div className="flex-shrink-0">
+                  <ProjectCard
+                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                    image="/images/projects/project-2.png"
+                    href="/projects/2"
+                  />
+                </div>
 
-                  {/* Project 5 - Medium (x: 457.63) */}
-                  <div className="absolute left-[458px] top-0">
-                    <ProjectCard
-                      title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                      image="/images/projects/project-2.png"
-                      href="/projects/5"
-                    />
-                  </div>
+                {/* Project 3 - Medium */}
+                <div className="flex-shrink-0">
+                  <ProjectCard
+                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                    image="/images/projects/project-2.png"
+                    href="/projects/3"
+                  />
+                </div>
 
-                  {/* Project 6 - XLarge (x: 915) */}
-                  <div className="absolute left-[915px] top-0">
-                    <ProjectCard
-                      title="Областной конкурс патриотической песни"
-                      date="30.08.2025"
-                      description="На территории Липецкой области с 30 августа по 12 октября 2025 года стартовал приём заявок на областной конкурс патриотической песни."
-                      image="/images/projects/project-6-58ced6.png"
-                      href="/projects/6"
-                      size="xlarge"
-                    />
-                  </div>
+                {/* Project 4 - Medium */}
+                <div className="flex-shrink-0">
+                  <ProjectCard
+                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                    image="/images/projects/project-2.png"
+                    href="/projects/4"
+                  />
+                </div>
+
+                {/* Project 5 - Medium */}
+                <div className="flex-shrink-0">
+                  <ProjectCard
+                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
+                    image="/images/projects/project-2.png"
+                    href="/projects/5"
+                  />
+                </div>
+
+                {/* Project 6 - XLarge */}
+                <div className="flex-shrink-0">
+                  <ProjectCard
+                    title="Областной конкурс патриотической песни"
+                    date="30.08.2025"
+                    description="На территории Липецкой области с 30 августа по 12 октября 2025 года стартовал приём заявок на областной конкурс патриотической песни."
+                    image="/images/projects/project-6-58ced6.png"
+                    href="/projects/6"
+                    size="xlarge"
+                  />
                 </div>
               </div>
             </div>
