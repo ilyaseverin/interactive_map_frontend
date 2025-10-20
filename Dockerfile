@@ -1,5 +1,5 @@
 # Используем официальный Node.js образ
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Устанавливаем зависимости только когда нужно
 FROM base AS deps
@@ -26,8 +26,12 @@ ARG NEXT_PUBLIC_STRAPI_URL
 ARG NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_STRAPI_URL=${NEXT_PUBLIC_STRAPI_URL}
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+ENV NEXT_DISABLE_SOURCEMAPS 1
 
-RUN npm run build
+RUN npm run build \
+    && rm -rf .next/cache \
+    && npm cache clean --force \
+    && npm prune --omit=dev || true
 
 # Образ для продакшена, скопируем все файлы и запустим next
 FROM base AS runner
@@ -41,7 +45,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Автоматически используем output traces для уменьшения размера образа
 # https://nextjs.org/docs/advanced-features/output-file-tracing
