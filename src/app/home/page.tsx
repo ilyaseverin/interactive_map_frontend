@@ -8,6 +8,7 @@ import ProjectCard from "@/components/ProjectCard";
 import PartnerCard from "@/components/PartnerCard";
 import NewsCard from "@/components/NewsCard";
 import HeroSlider from "@/components/HeroSlider";
+import ContactForm from "@/components/ContactForm";
 
 export default function HomePage() {
   return (
@@ -319,78 +320,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Contact Form Section - Full Width Background */}
-      <section className="relative w-full min-h-[492px] sm:min-h-[1026px] mt-[100px] sm:mt-[159px]">
-        {/* Background */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/contact-form-bg.png"
-            alt="Форма обратной связи"
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* Content - Constrained to max-width */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-[32px] sm:pt-[108px] pb-12 px-6 sm:px-0">
-          {/* Form Container */}
-          <div className="relative mx-auto w-full max-w-[271px] sm:max-w-[906px] h-auto sm:h-[799px]">
-            {/* Blur Background */}
-            <div className="absolute left-[13px] sm:left-[43px] top-[92px] sm:top-[150px] w-[246px] sm:w-[821px] h-[384px] sm:h-[624px] bg-[rgba(74,74,74,0.7)] blur-[84px] z-0" />
-
-            {/* White Card */}
-            <div className="relative bg-white rounded-[19px] w-full max-w-[271px] sm:max-w-[906px] h-auto sm:h-[799px] z-10 p-[30px] sm:p-0">
-              {/* Title */}
-              <h2 className="text-lg sm:text-[48px] font-bold font-montserrat text-black text-center sm:text-left leading-[1.219] mb-6 sm:mb-0 sm:absolute sm:left-[177px] sm:top-[60px] sm:w-[551px]">
-                Задайте свой вопрос
-              </h2>
-
-              {/* Form Fields Container */}
-              <div className="flex flex-col gap-5 sm:gap-0">
-                {/* Name Field */}
-                <div className="sm:absolute sm:left-[203px] sm:top-[163px] sm:w-[500px]">
-                  <label className="block text-xs sm:text-[24px] font-normal font-montserrat text-[#2C2C2C] leading-[1.219] mb-1 sm:mb-0 sm:absolute sm:left-[23.29px] sm:top-0">
-                    Имя
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Иван"
-                    className="w-full sm:w-[500px] h-[50px] sm:h-[67px] bg-[#EDEDED] rounded-[12px] text-xs sm:text-[24px] font-normal font-montserrat text-[#979797] px-4 sm:px-[27px] outline-none focus:ring-2 focus:ring-[#C62828] leading-[1.219] sm:absolute sm:left-0 sm:top-[40px]"
-                  />
-                </div>
-
-                {/* Email Field */}
-                <div className="sm:absolute sm:left-[203px] sm:top-[302px] sm:w-[500px]">
-                  <label className="block text-xs sm:text-[24px] font-normal font-montserrat text-[#2C2C2C] leading-[1.219] mb-1 sm:mb-0 sm:absolute sm:left-[23.29px] sm:top-0">
-                    Эл. почта
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="example@yandex.ru"
-                    className="w-full sm:w-[500px] h-[50px] sm:h-[67px] bg-[#EDEDED] rounded-[12px] text-xs sm:text-[24px] font-normal font-montserrat text-[#979797] px-4 sm:px-[27px] outline-none focus:ring-2 focus:ring-[#C62828] leading-[1.219] sm:absolute sm:left-0 sm:top-[40px]"
-                  />
-                </div>
-
-                {/* Question Field */}
-                <div className="sm:absolute sm:left-[203px] sm:top-[442px] sm:w-[500px]">
-                  <label className="block text-xs sm:text-[24px] font-normal font-montserrat text-[#2C2C2C] leading-[1.219] mb-1 sm:mb-0 sm:absolute sm:left-[23.2px] sm:top-0">
-                    Ваш вопрос
-                  </label>
-                  <textarea
-                    placeholder="Введите вопрос"
-                    className="w-full sm:w-[500px] h-[88px] sm:h-[148px] bg-[#EDEDED] rounded-[12px] text-xs sm:text-[24px] font-normal font-montserrat text-[#979797] px-4 sm:px-[27px] py-3 sm:py-[19px] outline-none focus:ring-2 focus:ring-[#C62828] resize-none leading-[1.219] sm:absolute sm:left-0 sm:top-[40px]"
-                  />
-                </div>
-
-                {/* Submit Button */}
-                <button className="w-full sm:w-[500px] h-[47px] sm:h-[63px] bg-[#C62828] hover:bg-[#B71C1C] rounded-[12px] text-xs sm:text-[22px] font-medium font-montserrat text-[#EDF3F7] transition-colors leading-[1.219] mt-2 sm:mt-0 sm:absolute sm:left-[203px] sm:top-[676px]">
-                  Отправить
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Contact Form Section */}
+      <ContactForm />
     </>
   );
 }
