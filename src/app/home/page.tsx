@@ -29,7 +29,7 @@ export default function HomePage() {
         </div>
 
         {/* Content - Constrained to max-width */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-8 sm:pt-[49px] pb-12 px-4 sm:px-6 lg:px-[69px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-8 sm:pt-[49px] pb-12 px-4 sm:px-6 lg:px-[137px] xl:px-[69px]">
           {/* Category Buttons */}
           <div className="flex flex-row justify-center sm:justify-start lg:justify-end gap-[6px] sm:gap-4 mb-8 sm:mb-12">
             <button className="h-[40px] px-[25px] py-[10px] sm:px-12 sm:py-4 sm:h-auto bg-[#1D4E89] text-[#FFFEFE] text-[12px] sm:text-lg lg:text-[22px] font-normal font-montserrat rounded-[8px] sm:rounded-[9px] hover:bg-[#164070] transition-colors leading-[2.5] flex items-center justify-center">
@@ -41,7 +41,7 @@ export default function HomePage() {
           </div>
 
           {/* News Cards Grid */}
-          <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8 sm:mb-12">
+          <div className="flex flex-col md:grid md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-3 gap-6 md:gap-[50px] lg:gap-8 xl:gap-8 mb-8 sm:mb-12">
             <NewsCard
               image="/images/news/news-1.png"
               date="19.09.2025"

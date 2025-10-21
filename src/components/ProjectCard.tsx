@@ -21,11 +21,11 @@ export default function ProjectCard({
   const getSizeClasses = () => {
     switch (size) {
       case "large":
-        return "w-full md:w-full lg:w-full lg:max-w-[657px] mx-auto";
+        return "w-full md:w-full lg:w-[657px] mx-auto";
       case "xlarge":
-        return "w-full md:w-full lg:w-full lg:max-w-[724px] mx-auto";
+        return "w-full md:w-full lg:w-[724px] mx-auto";
       default:
-        return "w-full md:w-full lg:w-full lg:max-w-[422px] mx-auto";
+        return "w-full md:w-full lg:w-[422px] mx-auto";
     }
   };
 
@@ -33,11 +33,11 @@ export default function ProjectCard({
   const getAspectClasses = () => {
     switch (size) {
       case "large":
-        return "aspect-[240/149] md:aspect-[330/327] lg:aspect-[657/411]";
+        return "aspect-[240/149] md:aspect-[330/327] lg:h-[422px]";
       case "xlarge":
-        return "aspect-[240/232] md:aspect-[330/327] lg:aspect-[724/411]";
+        return "aspect-[240/232] md:aspect-[330/327] lg:h-[422px]";
       default:
-        return "aspect-square md:aspect-[330/327] lg:aspect-[422/411]";
+        return "aspect-square md:aspect-[330/327] lg:h-[422px]";
     }
   };
 
