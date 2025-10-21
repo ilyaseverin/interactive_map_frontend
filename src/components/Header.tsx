@@ -1,20 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import MobileMenu from "./MobileMenu";
-
-type SubMenuItem = {
-  label: string;
-  href: string;
-};
+import Logo from "./header/Logo";
+import SearchButton from "./header/SearchButton";
+import BurgerButton from "./header/BurgerButton";
+import PartnersLink from "./header/PartnersLink";
+import DropdownMenu, { type SubMenuItem } from "./header/DropdownMenu";
 
 type MenuItem = {
   label: string;
   href: string;
   subMenu?: SubMenuItem[];
-  twoColumns?: boolean; // Для меню с двумя колонками
+  twoColumns?: boolean;
 };
 
 export default function Header() {
@@ -101,8 +100,8 @@ export default function Header() {
       style={{ backgroundColor: "rgba(255, 255, 255, 1)" }}
       className="border-none"
     >
-      {/* Desktop версия (≥1024px) - с фиксированными отступами 70px */}
-      <div className="hidden lg:block">
+      {/* Desktop версия (≥1280px) - с фиксированными отступами 70px */}
+      <div className="hidden xl:block">
         <div
           className="w-full px-[70px] mx-auto"
           style={{ minHeight: "clamp(140px, 15vh, 174px)" }}
@@ -116,33 +115,12 @@ export default function Header() {
             }}
           >
             {/* Левая часть: Логотип и название */}
-            <div
-              className="flex items-center flex-shrink-0"
-              style={{ gap: "clamp(12px, 1.2vw, 20px)" }}
-            >
-              <Link href="/" className="flex-shrink-0">
-                <Image
-                  src="/images/logo-392dd2.png"
-                  alt="Патриот Центр 48"
-                  width={122}
-                  height={112}
-                  className="object-contain"
-                  style={{
-                    width: "clamp(70px, 7vw, 122px)",
-                    height: "auto",
-                  }}
-                />
-              </Link>
-              <Link
-                href="/"
-                className="font-normal font-montserrat text-black whitespace-nowrap"
-                style={{
-                  fontSize: "clamp(20px, 2.5vw, 40px)",
-                  lineHeight: "1.2",
-                }}
-              >
-                Патриот Центр 48
-              </Link>
+            <div className="flex-shrink-0">
+              <Logo
+                logoSize={{ width: 122, height: 112 }}
+                fontSize="clamp(20px, 2.5vw, 40px)"
+                gap="clamp(12px, 1.2vw, 20px)"
+              />
             </div>
 
             {/* Центральная часть: Навигация с переносом */}
@@ -180,62 +158,10 @@ export default function Header() {
 
                     {/* Всплывающее подменю */}
                     {item.subMenu && activeDropdown === item.label && (
-                      <div
-                        className={`absolute top-full left-0 z-50 rounded-b-[5px] rounded-tr-[5px] ${
-                          item.twoColumns
-                            ? "grid grid-cols-2 gap-x-[30px] px-[15px] py-[19px]"
-                            : "px-[15px] py-[19px]"
-                        }`}
-                        style={{
-                          backgroundColor: "#1D4E89",
-                          minWidth: item.twoColumns ? "449px" : "217px",
-                        }}
-                      >
-                        {item.twoColumns ? (
-                          <>
-                            {/* Первая колонка (первые 6 элементов) */}
-                            <ul className="space-y-[16px]">
-                              {item.subMenu.slice(0, 6).map((subItem) => (
-                                <li key={subItem.href}>
-                                  <Link
-                                    href={subItem.href}
-                                    className="block font-montserrat font-normal text-[16px] leading-[20px] text-white hover:underline"
-                                  >
-                                    {subItem.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                            {/* Вторая колонка (элементы с 7 по 10) */}
-                            <ul className="space-y-[16px]">
-                              {item.subMenu.slice(6).map((subItem) => (
-                                <li key={subItem.href}>
-                                  <Link
-                                    href={subItem.href}
-                                    className="block font-montserrat font-normal text-[16px] leading-[20px] text-white hover:underline"
-                                  >
-                                    {subItem.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </>
-                        ) : (
-                          /* Одна колонка для остальных пунктов */
-                          <ul className="space-y-[16px]">
-                            {item.subMenu.map((subItem) => (
-                              <li key={subItem.href}>
-                                <Link
-                                  href={subItem.href}
-                                  className="block font-montserrat font-normal text-[18px] leading-[22px] text-white hover:underline"
-                                >
-                                  {subItem.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
+                      <DropdownMenu
+                        subMenu={item.subMenu}
+                        twoColumns={item.twoColumns}
+                      />
                     )}
                   </li>
                 ))}
@@ -247,74 +173,87 @@ export default function Header() {
               className="flex items-center flex-shrink-0"
               style={{ gap: "clamp(16px, 2vw, 40px)" }}
             >
-              <Link href="/partners" className="flex-shrink-0">
-                <Image
-                  src="/images/partners.svg"
-                  alt="Партнеры"
-                  width={240}
-                  height={105}
-                  className="object-contain"
-                  style={{
-                    width: "clamp(140px, 14vw, 240px)",
-                    height: "auto",
-                  }}
-                />
-              </Link>
-              <button
+              <PartnersLink size={{ width: 240, height: 105 }} />
+              <SearchButton
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="flex-shrink-0 hover:opacity-70 transition-opacity"
-                aria-label="Поиск"
-              >
-                <Image
-                  src="/images/search-icon.svg"
-                  alt="Поиск"
-                  width={46}
-                  height={45}
-                  className="object-contain"
-                  style={{
-                    width: "clamp(32px, 3vw, 46px)",
-                    height: "auto",
-                  }}
-                />
-              </button>
+                size={{ width: 46, height: 45 }}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Мобильная и планшетная версия для экранов <1024px */}
-      <div className="block lg:hidden">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-[18px] sm:py-4 md:py-6">
-          <div className="flex items-center justify-between">
-            {/* Логотип и название */}
-            <Link
-              href="/"
-              className="flex items-center gap-2 sm:gap-3 md:gap-4"
-            >
-              <Image
-                src="/images/logo-392dd2.png"
-                alt="Патриот Центр 48"
-                width={49}
-                height={45}
-                className="object-contain sm:w-[60px] sm:h-[55px] md:w-[80px] md:h-[73px]"
-              />
-              <h1 className="text-sm sm:text-base md:text-xl font-normal font-montserrat text-black whitespace-nowrap">
-                Патриот Центр 48
-              </h1>
-            </Link>
+      {/* Версия для 1024px - упрощенный хедер с бургером */}
+      <div className="hidden lg:block xl:hidden">
+        <div className="w-full px-[60px] mx-auto" style={{ height: "158px" }}>
+          <div className="flex items-center justify-between h-full">
+            <Logo
+              logoSize={{ width: 98, height: 90 }}
+              fontSize="24px"
+              gap="20px"
+              lineHeight="32px"
+            />
 
-            {/* Бургер меню */}
-            <button
+            <div className="flex items-center gap-[41px]">
+              <PartnersLink size={{ width: 187, height: 82 }} />
+              <SearchButton
+                onClick={() => setSearchOpen(!searchOpen)}
+                size={{ width: 35, height: 34 }}
+              />
+              <BurgerButton
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                lineWidth={37}
+                lineHeight={4}
+                gap={11}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Версия для планшетов 768px */}
+      <div className="hidden md:block lg:hidden">
+        <div className="w-full px-[35px] mx-auto" style={{ height: "100px" }}>
+          <div className="flex items-center justify-between h-full">
+            <Logo
+              logoSize={{ width: 63, height: 58 }}
+              fontSize="20px"
+              gap="16px"
+              lineHeight="32px"
+            />
+
+            <div className="flex items-center gap-[43px]">
+              <SearchButton
+                onClick={() => setSearchOpen(!searchOpen)}
+                size={{ width: 32, height: 31 }}
+              />
+              <BurgerButton
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                lineWidth={37}
+                lineHeight={4}
+                gap={11}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Мобильная версия для экранов <768px */}
+      <div className="block md:hidden">
+        <div className="w-full px-[19px] mx-auto" style={{ height: "80px" }}>
+          <div className="flex items-center justify-between h-full">
+            <Logo
+              logoSize={{ width: 49, height: 45 }}
+              fontSize="14px"
+              gap="14px"
+              lineHeight="17px"
+            />
+            <BurgerButton
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-[27px] h-[16px] hover:opacity-70 transition-opacity flex items-center justify-center"
-              aria-label="Меню"
-            >
-              <div className="flex flex-col gap-[5px]">
-                <div className="w-[27px] h-[3px] rounded-[3px] bg-black"></div>
-                <div className="w-[27px] h-[3px] rounded-[3px] bg-black"></div>
-                <div className="w-[27px] h-[3px] rounded-[3px] bg-black"></div>
-              </div>
-            </button>
+              lineWidth={27}
+              lineHeight={3}
+              gap={8}
+            />
           </div>
         </div>
       </div>
@@ -330,7 +269,7 @@ export default function Header() {
       {/* Search Bar */}
       {searchOpen && (
         <div className="border-t border-gray-200">
-          <div className="w-full mx-auto px-4 sm:px-6 md:px-12 lg:px-[70px] py-4">
+          <div className="w-full mx-auto px-[19px] md:px-[35px] lg:px-[60px] xl:px-[70px] py-4">
             <input
               type="text"
               placeholder="Поиск..."
