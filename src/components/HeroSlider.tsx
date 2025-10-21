@@ -136,7 +136,7 @@ const TabletContent = ({ slide }: { slide: HeroSlide }) => {
 
 // Desktop Content Component
 const DesktopContent = ({ slide }: { slide: HeroSlide }) => (
-  <div className="hidden lg:flex flex-col justify-center h-full px-12 xl:px-[102px] py-[265px]">
+  <div className="hidden lg:flex flex-col justify-end h-full px-12 xl:px-[102px] pb-[124px] lg:pb-[81px]">
     {/* Title */}
     <h1 className="text-[64px] font-bold font-montserrat text-white leading-[1.22] mb-[19px]">
       {slide.title}
@@ -175,7 +175,7 @@ const swiperConfig = {
 
 export default function HeroSlider() {
   return (
-    <div className="w-full max-w-[1800px] mx-auto px-[19px] sm:px-6 lg:px-12 xl:px-[102px] mt-4 sm:mt-7 mb-8 sm:mb-12 lg:mb-[61px]">
+    <div className="w-full mx-auto px-[19px] sm:px-6 lg:px-[60px] mt-4 sm:mt-7 mb-8 sm:mb-12 lg:mb-[61px]">
       <section className="w-full mx-auto">
         {/* Swiper Container с обёрткой */}
         <div className="relative w-full">
