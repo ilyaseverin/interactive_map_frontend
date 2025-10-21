@@ -4,16 +4,68 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+type SubMenuItem = {
+  label: string;
+  href: string;
+};
+
+type MenuItem = {
+  label: string;
+  href: string;
+  subMenu?: SubMenuItem[];
+  twoColumns?: boolean; // Для меню с двумя колонками
+};
+
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  const menuItems = [
-    { label: "Новости", href: "/news" },
+  const menuItems: MenuItem[] = [
+    {
+      label: "Новости",
+      href: "/news",
+      subMenu: [
+        { label: "Главные", href: "/news?category=main" },
+        { label: "Региональные", href: "/news?category=regional" },
+      ],
+    },
     { label: "Карта", href: "/battle-glory" },
-    { label: "О центре", href: "/about" },
+    {
+      label: "О центре",
+      href: "/about",
+      twoColumns: true,
+      subMenu: [
+        { label: "Об учреждении", href: "/about/organization" },
+        { label: "Руководство", href: "/about/management" },
+        { label: "Команда", href: "/about/team" },
+        { label: "Партнеры", href: "/about/partners" },
+        { label: "Контакты", href: "/about/contacts" },
+        { label: "Фирменный стиль", href: "/about/brand" },
+        { label: "Антимонопольный комплекс", href: "/documents/antimonopoly" },
+        {
+          label: "Антикоррупционная деятельность",
+          href: "/documents/anticorruption",
+        },
+        {
+          label: "Противодействие терроризму",
+          href: "/documents/counterterrorism",
+        },
+        {
+          label: "Антинаркотическая кампания",
+          href: "/documents/antidrug",
+        },
+      ],
+    },
     { label: "Наши проекты", href: "/projects" },
-    { label: "Для СМИ", href: "/media" },
+    {
+      label: "Для СМИ",
+      href: "/media",
+      subMenu: [
+        { label: "Пресс-релизы", href: "/media/press-releases" },
+        { label: "Фотоальбомы", href: "/media/photo-albums" },
+      ],
+    },
     { label: "Контакты", href: "/contacts" },
     { label: "Документы", href: "/documents" },
   ];
@@ -68,25 +120,97 @@ export default function Header() {
             </div>
 
             {/* Центральная часть: Навигация с переносом */}
-            <nav
-              className="flex-1 flex justify-center min-w-0"
-              style={{
-                paddingLeft: "clamp(8px, 1vw, 24px)",
-                paddingRight: "clamp(8px, 1vw, 24px)",
-              }}
-            >
+            <nav className="flex-1 flex justify-center min-w-0">
               <ul
                 className="flex flex-wrap items-center justify-center gap-y-2"
                 style={{ columnGap: "clamp(10px, 1.5vw, 24px)" }}
               >
                 {menuItems.map((item) => (
-                  <li key={item.href}>
+                  <li
+                    key={item.href}
+                    className="relative"
+                    onMouseEnter={() =>
+                      item.subMenu && setActiveDropdown(item.label)
+                    }
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
                     <Link
                       href={item.href}
-                      className="text-[18px] font-normal font-montserrat text-black hover:text-gray-600 transition-colors leading-[28px] whitespace-nowrap"
+                      className={`text-[18px] font-normal font-montserrat leading-[32px] whitespace-nowrap block ${
+                        item.subMenu ? "px-[15px] py-[2px]" : ""
+                      } ${
+                        item.subMenu && activeDropdown === item.label
+                          ? "text-white rounded-t-[5px]"
+                          : "text-black hover:text-gray-600"
+                      }`}
+                      style={
+                        item.subMenu && activeDropdown === item.label
+                          ? { backgroundColor: "#1D4E89" }
+                          : {}
+                      }
                     >
                       {item.label}
                     </Link>
+
+                    {/* Всплывающее подменю */}
+                    {item.subMenu && activeDropdown === item.label && (
+                      <div
+                        className={`absolute top-full left-0 z-50 rounded-b-[5px] rounded-tr-[5px] ${
+                          item.twoColumns
+                            ? "grid grid-cols-2 gap-x-[30px] px-[15px] py-[19px]"
+                            : "px-[15px] py-[19px]"
+                        }`}
+                        style={{
+                          backgroundColor: "#1D4E89",
+                          minWidth: item.twoColumns ? "449px" : "217px",
+                        }}
+                      >
+                        {item.twoColumns ? (
+                          <>
+                            {/* Первая колонка (первые 6 элементов) */}
+                            <ul className="space-y-[16px]">
+                              {item.subMenu.slice(0, 6).map((subItem) => (
+                                <li key={subItem.href}>
+                                  <Link
+                                    href={subItem.href}
+                                    className="block font-montserrat font-normal text-[16px] leading-[20px] text-white hover:underline"
+                                  >
+                                    {subItem.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                            {/* Вторая колонка (элементы с 7 по 10) */}
+                            <ul className="space-y-[16px]">
+                              {item.subMenu.slice(6).map((subItem) => (
+                                <li key={subItem.href}>
+                                  <Link
+                                    href={subItem.href}
+                                    className="block font-montserrat font-normal text-[16px] leading-[20px] text-white hover:underline"
+                                  >
+                                    {subItem.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        ) : (
+                          /* Одна колонка для остальных пунктов */
+                          <ul className="space-y-[16px]">
+                            {item.subMenu.map((subItem) => (
+                              <li key={subItem.href}>
+                                <Link
+                                  href={subItem.href}
+                                  className="block font-montserrat font-normal text-[18px] leading-[22px] text-white hover:underline"
+                                >
+                                  {subItem.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
