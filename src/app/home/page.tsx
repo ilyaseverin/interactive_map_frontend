@@ -390,14 +390,14 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-[34px] sm:px-6 lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-[34px] md:px-[50px] lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
         {/* Section Title */}
         <h2 className="text-center text-lg sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-8 sm:mb-12 lg:mb-[72px]">
           Партнеры
         </h2>
 
         {/* Partners Grid */}
-        <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-x-[57px] lg:gap-y-[0px] max-w-[1836px] mx-auto justify-items-center">
+        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-[40px] lg:gap-x-[57px] lg:gap-y-[0px] max-w-[668px] md:max-w-none lg:max-w-[1836px] mx-auto justify-items-stretch">
           <PartnerCard
             title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
             image="/images/partners/partner-bg.png"
@@ -421,6 +421,16 @@ export default function HomePage() {
             websiteText="https://yunarmy.ru"
             vkUrl="https://vk.com/yunarmy_lipetsk"
             vkText="https://vk.com/yunarmy_lipetsk"
+          />
+          {/* 4-я карточка только для планшетов */}
+          <PartnerCard
+            title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
+            image="/images/partners/partner-bg.png"
+            websiteUrl="https://yunarmy.ru"
+            websiteText="https://yunarmy.ru"
+            vkUrl="https://vk.com/yunarmy_lipetsk"
+            vkText="https://vk.com/yunarmy_lipetsk"
+            className="hidden md:block lg:hidden"
           />
         </div>
       </section>
