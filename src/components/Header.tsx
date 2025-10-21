@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import MobileMenu from "./MobileMenu";
 
 type SubMenuItem = {
   label: string;
@@ -68,6 +69,31 @@ export default function Header() {
     },
     { label: "Контакты", href: "/contacts" },
     { label: "Документы", href: "/documents" },
+  ];
+
+  // Меню для мобильной версии - у "О центре" только первые 6 пунктов
+  const mobileMenuItems: MenuItem[] = menuItems.map((item) => {
+    if (item.label === "О центре" && item.subMenu) {
+      return {
+        ...item,
+        subMenu: item.subMenu.slice(0, 6), // Только первые 6 пунктов
+      };
+    }
+    return item;
+  });
+
+  // Дополнительные пункты для мобильной версии (вынесены из "О центре")
+  const mobileExtraItems = [
+    { label: "Антимонопольный комплекс", href: "/documents/antimonopoly" },
+    {
+      label: "Противодействие терроризму",
+      href: "/documents/counterterrorism",
+    },
+    { label: "Антинаркотическая кампания", href: "/documents/antidrug" },
+    {
+      label: "Антикоррупционная деятельность",
+      href: "/documents/anticorruption",
+    },
   ];
 
   return (
@@ -280,53 +306,26 @@ export default function Header() {
             {/* Бургер меню */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+              className="w-[27px] h-[16px] hover:opacity-70 transition-opacity flex items-center justify-center"
               aria-label="Меню"
             >
-              <svg
-                className="w-[27px] h-[16px] sm:w-6 sm:h-6"
-                fill="none"
-                stroke="#030303"
-                viewBox="0 0 27 16"
-                strokeWidth={3}
-              >
-                {mobileMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 3L24 13M3 13l21-10"
-                  />
-                ) : (
-                  <>
-                    <path strokeLinecap="round" d="M0 0h27" />
-                    <path strokeLinecap="round" d="M0 8h27" />
-                    <path strokeLinecap="round" d="M0 16h27" />
-                  </>
-                )}
-              </svg>
+              <div className="flex flex-col gap-[5px]">
+                <div className="w-[27px] h-[3px] rounded-[3px] bg-black"></div>
+                <div className="w-[27px] h-[3px] rounded-[3px] bg-black"></div>
+                <div className="w-[27px] h-[3px] rounded-[3px] bg-black"></div>
+              </div>
             </button>
           </div>
-
-          {/* Мобильное меню */}
-          {mobileMenuOpen && (
-            <nav className="mt-4 pb-4 border-t border-gray-200 pt-4">
-              <ul className="space-y-2">
-                {menuItems.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="block text-base font-normal font-montserrat text-black hover:text-gray-600 transition-colors py-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
         </div>
       </div>
+
+      {/* Мобильное меню - вынесено из контейнера для полной ширины */}
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        menuItems={mobileMenuItems}
+        mobileExtraItems={mobileExtraItems}
+      />
 
       {/* Search Bar */}
       {searchOpen && (
