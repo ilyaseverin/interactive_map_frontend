@@ -67,11 +67,8 @@ export default function Calendar({
     <div
       className={`relative w-full md:w-[650px] lg:w-[938px] 2xl:w-full lg:min-w-[650px] lg:max-w-[938px] flex-shrink-0 ${className}`}
     >
-      {/* Blue Shadow - только для планшета и десктопа */}
-      <div className="hidden md:block absolute left-[24px] top-[35px] md:w-[604px] md:h-[586px] lg:w-[567px] lg:h-[564px] bg-[#1D4E89] md:bg-[rgba(103,103,103,0.9)] lg:bg-[#1D4E89] rounded-[15px] blur-[84px] md:blur-[84px] lg:blur-[104px] opacity-100" />
-
       {/* Calendar Container */}
-      <div className="relative bg-white rounded-[15px] w-full min-h-[328px] md:h-[647px] lg:h-[647px] px-[10px] md:px-[45px] lg:px-[45px] py-[18px] md:py-[35px] lg:py-[35px] overflow-hidden">
+      <div className="relative bg-white rounded-[15px] w-full min-h-[328px] md:h-[647px] lg:h-[647px] px-[10px] md:px-[45px] lg:px-[45px] py-[18px] md:py-[35px] lg:py-[35px] overflow-hidden shadow-[0_3px_14px_0_rgba(0,0,0,0.08)]">
         {/* Month Header */}
         <div className="flex items-center justify-between mb-[15px] md:mb-[49px] lg:mb-[49px]">
           <button
