@@ -3,13 +3,14 @@ import { NewsItem } from "@/types/strapi";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import NewsDetailGallery from "@/components/NewsDetailGallery";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
-export const dynamic = "force-dynamic"; // Всегда рендерить на сервере
-export const revalidate = 0; // Никогда не кэшировать
-export const fetchCache = "force-no-store"; // Отключить fetch cache
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
-// Получить новость по slug (всегда без кэша)
+// Получить новость по slug
 async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
   const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
@@ -17,7 +18,7 @@ async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
     const res = await fetch(
       `${apiUrl}/api/news?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links]=*&populate[meta_info][populate][tags]=*`,
       {
-        cache: "no-store", // Всегда без кэша
+        cache: "no-store",
       }
     );
 
@@ -39,7 +40,7 @@ async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
   }
 }
 
-// 🎯 Динамические мета-теги из API Strapi
+// Генерация метаданных
 export async function generateMetadata({
   params,
 }: {
@@ -69,28 +70,22 @@ export async function generateMetadata({
       ?.filter((tag) => tag.value)
       .map((tag) => tag.value || "") || [];
 
-  // Создаем качественное описание для SEO (минимум 50 символов)
   let metaDescription = "";
 
   if (news.content_info?.excerpt) {
-    // Если есть excerpt
     if (news.content_info.excerpt.length >= 50) {
       metaDescription = news.content_info.excerpt;
     } else {
-      // Если excerpt короткий, добавляем заголовок
       metaDescription = `${news.title}. ${news.content_info.excerpt}`;
     }
   } else {
-    // Если нет excerpt, используем fallback
-    metaDescription = `${news.title}. Читайте последние новости и обновления на интерактивной карте России.`;
+    metaDescription = `${news.title}. Читайте последние новости Патриот Центра 48.`;
   }
 
-  // Гарантируем минимальную длину 50 символов
   if (metaDescription.length < 50) {
-    metaDescription = `${metaDescription} Актуальные новости интерактивной карты России.`;
+    metaDescription = `${metaDescription} Актуальные новости Патриот Центра 48.`;
   }
 
-  // Обрезаем описание до 160 символов (рекомендация Google)
   const truncatedDescription =
     metaDescription.length > 160
       ? metaDescription.substring(0, 157) + "..."
@@ -99,9 +94,7 @@ export async function generateMetadata({
   return {
     title: `${news.title} | Новости`,
     description: truncatedDescription,
-
     keywords: tags,
-
     openGraph: {
       title: news.title,
       description: truncatedDescription,
@@ -112,19 +105,16 @@ export async function generateMetadata({
       images: fullCoverUrl ? [fullCoverUrl] : undefined,
       tags: tags,
     },
-
     twitter: {
       card: "summary_large_image",
       title: news.title,
       description: truncatedDescription,
       images: fullCoverUrl ? [fullCoverUrl] : undefined,
     },
-
     robots: {
       index: true,
       follow: true,
     },
-
     alternates: {
       canonical: `/news/${slug}`,
     },
@@ -135,14 +125,68 @@ export async function generateMetadata({
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
     year: "numeric",
-    month: "long",
-    day: "numeric",
   });
 }
 
+// Компонент даты с иконкой
+function DateDisplay({ date }: { date: string }) {
+  return (
+    <div className="flex items-center gap-[8px]">
+      <div className="relative w-[26px] h-[26px]">
+        <Image
+          src="/images/calendar/calendar-icon.png"
+          alt="Calendar"
+          width={26}
+          height={26}
+          className="object-contain"
+        />
+      </div>
+      <span className="text-[20px] lg:text-[24px] font-normal font-montserrat text-black leading-[1.219]">
+        {formatDate(date)}
+      </span>
+    </div>
+  );
+}
+
+// Кнопка "Назад"
+function BackButton() {
+  return (
+    <Link
+      href="/news"
+      className="inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
+    >
+      <svg
+        width="33"
+        height="25"
+        viewBox="0 0 33 25"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="flex-shrink-0"
+      >
+        <path
+          d="M6 13L28 13"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M13 6L6 13L13 20"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      Назад
+    </Link>
+  );
+}
+
 // Серверный компонент страницы новости
-export default async function NewsItemPage({
+export default async function NewsDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -163,132 +207,109 @@ export default async function NewsItemPage({
         }${coverUrl}`
     : null;
 
+  // Галерея изображений
+  const galleryImages =
+    news.media?.gallery?.map((image) => {
+      const imageUrl = image.url.startsWith("http")
+        ? image.url
+        : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+            image.url
+          }`;
+      return {
+        url: imageUrl,
+        alt: image.alternativeText || news.title,
+      };
+    }) || [];
+
+  // Если нет галереи, используем обложку
+  const sliderImages =
+    galleryImages.length > 0
+      ? galleryImages
+      : fullCoverUrl
+      ? [{ url: fullCoverUrl, alt: news.title }]
+      : [];
+
+  // Видео ссылки
+  const videoLinks = news.media?.video_links || [];
+  const firstVideoUrl = videoLinks.length > 0 ? videoLinks[0].url : undefined;
+
+  // Разбиваем контент на параграфы
+  const contentParagraphs =
+    news.content_info?.content?.split("\n\n").filter((p) => p.trim()) || [];
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Заголовок */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link
-            href="/news"
-            className="inline-flex items-center text-blue-500 hover:text-blue-600 mb-4"
-          >
-            ← Назад к новостям
-          </Link>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <article className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Обложка */}
-          {fullCoverUrl && (
-            <div className="relative h-96 w-full">
-              <Image
-                src={fullCoverUrl}
-                alt={news.media?.cover?.alternativeText || news.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-          )}
+      <main className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[63px] pt-[20px] lg:pt-[29px]">
+        {/* Хлебные крошки */}
+        <nav className="flex items-center gap-[14px] mb-[54px] text-[20px] font-normal font-montserrat leading-[1.219] lg:pl-[13px]">
+          <Link href="/home" className="text-black hover:text-[#1D4E89]">
+            Главная
+          </Link>
+          <span className="text-black">&gt;</span>
+          <Link href="/news" className="text-black hover:text-[#1D4E89]">
+            Новости
+          </Link>
+          <span className="text-black">&gt;</span>
+          <span className="text-black truncate max-w-[300px] lg:max-w-none">
+            {news.title}
+          </span>
+        </nav>
 
-          {/* Контент новости */}
-          <div className="p-8">
-            {/* Категория и дата */}
-            <div className="flex items-center gap-4 mb-4">
-              {news.basic_info?.category && (
-                <span
-                  className={`px-3 py-1 text-sm font-semibold rounded-full ${
-                    news.basic_info.category === "Главные"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-blue-100 text-blue-800"
-                  }`}
-                >
-                  {news.basic_info.category}
-                </span>
-              )}
-              <time className="text-gray-500">
-                {formatDate(news.basic_info.published_at_date)}
-              </time>
-            </div>
-
+        {/* Белая карточка с новостью */}
+        <div className="bg-white/90 rounded-[15px] p-6 lg:p-[67px] mb-[83px]">
+          {/* Верхняя часть: кнопка назад (справа) и заголовок (слева) */}
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-[23px]">
             {/* Заголовок */}
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">
+            <h1 className="text-[32px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219] flex-1">
               {news.title}
             </h1>
 
-            {/* Анонс */}
-            {news.content_info?.excerpt && (
-              <p className="text-xl text-gray-600 mb-8 border-l-4 border-blue-500 pl-4">
-                {news.content_info.excerpt}
-              </p>
-            )}
-
-            {/* Основной контент */}
-            {news.content_info?.content && (
-              <div
-                className="prose max-w-none text-gray-800"
-                dangerouslySetInnerHTML={{
-                  __html: news.content_info.content,
-                }}
-              />
-            )}
-
-            {/* Теги */}
-            {news.meta_info?.tags && news.meta_info.tags.length > 0 && (
-              <div className="mt-8 pt-8 border-t border-gray-200">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">
-                  Теги:
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {news.meta_info.tags
-                    .filter((tag) => tag.value)
-                    .map((tag) => (
-                      <span
-                        key={tag.id}
-                        className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full"
-                      >
-                        #{tag.value}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            )}
-
-            {/* Галерея (если есть) */}
-            {news.media?.gallery && news.media.gallery.length > 0 && (
-              <div className="mt-8 pt-8 border-t border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Галерея
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {news.media.gallery.map((image) => {
-                    const imageUrl = image.url.startsWith("http")
-                      ? image.url
-                      : `${
-                          process.env.NEXT_PUBLIC_STRAPI_URL ||
-                          "http://localhost:1337"
-                        }${image.url}`;
-
-                    return (
-                      <div
-                        key={image.id}
-                        className="relative h-48 rounded-lg overflow-hidden"
-                      >
-                        <Image
-                          src={imageUrl}
-                          alt={image.alternativeText || ""}
-                          fill
-                          className="object-cover hover:scale-105 transition-transform"
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            {/* Кнопка назад (только на десктопе сверху справа) */}
+            <div className="hidden lg:block flex-shrink-0">
+              <BackButton />
+            </div>
           </div>
-        </article>
+
+          {/* Дата */}
+          <div className="mb-[28px]">
+            <DateDisplay date={news.basic_info.published_at_date} />
+          </div>
+
+          {/* Краткое описание */}
+          {news.content_info?.excerpt && (
+            <p className="text-[20px] lg:text-[24px] font-semibold font-montserrat text-black leading-[1.219] mb-[46px]">
+              {news.content_info.excerpt}
+            </p>
+          )}
+
+          {/* Галерея (с клиентским компонентом для слайдера) */}
+          <NewsDetailGallery
+            images={sliderImages}
+            hasPhotoAlbum={galleryImages.length > 0}
+            videoUrl={firstVideoUrl}
+          />
+
+          {/* Текст новости */}
+          {contentParagraphs.length > 0 && (
+            <div className="mb-[64px] space-y-[36px] lg:px-[20px] xl:px-[40px] 2xl:px-[96px]">
+              {contentParagraphs.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="text-[20px] lg:text-[24px] font-normal font-montserrat text-black leading-[1.458] whitespace-pre-line"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          )}
+
+          {/* Нижняя часть: кнопка назад и дата */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pt-[64px] border-t border-gray-200 lg:px-[20px] xl:px-[40px] 2xl:px-[96px]">
+            <BackButton />
+            <DateDisplay date={news.basic_info.published_at_date} />
+          </div>
+        </div>
       </main>
     </div>
   );
