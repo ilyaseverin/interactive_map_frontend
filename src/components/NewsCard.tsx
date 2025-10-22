@@ -23,7 +23,7 @@ export default function NewsCard({
       <div className="flex flex-col py-[22px] px-[19px] gap-[5px] md:hidden">
         {/* 1. Заголовок - fill width, max 2 lines */}
         <h3
-          className="text-[12px] font-bold font-montserrat text-black leading-[1.219]"
+          className="text-[12px] font-bold font-montserrat text-black leading-[1.219] uppercase"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,
@@ -96,7 +96,7 @@ export default function NewsCard({
 
         {/* Заголовок - адаптивное позиционирование и ширина */}
         <h3
-          className="absolute text-[17px] font-bold font-montserrat text-black leading-[1.219]"
+          className="absolute text-[17px] font-bold font-montserrat text-black leading-[1.219] uppercase"
           style={{
             left: "calc((100vw - 274px) * 0.0466)", // 23/493
             top: "calc((100vw - 274px) * 0.665)", // 328/493
@@ -155,7 +155,7 @@ export default function NewsCard({
 
         {/* Заголовок - адаптивная ширина */}
         <h3
-          className="absolute left-[48px] right-[84px] top-[379px] text-[clamp(16px,1.125vw,18px)] font-bold font-montserrat text-black leading-[1.556]"
+          className="absolute left-[48px] right-[84px] top-[379px] text-[clamp(16px,1.125vw,18px)] font-bold font-montserrat text-black leading-[1.556] uppercase"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,
