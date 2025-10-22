@@ -20,6 +20,9 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT || 22 }}
           script: |
+            set -e  # Остановка при любой ошибке
+            set -o pipefail  # Отлов ошибок в пайпах
+
             cd /opt/frontend
             # Настраиваем Git
             git config --global user.email "deploy@example.com"
@@ -32,7 +35,7 @@ jobs:
             # Используем токен в URL для аутентификации (отдельный репозиторий фронтенда)
             git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/ilyaseverin/interactive_map_frontend.git
             git pull origin main
-            docker-compose down
+            docker-compose down || true  # Игнорируем ошибку если контейнеры не запущены
             docker-compose build --no-cache
             docker-compose up -d
-            docker system prune -f
+            docker system prune -f || true  # Игнорируем ошибку если нечего чистить
