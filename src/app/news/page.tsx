@@ -2,7 +2,7 @@
 
 import { NewsListResponse } from "@/types/strapi";
 import Link from "next/link";
-import NewsCard from "@/components/NewsCard";
+import NewsCard from "@/components/cards/NewsCard";
 import { useEffect, useState } from "react";
 
 // Функция для получения новостей из Strapi

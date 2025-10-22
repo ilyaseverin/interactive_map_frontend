@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import BattleGloryMapWithData from "@/components/BattleGloryMapWithData";
+import BattleGloryMapWithData from "@/components/maps/BattleGloryMapWithData";
 import { BattleGloryFilterType } from "@/types/map";
 import { useSearchParams } from "next/navigation";
 

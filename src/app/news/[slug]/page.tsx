@@ -3,7 +3,7 @@ import { NewsItem } from "@/types/strapi";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import NewsDetailGallery from "@/components/NewsDetailGallery";
+import NewsDetailGallery from "@/components/media/NewsDetailGallery";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";

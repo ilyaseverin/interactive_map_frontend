@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import CalendarCard from "@/components/CalendarCard";
-import Calendar from "@/components/Calendar";
-import ProjectCard from "@/components/ProjectCard";
-import PartnerCard from "@/components/PartnerCard";
-import NewsCard from "@/components/NewsCard";
-import HeroSlider from "@/components/HeroSlider";
-import ContactForm from "@/components/ContactForm";
+import CalendarCard from "@/components/calendar/CalendarCard";
+import Calendar from "@/components/calendar/Calendar";
+import ProjectCard from "@/components/cards/ProjectCard";
+import PartnerCard from "@/components/cards/PartnerCard";
+import NewsCard from "@/components/cards/NewsCard";
+import HeroSlider from "@/components/media/HeroSlider";
+import ContactForm from "@/components/forms/ContactForm";
 
 export default function HomePage() {
   return (
