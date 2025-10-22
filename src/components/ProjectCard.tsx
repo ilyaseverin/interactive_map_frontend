@@ -78,7 +78,7 @@ export default function ProjectCard({
 
         {/* Title */}
         <h3
-          className={`text-[10px] md:text-[16px] lg:text-[18px] xl:text-[24px] font-semibold font-montserrat text-white leading-[1.3] mb-1 md:mb-2 lg:mb-3 xl:mb-4 ${
+          className={`text-[12px] md:text-[16px] lg:text-[18px] xl:text-[24px] font-semibold font-montserrat text-white leading-[1.3] mb-1 md:mb-2 lg:mb-3 xl:mb-4 ${
             size === "large" ? "uppercase" : ""
           }`}
           style={{
