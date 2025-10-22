@@ -37,7 +37,7 @@ export default function PartnerCard({
       {/* Rectangle 159 - White Card (Bottom Part) */}
       <div className="relative bg-white rounded-b-[9px] md:rounded-b-[15px] lg:rounded-b-[15px] w-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)]">
         {/* Title Text - точные координаты из Figma */}
-        <h3 className="absolute left-[19px] top-[9px] md:left-[30px] md:top-[30px] lg:left-[59px] lg:top-[42px] w-[210px] md:w-[254px] lg:w-[calc(100%-118px)] text-[10px] md:text-[18px] lg:text-[18px] font-bold font-montserrat text-black leading-[1.219] md:leading-[1.556] lg:leading-[1.556] line-clamp-3 md:line-clamp-5 lg:line-clamp-3">
+        <h3 className="absolute left-[19px] top-[9px] md:left-[30px] md:top-[30px] lg:left-[59px] lg:top-[42px] w-[calc(100%-28px)] md:w-[254px] lg:w-[calc(100%-118px)] text-[12px] md:text-[18px] lg:text-[18px] font-bold font-montserrat text-black leading-[1.219] md:leading-[1.556] lg:leading-[1.556] line-clamp-3 md:line-clamp-5 lg:line-clamp-3">
           {title}
         </h3>
 
@@ -46,7 +46,7 @@ export default function PartnerCard({
           href={websiteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute left-[19px] top-[66px] md:left-[30px] md:top-[256px] lg:left-[59px] lg:top-[148px] flex items-center gap-[7px] md:gap-[14px] lg:gap-4 group w-[calc(100%-38px)] md:w-[246px] lg:w-[calc(100%-118px)]"
+          className="absolute left-[19px] top-[66px] md:left-[30px] md:top-[256px] lg:left-[59px] lg:top-[148px] flex items-center gap-[5px] md:gap-[14px] lg:gap-4 group w-[calc(100%-24px)] md:w-[246px] lg:w-[calc(100%-118px)]"
         >
           {/* Icon */}
           <div className="w-[23px] h-[23px] md:w-[44px] md:h-[44px] lg:w-[53px] lg:h-[53px] relative flex-shrink-0">
@@ -59,7 +59,7 @@ export default function PartnerCard({
           </div>
 
           {/* Text */}
-          <span className="text-[8px] md:text-[17px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
+          <span className="text-[10px] w-full md:text-[17px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
             {websiteText}
           </span>
         </a>
@@ -69,7 +69,7 @@ export default function PartnerCard({
           href={vkUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute left-[19px] top-[92px] md:left-[30px] md:top-[202px] lg:left-[59px] lg:top-[211px] flex items-center gap-[5px] md:gap-[18px] lg:gap-[11px] group w-[calc(100%-38px)] md:w-[246px] lg:w-[calc(100%-118px)]"
+          className="absolute left-[19px] top-[92px] md:left-[30px] md:top-[202px] lg:left-[59px] lg:top-[211px] flex items-center gap-[4px] md:gap-[18px] lg:gap-[11px] group w-[calc(100%-24px)] md:w-[246px] lg:w-[calc(100%-118px)]"
         >
           {/* Icon */}
           <div className="w-[25px] h-[25px] md:w-[43px] md:h-[43px] lg:w-[58px] lg:h-[58px] relative flex-shrink-0">
@@ -82,7 +82,7 @@ export default function PartnerCard({
           </div>
 
           {/* Text */}
-          <span className="text-[8px] md:text-[20px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
+          <span className="text-[10px] md:text-[20px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
             {vkText}
           </span>
         </a>

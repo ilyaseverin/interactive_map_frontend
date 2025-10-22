@@ -104,63 +104,6 @@ const BackgroundImage = ({ src, alt, gradient }: BackgroundImageProps) => (
   </div>
 );
 
-interface CardIconProps {
-  src: string;
-  alt: string;
-  position?: { left: number; top: number };
-}
-
-const CardIcon = ({ src, alt, position }: CardIconProps) => {
-  if (position) {
-    return (
-      <>
-        {/* Mobile positioned icon - без фона */}
-        <div
-          className="absolute md:hidden w-[37px] h-[43px] bg-transparent"
-          style={{ left: "20px", top: "5px" }}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            width={37}
-            height={43}
-            className="w-full h-full object-contain bg-transparent"
-            style={{ background: "transparent" }}
-          />
-        </div>
-        {/* Tablet/Desktop positioned icon - для События дня */}
-        <div
-          className="hidden md:block absolute w-[48px] h-[50px] lg:w-[50px] lg:h-[50px]"
-          style={{
-            left: position.left ? `${position.left - 2}px` : "18px",
-            top: position.top ? `${position.top - 10}px` : "19px",
-          }}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            width={50}
-            height={50}
-            className="w-full h-full object-contain"
-          />
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <div className="w-[37px] h-[43px] md:w-[47px] md:h-[50px] lg:w-[50px] lg:h-[50px] mb-0 flex-shrink-0 bg-transparent">
-      <Image
-        src={src}
-        alt={alt}
-        width={50}
-        height={50}
-        className="w-full h-full object-contain"
-      />
-    </div>
-  );
-};
-
 interface CardTextProps {
   text: string;
   config: CardConfig;
@@ -208,17 +151,21 @@ export default function CalendarCard({
       return (
         <>
           {/* Mobile - только иконка + название */}
-          <div className="md:hidden relative z-10 h-full">
+          <div className="md:hidden relative z-10 h-full flex items-center">
             {icon && (
-              <CardIcon
-                src={icon}
-                alt={title}
-                position={{ left: 20, top: 5 }}
-              />
+              <div className="absolute left-[20px] w-[37px] h-[43px]">
+                <Image
+                  src={icon}
+                  alt={title}
+                  width={37}
+                  height={43}
+                  className="w-full h-full object-contain"
+                />
+              </div>
             )}
             {title && (
-              <div className="absolute left-[52px] top-[17px] w-[174px] flex items-center justify-center">
-                <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667]">
+              <div className="w-full flex items-center justify-center">
+                <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667] text-center">
                   {title}
                 </p>
               </div>
@@ -252,13 +199,21 @@ export default function CalendarCard({
     return (
       <>
         {/* Mobile layout - только название блока без фона и без description */}
-        <div className="md:hidden relative z-10 h-full">
+        <div className="md:hidden relative z-10 h-full flex items-center">
           {icon && (
-            <CardIcon src={icon} alt={title} position={{ left: 20, top: 5 }} />
+            <div className="absolute left-[20px] w-[37px] h-[43px]">
+              <Image
+                src={icon}
+                alt={title}
+                width={37}
+                height={43}
+                className="w-full h-full object-contain"
+              />
+            </div>
           )}
           {title && (
-            <div className="absolute left-[52px] top-[17px] w-[174px] flex items-center justify-center">
-              <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667]">
+            <div className="w-full flex items-center justify-center">
+              <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667] text-center">
                 {title}
               </p>
             </div>
