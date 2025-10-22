@@ -17,8 +17,6 @@ interface CalendarCardProps {
 }
 
 interface CardConfig {
-  shadowPosition: { left: number; top: number };
-  hasSecondaryBlur?: boolean;
   iconPosition?: { left: number; top: number };
   contentPadding?: boolean;
   textColor: "white" | "black";
@@ -56,28 +54,15 @@ const getCardDimensions = (type: CardType) => {
   }
 };
 
-const SHADOW_DIMENSIONS = {
-  mobile: {
-    width: "w-[222px]",
-    height: "h-[28px]",
-  },
-  desktop: {
-    width: "w-[359px]",
-    height: "h-[197px]",
-  },
-} as const;
-
 // Конфигурация для каждого типа карточки
 const CARD_CONFIGS: Record<CardType, CardConfig> = {
   event: {
-    shadowPosition: { left: 38, top: 61 },
     iconPosition: { left: 40, top: 29 },
     textColor: "white",
     lineHeight: 1.364,
     fontWeight: "normal",
   },
   movie: {
-    shadowPosition: { left: 36, top: 60 },
     iconPosition: { left: 40, top: 29 },
     contentPadding: true,
     textColor: "white",
@@ -85,18 +70,14 @@ const CARD_CONFIGS: Record<CardType, CardConfig> = {
     fontWeight: "normal",
   },
   person: {
-    shadowPosition: { left: 58, top: 61 },
     iconPosition: { left: 40, top: 29 },
-    hasSecondaryBlur: true,
     contentPadding: true,
     textColor: "black",
     lineHeight: 1.35,
     fontWeight: "normal",
   },
   theme: {
-    shadowPosition: { left: 58, top: 61 },
     iconPosition: { left: 40, top: 29 },
-    hasSecondaryBlur: true,
     contentPadding: true,
     textColor: "black",
     lineHeight: 1.364,
@@ -107,29 +88,6 @@ const CARD_CONFIGS: Record<CardType, CardConfig> = {
 // ============================================================================
 // HELPER COMPONENTS
 // ============================================================================
-
-interface BlueShadowProps {
-  position: { left: number; top: number };
-}
-
-const BlueShadow = ({ position }: BlueShadowProps) => (
-  <>
-    {/* Tablet shadow - серый */}
-    <div
-      className={`hidden md:block lg:hidden absolute w-[257px] h-[205px] bg-[rgba(138,138,138,0.9)] blur-[84px]`}
-      style={{ left: `${position.left + 12}px`, top: `${position.top}px` }}
-    />
-    {/* Desktop shadow - синий */}
-    <div
-      className={`hidden lg:block absolute ${SHADOW_DIMENSIONS.desktop.width} ${SHADOW_DIMENSIONS.desktop.height} bg-[rgba(33,66,95,0.3)] blur-[84px]`}
-      style={{ left: `${position.left}px`, top: `${position.top}px` }}
-    />
-  </>
-);
-
-const SecondaryBlur = () => (
-  <div className="hidden lg:block absolute left-[40px] top-[28px] w-[374px] h-[253px] bg-[rgba(29,78,137,0.6)] blur-[74px] rounded-[15px]" />
-);
 
 interface BackgroundImageProps {
   src: string;
@@ -345,10 +303,6 @@ export default function CalendarCard({
     <div
       className={`relative group cursor-pointer ${cardDimensions.width} ${cardDimensions.height}`}
     >
-      {/* Тени */}
-      <BlueShadow position={config.shadowPosition} />
-      {config.hasSecondaryBlur && <SecondaryBlur />}
-
       {/* Контейнер карточки */}
       <div
         className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform group-hover:scale-[1.02]`}

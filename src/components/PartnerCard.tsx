@@ -23,21 +23,8 @@ export default function PartnerCard({
     <article
       className={`relative w-full md:w-full lg:max-w-[574px] mx-auto ${className}`}
     >
-      {/* Rectangle 157 - Blur Background - только для desktop */}
-      <div
-        className="hidden lg:block absolute bg-[#1D4E89] rounded-[15px]"
-        style={{
-          left: "22px",
-          top: "39px",
-          width: "525px",
-          height: "626px",
-          filter: "blur(75px)",
-          zIndex: 0,
-        }}
-      />
-
       {/* Rectangle 158 - Image (Top Part) - адаптивная высота */}
-      <div className="relative rounded-t-[15px] overflow-hidden w-full aspect-[251/168] md:aspect-[314/248] lg:aspect-[574/384] z-20 shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] lg:shadow-none">
+      <div className="relative rounded-t-[15px] overflow-hidden w-full aspect-[251/168] md:aspect-[314/248] lg:aspect-[574/384] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)]">
         <Image
           src={image}
           alt={title}
@@ -48,7 +35,7 @@ export default function PartnerCard({
       </div>
 
       {/* Rectangle 159 - White Card (Bottom Part) */}
-      <div className="relative bg-white rounded-b-[9px] md:rounded-b-[15px] lg:rounded-b-[15px] w-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] z-10">
+      <div className="relative bg-white rounded-b-[9px] md:rounded-b-[15px] lg:rounded-b-[15px] w-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)]">
         {/* Title Text - точные координаты из Figma */}
         <h3 className="absolute left-[19px] top-[9px] md:left-[30px] md:top-[30px] lg:left-[59px] lg:top-[42px] w-[210px] md:w-[254px] lg:w-[calc(100%-118px)] text-[10px] md:text-[18px] lg:text-[18px] font-bold font-montserrat text-black leading-[1.219] md:leading-[1.556] lg:leading-[1.556] line-clamp-3 md:line-clamp-5 lg:line-clamp-3">
           {title}
