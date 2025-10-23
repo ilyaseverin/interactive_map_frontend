@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function OrganizationPage() {
   return (
-    <div className="w-full">
+    <div className="w-full px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
       {/* Center Photo */}
       <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[666px] mb-[50px] sm:mb-[75px] lg:mb-[100px] rounded-[10px] sm:rounded-[15px] overflow-hidden shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
         <Image

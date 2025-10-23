@@ -44,10 +44,10 @@ export default function AboutLayout({
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] font-montserrat leading-[1.2] sm:leading-[1.3] lg:leading-[29px] ${
+              className={`font-montserrat leading-[1.2] sm:leading-[1.3] lg:leading-[29px] ${
                 pathname === item.href
-                  ? "font-bold text-black"
-                  : "font-medium text-black hover:text-gray-600"
+                  ? "text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] xl:text-[40px] font-bold text-black"
+                  : "text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-medium text-black hover:text-gray-600"
               }`}
             >
               {item.label}
@@ -57,9 +57,7 @@ export default function AboutLayout({
       </div>
 
       {/* Page Content */}
-      <div className="w-full px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
-        {children}
-      </div>
+      <div className="w-full">{children}</div>
     </div>
   );
 }
