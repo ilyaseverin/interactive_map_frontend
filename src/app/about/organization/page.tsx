@@ -9,10 +9,10 @@ export default function OrganizationPage() {
       {/* Center Photo */}
       <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[666px] mb-[50px] sm:mb-[75px] lg:mb-[100px] rounded-[10px] sm:rounded-[15px] overflow-hidden shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
         <Image
-          src="/images/hero-bg.png"
+          src="/images/center-photo.png"
           alt="Центр подготовки граждан РФ к военной службе"
-          width={1764}
-          height={666}
+          width={870}
+          height={580}
           className="w-full h-full object-cover"
         />
       </div>
