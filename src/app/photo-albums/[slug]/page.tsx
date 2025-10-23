@@ -1,0 +1,163 @@
+"use client";
+
+import { NewsItem } from "@/types/strapi";
+import Link from "next/link";
+import PhotoCard from "@/components/cards/PhotoCard";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+
+// Функция для получения новости с галереей из Strapi
+async function getPhotoAlbum(slug: string): Promise<NewsItem | null> {
+  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
+  try {
+    const res = await fetch(
+      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&populate[basic_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.error("Failed to fetch photo album:", res.status, res.statusText);
+      return null;
+    }
+
+    const response = await res.json();
+    return response.data[0] || null;
+  } catch (error) {
+    console.error("Error fetching photo album:", error);
+    return null;
+  }
+}
+
+export default function PhotoAlbumDetailPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
+
+  const [album, setAlbum] = useState<NewsItem | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (slug) {
+      setIsLoading(true);
+      getPhotoAlbum(slug).then((data) => {
+        setAlbum(data);
+        setIsLoading(false);
+      });
+    }
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F1F2F3] flex justify-center items-center">
+        <div className="text-xl text-gray-600">Загрузка...</div>
+      </div>
+    );
+  }
+
+  if (!album) {
+    return (
+      <div className="min-h-screen bg-[#F1F2F3] flex justify-center items-center">
+        <div className="text-xl text-gray-600">Фотоальбом не найден</div>
+      </div>
+    );
+  }
+
+  // Получаем все фотографии из галереи
+  const photos = album.media?.gallery || [];
+
+  return (
+    <div className="min-h-screen bg-[#F1F2F3]">
+      {/* Основной контент */}
+      <main className="w-full max-w-[1920px] mx-auto pt-[37px] lg:pt-[39px]">
+        {/* Хлебные крошки */}
+        <nav className="px-4 sm:px-6 lg:px-[76px] flex items-center gap-[14px] mb-[37px] lg:mb-[37px] text-[20px] font-normal font-montserrat leading-[1.219]">
+          <Link href="/home" className="text-black hover:text-[#1D4E89]">
+            Главная
+          </Link>
+          <span className="text-black">&gt;</span>
+          <Link href="/news" className="text-black hover:text-[#1D4E89]">
+            Новости
+          </Link>
+          <span className="text-black">&gt;</span>
+          <Link
+            href="/photo-albums"
+            className="text-black hover:text-[#1D4E89]"
+          >
+            Фотоальбомы
+          </Link>
+          <span className="text-black">&gt;</span>
+          <span className="text-black">{album.title}</span>
+        </nav>
+
+        {/* Заголовок и Кнопка Назад */}
+        <div className="px-4 sm:px-6 lg:px-[80px] flex flex-col lg:flex-row lg:items-start lg:justify-between mb-[68px] lg:mb-[68px]">
+          {/* Заголовок */}
+          <h1 className="text-[40px] font-bold font-montserrat text-black leading-[1.219] mb-4 lg:mb-0 max-w-[1103px]">
+            {album.title}
+          </h1>
+
+          {/* Кнопка Назад */}
+          <Link
+            href="/photo-albums"
+            className="inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] self-start lg:self-auto"
+          >
+            <svg
+              width="29"
+              height="17"
+              viewBox="0 0 29 17"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="rotate-180"
+            >
+              <path
+                d="M2 9L27 9"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <path
+                d="M20 2L27 9L20 16"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Назад
+          </Link>
+        </div>
+
+        {/* Блок фотографий */}
+        {photos.length === 0 ? (
+          <div className="px-4 sm:px-6 lg:px-[102px] flex justify-center items-center py-20">
+            <div className="text-xl text-gray-600">
+              В этом альбоме пока нет фотографий
+            </div>
+          </div>
+        ) : (
+          <div className="px-4 sm:px-6 lg:px-[102px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] gap-y-[39px] mb-[150px] lg:mb-[150px]">
+            {Array.from({ length: Math.max(18, photos.length) }).map((_, i) => {
+              const photo = photos[i % photos.length];
+              const photoUrl = photo.url.startsWith("http")
+                ? photo.url
+                : `${
+                    process.env.NEXT_PUBLIC_STRAPI_URL ||
+                    "http://localhost:1337"
+                  }${photo.url}`;
+
+              return (
+                <PhotoCard
+                  key={`${photo.id}-${i}`}
+                  image={photoUrl}
+                  alt={photo.alternativeText || `Фото ${i + 1}`}
+                />
+              );
+            })}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

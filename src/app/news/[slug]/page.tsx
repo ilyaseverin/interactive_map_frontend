@@ -288,6 +288,7 @@ export default async function NewsDetailPage({
             images={sliderImages}
             hasPhotoAlbum={galleryImages.length > 0}
             videoUrl={firstVideoUrl}
+            newsSlug={news.slug}
           />
 
           {/* Текст новости */}

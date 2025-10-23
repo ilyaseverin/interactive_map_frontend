@@ -19,6 +19,7 @@ interface NewsDetailGalleryProps {
   images: GalleryImage[];
   hasPhotoAlbum: boolean;
   videoUrl?: string;
+  newsSlug?: string;
 }
 
 // Swiper Configuration - скопировано из HeroSlider
@@ -41,6 +42,7 @@ export default function NewsDetailGallery({
   images,
   hasPhotoAlbum,
   videoUrl,
+  newsSlug,
 }: NewsDetailGalleryProps) {
   if (images.length === 0) return null;
 
@@ -74,9 +76,9 @@ export default function NewsDetailGallery({
       {/* Кнопки для фотоальбома и видео */}
       {(hasPhotoAlbum || videoUrl) && (
         <div className="flex flex-col sm:flex-row gap-[15px] mt-[32px] justify-end">
-          {hasPhotoAlbum && (
+          {hasPhotoAlbum && newsSlug && (
             <Link
-              href="#gallery"
+              href={`/photo-albums/${newsSlug}`}
               className="inline-flex items-center justify-center px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
             >
               К фотоальбому
