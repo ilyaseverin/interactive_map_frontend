@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function OrganizationPage() {
   return (
-    <div className="w-full px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
+    <div className="w-full max-w-[1920px] mx-auto px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
       {/* Center Photo */}
       <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[666px] mb-[50px] sm:mb-[75px] lg:mb-[100px] rounded-[10px] sm:rounded-[15px] overflow-hidden shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
         <Image
@@ -20,7 +20,7 @@ export default function OrganizationPage() {
       {/* Content Blocks */}
       <div className="space-y-[30px] sm:space-y-[40px] lg:space-y-[50px]">
         {/* Introduction Text */}
-        <div className="space-y-[20px] sm:space-y-[30px] lg:space-y-[40px]">
+        <div className="space-y-[20px] sm:space-y-[30px] lg:space-y-[40px] ml-[30px] sm:ml-[40px] lg:ml-[54px]">
           <p className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.4] sm:leading-[1.5] lg:leading-[35px] text-black">
             Областное бюджетное учреждение «Региональный центр подготовки
             граждан РФ к военной службе и военно-патриотического воспитания

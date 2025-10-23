@@ -85,7 +85,7 @@ export default function TeamPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
+      <div className="w-full max-w-[1920px] mx-auto px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
         <div className="mt-[60px] sm:mt-[80px] md:mt-[100px] lg:mt-[112px] mb-[100px] sm:mb-[120px] md:mb-[150px] lg:mb-[194px] flex justify-center items-center py-20">
           <div className="text-xl text-gray-600">Загрузка...</div>
         </div>
@@ -94,7 +94,7 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="w-full px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
+    <div className="w-full max-w-[1920px] mx-auto px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
       {/* Team Cards - точно как в макете */}
       <div className="mt-[60px] sm:mt-[80px] md:mt-[100px] lg:mt-[112px] mb-[100px] sm:mb-[120px] md:mb-[150px] lg:mb-[194px] space-y-[40px] sm:space-y-[50px] md:space-y-[60px] lg:space-y-[65px]">
         {teamData.length === 0 ? (
