@@ -3,6 +3,7 @@
 import { NewsItem } from "@/types/strapi";
 import Link from "next/link";
 import PhotoCard from "@/components/cards/PhotoCard";
+import PhotoModal from "@/components/modals/PhotoModal";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
@@ -37,6 +38,14 @@ export default function PhotoAlbumDetailPage() {
 
   const [album, setAlbum] = useState<NewsItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedPhoto, setSelectedPhoto] = useState<{
+    url: string;
+    alt: string;
+    title: string;
+    date?: string;
+    imageName?: string;
+  } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -66,6 +75,37 @@ export default function PhotoAlbumDetailPage() {
 
   // Получаем все фотографии из галереи
   const photos = album.media?.gallery || [];
+
+  // Функция для открытия попапа с фото
+  const handlePhotoClick = (
+    photo: { url: string; alternativeText?: string | null; name?: string },
+    index: number
+  ) => {
+    const photoUrl = photo.url.startsWith("http")
+      ? photo.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+          photo.url
+        }`;
+
+    setSelectedPhoto({
+      url: photoUrl,
+      alt: photo.alternativeText || `Фото ${index + 1}`,
+      title: album.title,
+      date: album.basic_info?.published_at_date
+        ? new Date(album.basic_info.published_at_date).toLocaleDateString(
+            "ru-RU"
+          )
+        : undefined,
+      imageName: photo.name || `${album.title}_${index + 1}.jpg`,
+    });
+    setIsModalOpen(true);
+  };
+
+  // Функция для закрытия попапа
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPhoto(null);
+  };
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
@@ -148,16 +188,34 @@ export default function PhotoAlbumDetailPage() {
                   }${photo.url}`;
 
               return (
-                <PhotoCard
+                <div
                   key={`${photo.id}-${i}`}
-                  image={photoUrl}
-                  alt={photo.alternativeText || `Фото ${i + 1}`}
-                />
+                  onClick={() => handlePhotoClick(photo, i)}
+                  className="cursor-pointer hover:opacity-90 transition-opacity"
+                >
+                  <PhotoCard
+                    image={photoUrl}
+                    alt={photo.alternativeText || `Фото ${i + 1}`}
+                  />
+                </div>
               );
             })}
           </div>
         )}
       </main>
+
+      {/* Попап для просмотра фото */}
+      {selectedPhoto && (
+        <PhotoModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          imageUrl={selectedPhoto.url}
+          title={selectedPhoto.title}
+          date={selectedPhoto.date}
+          alt={selectedPhoto.alt}
+          imageName={selectedPhoto.imageName}
+        />
+      )}
     </div>
   );
 }
