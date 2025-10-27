@@ -140,3 +140,46 @@ export interface BattleGloryResponse {
     };
   };
 }
+
+// Типы для пресс-релизов
+export interface PressReleaseBasicInfo {
+  id: number;
+  published_at_date: string;
+  author?: string;
+  category?: string;
+}
+
+export interface PressReleaseContentInfo {
+  id: number;
+  excerpt?: string;
+  content?: string;
+}
+
+export interface PressReleaseMedia {
+  id: number;
+  cover?: StrapiImage | null;
+  gallery?: StrapiImage[];
+}
+
+export interface PressReleaseMeta {
+  id: number;
+  keywords?: { id: number; value?: string | null }[];
+}
+
+export interface PressReleaseItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  basic_info: PressReleaseBasicInfo;
+  content_info?: PressReleaseContentInfo;
+  media?: PressReleaseMedia;
+  attachments_block?: { id: number; attachments?: unknown[] };
+  meta_info?: PressReleaseMeta;
+}
+
+export type PressReleaseListResponse = StrapiResponse<PressReleaseItem[]>;
+export type PressReleaseItemResponse = StrapiResponse<PressReleaseItem>;

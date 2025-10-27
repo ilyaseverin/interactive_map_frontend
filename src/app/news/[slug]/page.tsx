@@ -3,7 +3,7 @@ import { NewsItem } from "@/types/strapi";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import NewsDetailGallery from "@/components/media/NewsDetailGallery";
+import MediaGallery from "@/components/media/MediaGallery";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -284,11 +284,11 @@ export default async function NewsDetailPage({
           )}
 
           {/* Галерея (с клиентским компонентом для слайдера) */}
-          <NewsDetailGallery
+          <MediaGallery
             images={sliderImages}
             hasPhotoAlbum={galleryImages.length > 0}
             videoUrl={firstVideoUrl}
-            newsSlug={news.slug}
+            slug={news.slug}
           />
 
           {/* Текст новости */}

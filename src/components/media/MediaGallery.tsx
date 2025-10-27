@@ -15,11 +15,11 @@ interface GalleryImage {
   alt: string;
 }
 
-interface NewsDetailGalleryProps {
+interface MediaGalleryProps {
   images: GalleryImage[];
   hasPhotoAlbum: boolean;
   videoUrl?: string;
-  newsSlug?: string;
+  slug?: string;
 }
 
 // Swiper Configuration - скопировано из HeroSlider
@@ -29,7 +29,7 @@ const swiperConfig = {
   fadeEffect: { crossFade: true },
   pagination: {
     clickable: true,
-    el: ".news-detail-pagination",
+    el: ".media-detail-pagination",
   },
   autoplay: {
     delay: 5000,
@@ -38,12 +38,12 @@ const swiperConfig = {
   loop: true,
 };
 
-export default function NewsDetailGallery({
+export default function MediaGallery({
   images,
   hasPhotoAlbum,
   videoUrl,
-  newsSlug,
-}: NewsDetailGalleryProps) {
+  slug,
+}: MediaGalleryProps) {
   if (images.length === 0) return null;
 
   return (
@@ -52,7 +52,7 @@ export default function NewsDetailGallery({
       <div className="relative w-full">
         <Swiper
           {...swiperConfig}
-          className="news-detail-swiper w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9] rounded-[15px] shadow-[0px_5px_12px_0px_rgba(0,0,0,0.25)]"
+          className="media-detail-swiper w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9] rounded-[15px] shadow-[0px_5px_12px_0px_rgba(0,0,0,0.25)]"
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
@@ -70,15 +70,15 @@ export default function NewsDetailGallery({
         </Swiper>
 
         {/* Pagination Dots - внутри relative контейнера для absolute позиционирования на mobile/tablet */}
-        <div className="news-detail-pagination"></div>
+        <div className="media-detail-pagination"></div>
       </div>
 
       {/* Кнопки для фотоальбома и видео */}
       {(hasPhotoAlbum || videoUrl) && (
         <div className="flex flex-col sm:flex-row gap-[15px] mt-[32px] justify-end">
-          {hasPhotoAlbum && newsSlug && (
+          {hasPhotoAlbum && slug && (
             <Link
-              href={`/photo-albums/${newsSlug}`}
+              href={`/photo-albums/${slug}`}
               className="inline-flex items-center justify-center px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
             >
               К фотоальбому
@@ -100,7 +100,7 @@ export default function NewsDetailGallery({
       {/* Custom Pagination Styles - скопировано из HeroSlider */}
       <style jsx global>{`
         /* Mobile pagination - centered inside slider */
-        .news-detail-pagination {
+        .media-detail-pagination {
           position: absolute !important;
           left: 50% !important;
           bottom: 28px !important;
@@ -113,7 +113,7 @@ export default function NewsDetailGallery({
         }
 
         /* Pagination bullet styles */
-        .news-detail-pagination .swiper-pagination-bullet {
+        .media-detail-pagination .swiper-pagination-bullet {
           width: 10px !important;
           height: 10.66px !important;
           border-radius: 50%;
@@ -125,21 +125,21 @@ export default function NewsDetailGallery({
           flex-shrink: 0;
         }
 
-        .news-detail-pagination .swiper-pagination-bullet:hover {
+        .media-detail-pagination .swiper-pagination-bullet:hover {
           background: #b0b0b0;
         }
 
-        .news-detail-pagination .swiper-pagination-bullet-active {
+        .media-detail-pagination .swiper-pagination-bullet-active {
           background: #3b76aa;
         }
 
-        .news-detail-pagination .swiper-pagination-bullet-active:hover {
+        .media-detail-pagination .swiper-pagination-bullet-active:hover {
           background: #2c5f8a;
         }
 
         /* Tablet pagination - centered inside slider */
         @media (min-width: 768px) and (max-width: 1023px) {
-          .news-detail-pagination {
+          .media-detail-pagination {
             position: absolute !important;
             left: 50% !important;
             bottom: 40px !important;
@@ -148,7 +148,7 @@ export default function NewsDetailGallery({
             justify-content: center !important;
           }
 
-          .news-detail-pagination .swiper-pagination-bullet {
+          .media-detail-pagination .swiper-pagination-bullet {
             width: 20px !important;
             height: 20px !important;
           }
@@ -156,7 +156,7 @@ export default function NewsDetailGallery({
 
         /* Desktop pagination - below slider */
         @media (min-width: 1024px) {
-          .news-detail-pagination {
+          .media-detail-pagination {
             position: static !important;
             left: auto !important;
             bottom: auto !important;
@@ -166,7 +166,7 @@ export default function NewsDetailGallery({
             justify-content: center !important;
           }
 
-          .news-detail-pagination .swiper-pagination-bullet {
+          .media-detail-pagination .swiper-pagination-bullet {
             width: 20px !important;
             height: 20px !important;
           }
