@@ -18,7 +18,7 @@ export default function NewsCard({
   href,
 }: NewsCardProps) {
   return (
-    <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full md:w-[calc(100vw-274px)] lg:w-full xl:max-w-[574px] mx-auto relative md:min-h-[calc((100vw-274px)*1.215)] lg:min-h-[698px]">
+    <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full mx-auto relative md:min-h-[500px] lg:min-h-[698px]">
       {/* Mobile Layout - Column with gap */}
       <div className="flex flex-col py-[22px] px-[19px] gap-[5px] md:hidden">
         {/* 1. Заголовок - fill width, max 2 lines */}
@@ -68,39 +68,22 @@ export default function NewsCard({
         </Link>
       </div>
 
-      {/* Tablet Layout - Absolute positioning with adaptive sizing */}
-      <div className="hidden md:block lg:hidden">
-        {/* Изображение - адаптивная ширина и высота */}
-        <div
-          className="absolute rounded-[15px] overflow-hidden"
-          style={{
-            left: "calc((100vw - 274px) * 0.0385)", // 19/493
-            top: "calc((100vw - 274px) * 0.0446)", // 22/493
-            width: "calc((100vw - 274px) * 0.923)", // 455/493
-            height: "calc((100vw - 274px) * 0.552)", // 272/493
-          }}
-        >
+      {/* Tablet Layout - Flexible layout */}
+      <div className="hidden md:flex flex-col lg:hidden relative px-[22px] py-[22px]">
+        {/* Изображение */}
+        <div className="relative w-full aspect-[455/272] mb-[14px] rounded-[15px] overflow-hidden">
           <Image src={image} alt={title} fill className="object-cover" />
         </div>
 
-        {/* Дата - адаптивное позиционирование */}
-        <time
-          className="absolute text-[14px] font-normal font-montserrat text-black leading-[1.429]"
-          style={{
-            left: "calc((100vw - 274px) * 0.817)", // 403/493
-            top: "calc((100vw - 274px) * 0.625)", // 308/493
-          }}
-        >
+        {/* Дата */}
+        <time className="text-[14px] font-normal font-montserrat text-black leading-[1.429] text-right mb-[16px]">
           {date}
         </time>
 
-        {/* Заголовок - адаптивное позиционирование и ширина */}
+        {/* Заголовок */}
         <h3
-          className="absolute text-[17px] font-bold font-montserrat text-black leading-[1.219] uppercase"
+          className="text-[16px] font-bold font-montserrat text-black leading-[1.219] uppercase mb-[15px] max-w-[347px]"
           style={{
-            left: "calc((100vw - 274px) * 0.0466)", // 23/493
-            top: "calc((100vw - 274px) * 0.665)", // 328/493
-            width: "calc((100vw - 274px) * 0.704)", // 347/493
             display: "-webkit-box",
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
@@ -111,13 +94,10 @@ export default function NewsCard({
           {title}
         </h3>
 
-        {/* Описание - адаптивное позиционирование и ширина */}
+        {/* Описание */}
         <p
-          className="absolute text-[16px] font-normal font-montserrat text-black leading-[1.219]"
+          className="text-[16px] font-normal font-montserrat text-black leading-[1.219] mb-[21px] max-w-[447px]"
           style={{
-            left: "calc((100vw - 274px) * 0.0466)", // 23/493
-            top: "calc((100vw - 274px) * 0.777)", // 383/493
-            width: "calc((100vw - 274px) * 0.907)", // 447/493
             display: "-webkit-box",
             WebkitLineClamp: 5,
             WebkitBoxOrient: "vertical",
@@ -128,14 +108,10 @@ export default function NewsCard({
           {description}
         </p>
 
-        {/* Кнопка - адаптивное позиционирование */}
+        {/* Кнопка */}
         <Link
           href={href}
-          className="absolute inline-flex items-center justify-center px-[24px] py-[16px] border border-[#1D4E89] text-[#1D4E89] text-[18px] font-normal font-montserrat rounded-[12px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap gap-[16px]"
-          style={{
-            left: "calc((100vw - 274px) * 0.0466)", // 23/493
-            top: "calc((100vw - 274px) * 1.037)", // 511/493
-          }}
+          className="inline-flex items-center justify-center w-fit h-[52px] px-[20px] py-[12px] border border-[#1D4E89] text-[#1D4E89] text-[16px] font-normal font-montserrat rounded-[10px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap"
         >
           Читать подробнее..
         </Link>
@@ -190,8 +166,8 @@ export default function NewsCard({
         </Link>
       </div>
 
-      {/* Spacer for tablet/desktop absolute positioning */}
-      <div className="hidden md:block md:h-[calc((100vw-274px)*1.215)] lg:h-[698px]" />
+      {/* Spacer for desktop absolute positioning */}
+      <div className="hidden lg:block lg:h-[698px]" />
     </article>
   );
 }

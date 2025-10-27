@@ -43,7 +43,10 @@ export default function PhotoModal({
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div
+            className="flex min-h-full items-center justify-center p-4 text-center"
+            onClick={onClose}
+          >
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -53,16 +56,19 @@ export default function PhotoModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="relative w-full max-w-[1262px] h-[500px] sm:h-[600px] lg:h-[797px] transform overflow-hidden rounded-[15px] bg-[#FEFEFE] text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel
+                className="relative w-full max-w-[1262px] h-[500px] sm:h-[765px] lg:h-[765px] transform overflow-hidden rounded-[15px] bg-[#FEFEFE] text-left align-middle shadow-xl transition-all"
+                onClick={(e) => e.stopPropagation()}
+              >
                 {/* Крестик закрытия */}
                 <svg
                   onClick={onClose}
-                  width="48"
-                  height="48"
+                  width="36"
+                  height="36"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="absolute right-[24px] sm:right-[24px] lg:right-[24px] top-[16px] sm:top-[24px] lg:top-[32px] z-10 w-[48px] h-[48px] sm:w-[56px] sm:h-[56px] lg:w-[64px] lg:h-[64px] text-black cursor-pointer hover:opacity-80 transition-opacity"
+                  className="absolute right-[24px] sm:right-[24px] lg:right-[24px] top-[16px] sm:top-[24px] lg:top-[32px] z-10 w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] lg:w-[44px] lg:h-[44px] text-black cursor-pointer hover:opacity-80 transition-opacity"
                 >
                   <path
                     d="M18 6L6 18M6 6L18 18"
@@ -74,10 +80,10 @@ export default function PhotoModal({
                 </svg>
 
                 {/* Контент попапа */}
-                <div className="relative h-full p-[16px] sm:p-[32px] lg:p-[94px]">
+                <div className="relative h-full p-[16px] sm:p-[94px] lg:p-[94px]">
                   {/* Фото */}
-                  <div className="absolute left-[16px] sm:left-[32px] lg:left-[94px] top-[16px] sm:top-[32px] lg:top-[57px] right-[16px] sm:right-[32px] lg:right-[94px]">
-                    <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[550px] rounded-[15px] overflow-hidden">
+                  <div className="absolute left-[16px] sm:left-[94px] lg:left-[94px] top-[16px] sm:top-[57px] lg:top-[57px] right-[16px] sm:right-[94px] lg:right-[94px]">
+                    <div className="relative w-full h-[300px] sm:h-[550px] lg:h-[550px] rounded-[15px] overflow-hidden">
                       <Image
                         src={imageUrl}
                         alt={alt}
@@ -89,19 +95,19 @@ export default function PhotoModal({
                   </div>
 
                   {/* Текст под фото */}
-                  <div className="absolute left-[16px] sm:left-[32px] lg:left-[94px] bottom-[16px] sm:bottom-[32px] lg:bottom-[94px] right-[120px] sm:right-[140px] lg:right-[200px]">
-                    <h3 className="text-[16px] sm:text-[20px] lg:text-[24px] font-montserrat font-medium leading-[1.219] text-black mb-[5px] sm:mb-[8px] lg:mb-[10px]">
+                  <div className="absolute left-[16px] sm:left-[94px] lg:left-[94px] bottom-[16px] sm:bottom-[44px] lg:bottom-[44px] right-[120px] sm:right-[259px] lg:right-[165px]">
+                    <h3 className="text-[16px] sm:text-[24px] lg:text-[24px] font-montserrat font-medium leading-[1.219] text-black mb-[5px] sm:mb-[10px] lg:mb-[10px]">
                       {title}
                     </h3>
                     {date && (
-                      <p className="text-[14px] sm:text-[18px] lg:text-[24px] font-montserrat font-medium leading-[1.219] text-black">
+                      <p className="text-[14px] sm:text-[24px] lg:text-[24px] font-montserrat font-medium leading-[1.219] text-black">
                         {date}
                       </p>
                     )}
                   </div>
 
                   {/* Кнопка скачать */}
-                  <div className="absolute right-[16px] sm:right-[32px] lg:right-[94px] bottom-[16px] sm:bottom-[32px] lg:bottom-[94px]">
+                  <div className="absolute right-[16px] sm:right-[94px] lg:right-[94px] bottom-[16px] sm:bottom-[44px] lg:bottom-[44px]">
                     <button
                       onClick={async () => {
                         try {
@@ -129,7 +135,7 @@ export default function PhotoModal({
                           window.open(imageUrl, "_blank");
                         }
                       }}
-                      className="flex items-center gap-[6px] sm:gap-[8px] lg:gap-[9px] px-[16px] sm:px-[20px] lg:px-[24px] py-[12px] sm:py-[14px] lg:py-[16px] bg-[#C62828] text-[#EDF3F7] text-[16px] sm:text-[18px] lg:text-[20px] font-montserrat font-medium rounded-[12px] hover:bg-[#B71C1C] transition-colors"
+                      className="flex items-center gap-[6px] sm:gap-[9px] lg:gap-[9px] px-[16px] sm:px-[24px] lg:px-[24px] py-[12px] sm:py-[16px] lg:py-[16px] bg-[#C62828] text-[#EDF3F7] text-[16px] sm:text-[20px] lg:text-[20px] font-montserrat font-medium rounded-[12px] hover:bg-[#B71C1C] transition-colors"
                     >
                       <svg
                         width="24"
@@ -137,7 +143,7 @@ export default function PhotoModal({
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                        className="w-4 h-4 sm:w-6 sm:h-6 lg:w-6 lg:h-6"
                       >
                         <path
                           d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"

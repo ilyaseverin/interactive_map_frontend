@@ -175,13 +175,13 @@ const swiperConfig = {
 
 export default function HeroSlider() {
   return (
-    <div className="w-full mx-auto px-[19px] sm:px-6 lg:px-[60px] mt-4 sm:mt-7 mb-8 sm:mb-12 lg:mb-[61px]">
+    <div className="w-full mx-auto px-[19px] sm:px-[37px] lg:px-[60px] mt-4 sm:mt-7 mb-8 sm:mb-12 lg:mb-[61px]">
       <section className="w-full mx-auto">
         {/* Swiper Container с обёрткой */}
         <div className="relative w-full">
           <Swiper
             {...swiperConfig}
-            className="hero-swiper w-full h-[471px] sm:h-[600px] lg:h-[685px] rounded-[10px] sm:rounded-[20px] lg:rounded-[26px] shadow-[0px_5px_12px_0px_rgba(0,0,0,0.25)]"
+            className="hero-swiper w-full h-[471px] sm:h-[841px] lg:h-[685px] rounded-[10px] sm:rounded-[20px] lg:rounded-[26px] shadow-[0px_5px_12px_0px_rgba(0,0,0,0.25)]"
           >
             {slides.map((slide, index) => (
               <SwiperSlide key={index}>

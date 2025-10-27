@@ -115,7 +115,7 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[69px] pt-[37px] lg:pt-[39px]">
+      <main className="w-full max-w-[1920px] mx-auto px-4 lg:px-[69px] pt-[37px] lg:pt-[39px]">
         {/* Хлебные крошки */}
         <nav className="flex items-center gap-[14px] mb-[37px] lg:mb-[37px] text-[20px] font-normal font-montserrat leading-[1.219]">
           <Link href="/home" className="text-black hover:text-[#1D4E89]">
@@ -172,8 +172,21 @@ export default function NewsPage() {
                 setCategory(undefined);
                 setCurrentPage(1);
               }}
-              className={`px-[65px] py-[16px] rounded-[9px] text-[22px] font-normal font-montserrat leading-[1.364] transition-colors ${
+              className={`px-[20px] py-[12px] md:px-[20px] md:py-[12px] lg:px-[65px] lg:py-4 rounded-[10px] md:rounded-[10px] lg:rounded-[9px] text-[16px] md:text-[16px] lg:text-[20px] font-normal font-montserrat leading-[1.875] md:leading-[1.875] lg:leading-[1.219] transition-colors flex items-center justify-center ${
                 category === undefined
+                  ? "bg-[#1D4E89] text-[#FFFEFE]"
+                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
+              }`}
+            >
+              Все
+            </button>
+            <button
+              onClick={() => {
+                setCategory("Главные");
+                setCurrentPage(1);
+              }}
+              className={`px-[20px] py-[12px] md:px-[20px] md:py-[12px] lg:px-[65px] lg:py-4 rounded-[10px] md:rounded-[10px] lg:rounded-[9px] text-[16px] md:text-[16px] lg:text-[20px] font-normal font-montserrat leading-[1.875] md:leading-[1.875] lg:leading-[1.219] transition-colors flex items-center justify-center ${
+                category === "Главные"
                   ? "bg-[#1D4E89] text-[#FFFEFE]"
                   : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
               }`}
@@ -185,7 +198,7 @@ export default function NewsPage() {
                 setCategory("Региональные");
                 setCurrentPage(1);
               }}
-              className={`px-[65px] py-[16px] rounded-[9px] text-[22px] font-normal font-montserrat leading-[1.364] transition-colors ${
+              className={`px-[20px] py-[12px] md:px-[20px] md:py-[12px] lg:px-[65px] lg:py-4 rounded-[10px] md:rounded-[10px] lg:rounded-[9px] text-[16px] md:text-[16px] lg:text-[20px] font-normal font-montserrat leading-[1.875] md:leading-[1.875] lg:leading-[1.219] transition-colors flex items-center justify-center ${
                 category === "Региональные"
                   ? "bg-[#1D4E89] text-[#FFFEFE]"
                   : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
@@ -199,15 +212,15 @@ export default function NewsPage() {
           <div className="flex gap-[15px]">
             <Link
               href="/photo-albums"
-              className="inline-flex items-center justify-center px-[24px] py-[16px] bg-white text-[#1D4E89] text-[20px] font-normal font-montserrat rounded-[12px] border border-[#1D4E89] hover:bg-gray-50 transition-colors leading-[1.219]"
+              className="inline-flex items-center justify-center px-[20px] py-[12px] md:px-[20px] md:py-[12px] lg:px-[24px] lg:py-4 rounded-[10px] md:rounded-[10px] lg:rounded-[12px] bg-white text-[#1D4E89] text-[16px] md:text-[16px] lg:text-[20px] font-normal font-montserrat border border-[#1D4E89] hover:bg-gray-50 transition-colors leading-[1.875] md:leading-[1.875] lg:leading-[1.219]"
             >
-              Фотоальбомы
+              К фотоальбомам
             </Link>
             <Link
               href="/videos"
-              className="inline-flex items-center justify-center px-[24px] py-[16px] bg-white text-[#1D4E89] text-[20px] font-normal font-montserrat rounded-[12px] border border-[#1D4E89] hover:bg-gray-50 transition-colors leading-[1.219]"
+              className="inline-flex items-center justify-center px-[20px] py-[12px] md:px-[20px] md:py-[12px] lg:px-[24px] lg:py-4 rounded-[10px] md:rounded-[10px] lg:rounded-[12px] bg-white text-[#1D4E89] text-[16px] md:text-[16px] lg:text-[20px] font-normal font-montserrat border border-[#1D4E89] hover:bg-gray-50 transition-colors leading-[1.875] md:leading-[1.875] lg:leading-[1.219]"
             >
-              Видео
+              К видео
             </Link>
           </div>
         </div>
@@ -222,7 +235,7 @@ export default function NewsPage() {
             <div className="text-xl text-gray-600">Новостей пока нет</div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] gap-y-[37px] mb-[88px] lg:mb-[88px]">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-[30px] gap-y-[25px] mb-[88px] lg:mb-[88px] px-[47px] md:px-[138px] lg:px-0">
             {(() => {
               // Дублируем карточки, чтобы показать минимум 9 для демонстрации (3x3 сетка)
               const minCards = 10;
@@ -264,12 +277,12 @@ export default function NewsPage() {
 
         {/* Пагинация */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-[36px] mb-[150px] lg:mb-[150px]">
+          <div className="flex items-center justify-center gap-[36px] mb-[150px] lg:mb-[150px] px-4 md:px-[90px] lg:px-0">
             {/* Кнопка Назад */}
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className={`inline-flex items-center justify-center px-[24px] py-[16px] rounded-[12px] text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
+              className={`inline-flex items-center justify-center w-[132px] h-[48px] px-[12px] py-[20px] md:w-[132px] md:h-[48px] md:px-[12px] md:py-[20px] lg:w-auto lg:px-[24px] lg:py-[16px] rounded-[10px] md:rounded-[10px] lg:rounded-[12px] text-[16px] md:text-[16px] lg:text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
                 currentPage === 1
                   ? "bg-[#DBDBDB] text-[#B8B8B8] cursor-not-allowed"
                   : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C]"
@@ -297,7 +310,7 @@ export default function NewsPage() {
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`inline-flex items-center justify-center min-w-[56px] px-[24px] py-[16px] rounded-[10px] text-[20px] font-normal font-montserrat transition-colors leading-[1.219] ${
+                    className={`inline-flex items-center justify-center w-[51px] h-[48px] md:w-[51px] md:h-[48px] lg:w-auto lg:min-w-[56px] lg:px-[24px] lg:py-[16px] px-[12px] py-[20px] rounded-[10px] md:rounded-[10px] lg:rounded-[10px] text-[16px] md:text-[16px] lg:text-[20px] font-normal font-montserrat transition-colors leading-[1.219] ${
                       currentPage === pageNum
                         ? "bg-[#C62828] text-[#EDF3F7]"
                         : "bg-white text-black border border-[#C62828] hover:bg-gray-50"
@@ -315,7 +328,7 @@ export default function NewsPage() {
                 setCurrentPage(Math.min(totalPages, currentPage + 1))
               }
               disabled={currentPage === totalPages}
-              className={`inline-flex items-center justify-center px-[24px] py-[16px] rounded-[12px] text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
+              className={`inline-flex items-center justify-center w-[132px] h-[48px] px-[12px] py-[20px] md:w-[132px] md:h-[48px] md:px-[12px] md:py-[20px] lg:w-auto lg:px-[24px] lg:py-[16px] rounded-[10px] md:rounded-[10px] lg:rounded-[12px] text-[16px] md:text-[16px] lg:text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
                 currentPage === totalPages
                   ? "bg-[#DBDBDB] text-[#B8B8B8] cursor-not-allowed"
                   : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C]"
