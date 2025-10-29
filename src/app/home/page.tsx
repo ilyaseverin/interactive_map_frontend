@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import CalendarCard from "@/components/CalendarCard";
-import Calendar from "@/components/Calendar";
-import ProjectCard from "@/components/ProjectCard";
-import PartnerCard from "@/components/PartnerCard";
-import NewsCard from "@/components/NewsCard";
-import HeroSlider from "@/components/HeroSlider";
-import ContactForm from "@/components/ContactForm";
+import CalendarCard from "@/components/calendar/CalendarCard";
+import Calendar from "@/components/calendar/Calendar";
+import ProjectCard from "@/components/cards/ProjectCard";
+import PartnerCard from "@/components/cards/PartnerCard";
+import NewsCard from "@/components/cards/NewsCard";
+import HeroSlider from "@/components/media/HeroSlider";
+import ContactForm from "@/components/forms/ContactForm";
 
 export default function HomePage() {
   return (
@@ -29,7 +29,7 @@ export default function HomePage() {
         </div>
 
         {/* Content - Constrained to max-width */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-8 sm:pt-[49px] pb-12 px-4 sm:px-6 lg:px-[137px] xl:px-[69px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-8 sm:pt-[49px] pb-12 px-4 md:px-[138px] lg:px-[137px] xl:px-[69px]">
           {/* Category Buttons */}
           <div className="flex flex-row justify-center lg:justify-end gap-[6px] sm:gap-4 mb-8 sm:mb-12">
             <button className="w-[117px] h-[40px] px-[25px] py-[10px] md:w-[178px] md:h-[48px] md:px-5 md:py-3 lg:w-auto lg:px-[65px] lg:py-4 md:rounded-[10px] lg:rounded-[9px] bg-[#1D4E89] text-[#FFFEFE] text-[12px] md:text-lg lg:text-[22px] font-normal font-montserrat rounded-[8px] hover:bg-[#164070] transition-colors leading-[2.5] md:leading-[1.667] lg:leading-[1.364] flex items-center justify-center">
@@ -69,7 +69,7 @@ export default function HomePage() {
           <div className="flex justify-center lg:justify-end">
             <Link
               href="/news"
-              className="inline-flex items-center justify-center h-[40px] sm:h-auto px-[25px] py-[10px] sm:px-6 sm:py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-[12px] sm:text-[22px] font-medium font-montserrat rounded-lg sm:rounded-xl transition-colors shadow-lg"
+              className="inline-flex items-center justify-center w-[232px] h-[40px] md:w-[232px] md:h-[48px] px-[25px] py-[10px] md:px-5 md:py-[12px] bg-[#C62828] hover:bg-[#B71C1C] text-white text-[12px] md:text-[16px] font-medium font-montserrat rounded-lg md:rounded-[10px] transition-colors shadow-lg leading-[1.219]"
             >
               Ко всем новостям
             </Link>
@@ -78,7 +78,7 @@ export default function HomePage() {
       </section>
 
       {/* Calendar Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 md:px-6 lg:px-[144px] mt-16 md:mt-[110px] lg:mt-[110px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-4 lg:px-[144px] mt-16 md:mt-[110px] lg:mt-[110px] pb-12 lg:pb-16">
         {/* Section Title */}
         <h2 className="text-center text-xl md:text-[30px] lg:text-[48px] font-semibold font-montserrat text-black mb-8 md:mb-[71px] lg:mb-[72px]">
           Календарь
@@ -220,7 +220,7 @@ export default function HomePage() {
         </div>
 
         {/* Content Container with Backdrop Blur */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[93px] pt-12 sm:pt-[102px] pb-12 sm:pb-[102px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 lg:px-[93px] pt-12 sm:pt-[102px] pb-12 sm:pb-[102px]">
           <div
             className="w-full sm:max-w-[1733px] mx-auto px-6 lg:px-[47px] pt-12 lg:pt-[72px] pb-12 lg:pb-[66px] rounded-[15px]"
             style={{
@@ -390,7 +390,7 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-[34px] md:px-[50px] lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-[34px] lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
         {/* Section Title */}
         <h2 className="text-center text-lg sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-8 sm:mb-12 lg:mb-[72px]">
           Партнеры

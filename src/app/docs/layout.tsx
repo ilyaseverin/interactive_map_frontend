@@ -29,11 +29,11 @@ export const metadata: Metadata = {
     description: "Встройте карту на свой сайт с помощью простого iframe кода",
   },
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
     googleBot: {
-      index: true,
-      follow: true,
+      index: false,
+      follow: false,
     },
   },
   alternates: {
@@ -48,4 +48,3 @@ export default function DocsLayout({
 }) {
   return <>{children}</>;
 }
-

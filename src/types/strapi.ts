@@ -140,3 +140,92 @@ export interface BattleGloryResponse {
     };
   };
 }
+
+// Типы для пресс-релизов
+export interface PressReleaseBasicInfo {
+  id: number;
+  published_at_date: string;
+  author?: string;
+  category?: string;
+}
+
+export interface PressReleaseContentInfo {
+  id: number;
+  excerpt?: string;
+  content?: string;
+}
+
+export interface PressReleaseMedia {
+  id: number;
+  cover?: StrapiImage | null;
+  gallery?: StrapiImage[];
+}
+
+export interface PressReleaseMeta {
+  id: number;
+  keywords?: { id: number; value?: string | null }[];
+}
+
+export interface PressReleaseItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  basic_info: PressReleaseBasicInfo;
+  content_info?: PressReleaseContentInfo;
+  media?: PressReleaseMedia;
+  attachments_block?: { id: number; attachments?: unknown[] };
+  meta_info?: PressReleaseMeta;
+}
+
+export type PressReleaseListResponse = StrapiResponse<PressReleaseItem[]>;
+export type PressReleaseItemResponse = StrapiResponse<PressReleaseItem>;
+
+// Типы для проектов
+export interface ProjectBasicInfo {
+  id: number;
+  material_type?: "новость" | "анонс" | "объявление" | "прочее";
+  category?: string;
+}
+
+export interface ProjectSummary {
+  id: number;
+  excerpt?: string;
+}
+
+export interface ProjectContentInfo {
+  id: number;
+  content?: string;
+}
+
+export interface ProjectMedia {
+  id: number;
+  cover?: StrapiImage | null;
+  gallery?: StrapiImage[];
+  videos?: { id: number; provider?: string; url?: string }[];
+}
+
+export interface ProjectItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  basic_info: ProjectBasicInfo;
+  summary?: ProjectSummary;
+  content_info?: ProjectContentInfo;
+  media?: ProjectMedia;
+  attachments_block?: { id: number; attachments?: unknown[] };
+  links?: {
+    id: number;
+    external_links?: { id: number; url?: string; label?: string }[];
+  };
+}
+
+export type ProjectListResponse = StrapiResponse<ProjectItem[]>;
+export type ProjectItemResponse = StrapiResponse<ProjectItem>;

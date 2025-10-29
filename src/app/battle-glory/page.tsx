@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import BattleGloryMapWithData from "@/components/BattleGloryMapWithData";
+import BattleGloryMapWithData from "@/components/maps/BattleGloryMapWithData";
 import Link from "next/link";
 
 type FilterType =
