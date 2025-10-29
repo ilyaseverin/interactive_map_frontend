@@ -112,8 +112,8 @@ export async function generateMetadata({
       images: fullCoverUrl ? [fullCoverUrl] : undefined,
     },
     robots: {
-      index: true,
-      follow: true,
+      index: false,
+      follow: false,
     },
     alternates: {
       canonical: `/news/${slug}`,

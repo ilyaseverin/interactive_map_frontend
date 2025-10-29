@@ -183,3 +183,49 @@ export interface PressReleaseItem {
 
 export type PressReleaseListResponse = StrapiResponse<PressReleaseItem[]>;
 export type PressReleaseItemResponse = StrapiResponse<PressReleaseItem>;
+
+// Типы для проектов
+export interface ProjectBasicInfo {
+  id: number;
+  material_type?: "новость" | "анонс" | "объявление" | "прочее";
+  category?: string;
+}
+
+export interface ProjectSummary {
+  id: number;
+  excerpt?: string;
+}
+
+export interface ProjectContentInfo {
+  id: number;
+  content?: string;
+}
+
+export interface ProjectMedia {
+  id: number;
+  cover?: StrapiImage | null;
+  gallery?: StrapiImage[];
+  videos?: { id: number; provider?: string; url?: string }[];
+}
+
+export interface ProjectItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  basic_info: ProjectBasicInfo;
+  summary?: ProjectSummary;
+  content_info?: ProjectContentInfo;
+  media?: ProjectMedia;
+  attachments_block?: { id: number; attachments?: unknown[] };
+  links?: {
+    id: number;
+    external_links?: { id: number; url?: string; label?: string }[];
+  };
+}
+
+export type ProjectListResponse = StrapiResponse<ProjectItem[]>;
+export type ProjectItemResponse = StrapiResponse<ProjectItem>;

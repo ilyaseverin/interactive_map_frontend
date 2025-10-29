@@ -115,8 +115,8 @@ export async function generateMetadata({
       images: fullCoverUrl ? [fullCoverUrl] : undefined,
     },
     robots: {
-      index: true,
-      follow: true,
+      index: false,
+      follow: false,
     },
     alternates: {
       canonical: `/media/press-releases/${slug}`,
@@ -132,6 +132,21 @@ function formatDate(dateString: string): string {
     month: "2-digit",
     year: "numeric",
   });
+}
+
+// Форматирование размера файла
+function formatFileSize(bytes: number | undefined): string {
+  if (!bytes) return "";
+
+  if (bytes < 1024) {
+    return `${bytes} Б`;
+  } else if (bytes < 1024 * 1024) {
+    const kb = bytes / 1024;
+    return `${kb.toFixed(kb >= 10 ? 0 : 1)} КБ`;
+  } else {
+    const mb = bytes / (1024 * 1024);
+    return `${mb.toFixed(mb >= 10 ? 1 : 1)} МБ`;
+  }
 }
 
 // Компонент даты с иконкой
@@ -338,71 +353,56 @@ export default async function PressReleaseDetailPage({
 
             {/* Вложения */}
             {attachments.length > 0 && (
-              <div className="flex items-start gap-[8px] mb-[64px]">
-                {/* Иконка файла */}
-                <div className="w-[68px] h-[68px] flex-shrink-0">
-                  <Image
-                    src="/images/document-icon.png"
-                    alt="Документ"
-                    width={68}
-                    height={68}
-                  />
-                </div>
-                <div className="flex flex-col gap-[10px]">
-                  <p className="text-[20px] font-normal font-montserrat text-black">
-                    Скачать официальную версию
-                  </p>
-                  <div className="flex items-center gap-[8px] text-[20px] font-normal font-montserrat text-black">
-                    {attachments.map((attachment, index) => {
-                      const att = attachment as {
-                        title?: string;
-                        file?: {
-                          url: string;
-                          ext?: string;
-                          name?: string;
-                          filename?: string;
-                        };
-                      };
-                      const file = att?.file;
-                      if (!file) return null;
+              <div className="flex flex-col gap-[10px] mb-[64px]">
+                {attachments.map((attachment, index) => {
+                  const att = attachment as {
+                    title?: string;
+                    file?: {
+                      url: string;
+                      ext?: string;
+                      name?: string;
+                      filename?: string;
+                      size?: number;
+                    };
+                  };
+                  const file = att?.file;
+                  if (!file) return null;
 
-                      // Собираем URL с оригинальным именем файла
-                      let fileUrl = file.url.startsWith("http")
-                        ? file.url
-                        : `${
-                            process.env.NEXT_PUBLIC_STRAPI_URL ||
-                            "http://localhost:1337"
-                          }${file.url}`;
+                  // Собираем URL с оригинальным именем файла
+                  let fileUrl = file.url.startsWith("http")
+                    ? file.url
+                    : `${
+                        process.env.NEXT_PUBLIC_STRAPI_URL ||
+                        "http://localhost:1337"
+                      }${file.url}`;
 
-                      // Пытаемся добавить оригинальное имя файла к URL для Strapi
-                      if (file.name && !file.url.startsWith("http")) {
-                        // Для Strapi можно использовать параметр ?filename= или просто имя из базы
-                        fileUrl = `${
-                          process.env.NEXT_PUBLIC_STRAPI_URL ||
-                          "http://localhost:1337"
-                        }${file.url}?filename=${encodeURIComponent(file.name)}`;
-                      }
+                  // Пытаемся добавить оригинальное имя файла к URL для Strapi
+                  if (file.name && !file.url.startsWith("http")) {
+                    fileUrl = `${
+                      process.env.NEXT_PUBLIC_STRAPI_URL ||
+                      "http://localhost:1337"
+                    }${file.url}?filename=${encodeURIComponent(file.name)}`;
+                  }
 
-                      // Отображаем тип файла (расширение) в верхнем регистре
-                      const displayName =
-                        file.ext?.toUpperCase()?.replace(".", "") || "PDF";
+                  // Название файла
+                  const fileName =
+                    file.name ||
+                    file.filename ||
+                    att.title ||
+                    `document${file.ext || ".pdf"}`;
 
-                      return (
-                        <DownloadLink
-                          key={index}
-                          url={fileUrl}
-                          fileName={
-                            file.name ||
-                            file.filename ||
-                            `document${file.ext || ".pdf"}`
-                          }
-                          displayName={displayName}
-                          isLast={index === attachments.length - 1}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
+                  // Размер файла
+                  const fileSize = formatFileSize(file.size);
+
+                  return (
+                    <DownloadLink
+                      key={index}
+                      url={fileUrl}
+                      fileName={fileName}
+                      fileSize={fileSize}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>
