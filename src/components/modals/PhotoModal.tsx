@@ -61,23 +61,28 @@ export default function PhotoModal({
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Крестик закрытия */}
-                <svg
+                <button
                   onClick={onClose}
-                  width="36"
-                  height="36"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="absolute right-[24px] sm:right-[24px] lg:right-[24px] top-[16px] sm:top-[24px] lg:top-[32px] z-10 w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] lg:w-[44px] lg:h-[44px] text-black cursor-pointer hover:opacity-80 transition-opacity"
+                  className="absolute right-[16px] sm:right-[24px] lg:right-[24px] top-[16px] sm:top-[24px] lg:top-[24px] z-10 w-[44px] h-[44px] rounded-full bg-black/50 backdrop-blur-md hover:bg-black/70 hover:shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center group"
+                  aria-label="Закрыть"
                 >
-                  <path
-                    d="M18 6L6 18M6 6L18 18"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    strokeLinecap="square"
-                    strokeLinejoin="miter"
-                  />
-                </svg>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-white group-hover:rotate-90 transition-all duration-200"
+                  >
+                    <path
+                      d="M15 5L5 15M5 5L15 15"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
 
                 {/* Контент попапа */}
                 <div className="relative h-full p-[16px] sm:p-[94px] lg:p-[94px]">
