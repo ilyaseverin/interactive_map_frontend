@@ -1,43 +1,15 @@
 "use client";
-
-import { NewsItem } from "@/types/strapi";
 import Link from "next/link";
 import PhotoCard from "@/components/cards/PhotoCard";
 import PhotoModal from "@/components/modals/PhotoModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
-
-// Функция для получения новости с галереей из Strapi
-async function getPhotoAlbum(slug: string): Promise<NewsItem | null> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&populate[basic_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      console.error("Failed to fetch photo album:", res.status, res.statusText);
-      return null;
-    }
-
-    const response = await res.json();
-    return response.data[0] || null;
-  } catch (error) {
-    console.error("Error fetching photo album:", error);
-    return null;
-  }
-}
+import { useGetPhotoAlbumBySlugQuery } from "@/services/strapiApi";
 
 export default function PhotoAlbumDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
 
-  const [album, setAlbum] = useState<NewsItem | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState<{
     url: string;
     alt: string;
@@ -47,20 +19,28 @@ export default function PhotoAlbumDetailPage() {
   } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (slug) {
-      setIsLoading(true);
-      getPhotoAlbum(slug).then((data) => {
-        setAlbum(data);
-        setIsLoading(false);
-      });
-    }
-  }, [slug]);
+  const {
+    data: album,
+    isFetching,
+    isError,
+  } = useGetPhotoAlbumBySlugQuery(slug, {
+    skip: !slug,
+  });
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <div className="min-h-screen bg-[#F1F2F3] flex justify-center items-center">
         <div className="text-xl text-gray-600">Загрузка...</div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[#F1F2F3] flex justify-center items-center">
+        <div className="text-xl text-gray-600">
+          Не удалось загрузить фотоальбом. Попробуйте обновить страницу.
+        </div>
       </div>
     );
   }

@@ -1,40 +1,10 @@
 "use client";
 
-import { PressReleaseListResponse } from "@/types/strapi";
+import type { PressReleaseListResponse } from "@/types/strapi";
 import Link from "next/link";
 import PressReleaseCard from "@/components/cards/PressReleaseCard";
-import { useEffect, useState } from "react";
-
-// Функция для получения пресс-релизов из Strapi
-async function getPressReleases(
-  page: number = 1,
-  pageSize: number = 6
-): Promise<PressReleaseListResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/press-releases?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&sort=basic_info.published_at_date:desc`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      console.error(
-        "Failed to fetch press releases:",
-        res.status,
-        res.statusText
-      );
-      return { data: [], meta: {} };
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching press releases:", error);
-    return { data: [], meta: {} };
-  }
-}
+import { useState } from "react";
+import { useGetPressReleasesQuery } from "@/services/strapiApi";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -48,26 +18,22 @@ function formatDate(dateString: string): string {
 
 // Клиентский компонент
 export default function PressReleasesPage() {
-  const [pressReleasesData, setPressReleasesData] =
-    useState<PressReleaseListResponse>({
-      data: [],
-      meta: {},
-    });
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
 
   const pageSize = 6;
 
-  useEffect(() => {
-    setIsLoading(true);
-    getPressReleases(currentPage, pageSize).then((data) => {
-      setPressReleasesData(data);
-      setIsLoading(false);
-    });
-  }, [currentPage]);
+  const {
+    data: pressReleasesData,
+    isFetching,
+    isError,
+  } = useGetPressReleasesQuery({ page: currentPage, pageSize });
 
-  const pressReleasesList = pressReleasesData.data;
-  const totalPages = pressReleasesData.meta?.pagination?.pageCount || 1;
+  const fallbackData: PressReleaseListResponse = { data: [], meta: {} };
+  const mergedData = pressReleasesData ?? fallbackData;
+
+  const pressReleasesList = mergedData.data;
+  const totalPages = mergedData.meta?.pagination?.pageCount || 1;
+  const isLoading = isFetching;
 
   // Генерация номеров страниц для пагинации
   const getPageNumbers = () => {
@@ -173,7 +139,13 @@ export default function PressReleasesPage() {
         </div>
 
         {/* Блок пресс-релизов */}
-        {isLoading ? (
+        {isError ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="text-xl text-gray-600">
+              Не удалось загрузить пресс-релизы. Попробуйте обновить страницу.
+            </div>
+          </div>
+        ) : isLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="text-xl text-gray-600">Загрузка...</div>
           </div>

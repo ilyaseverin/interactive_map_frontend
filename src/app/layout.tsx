@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
+import { ReduxProvider } from "@/store/ReduxProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -92,7 +93,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased`}
       >
+        <ReduxProvider>
         <ConditionalLayout>{children}</ConditionalLayout>
+        </ReduxProvider>
       </body>
     </html>
   );

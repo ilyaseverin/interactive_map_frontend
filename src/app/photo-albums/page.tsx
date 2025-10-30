@@ -1,65 +1,35 @@
 "use client";
 
-import { NewsListResponse } from "@/types/strapi";
+import type { NewsListResponse } from "@/types/strapi";
 import Link from "next/link";
 import PhotoAlbumCard from "@/components/cards/PhotoAlbumCard";
-import { useEffect, useState } from "react";
-
-// Функция для получения новостей с фотогалереями из Strapi
-async function getPhotoAlbums(
-  page: number = 1,
-  pageSize: number = 18
-): Promise<NewsListResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/news?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate[basic_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&sort=basic_info.published_at_date:desc`,
-      {
-        cache: "no-store", // Всегда без кэша
-      }
-    );
-
-    if (!res.ok) {
-      console.error(
-        "Failed to fetch photo albums:",
-        res.status,
-        res.statusText
-      );
-      return { data: [], meta: {} };
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching photo albums:", error);
-    return { data: [], meta: {} };
-  }
-}
+import { useState } from "react";
+import { useGetPhotoAlbumsQuery } from "@/services/strapiApi";
 
 // Клиентский компонент
 export default function PhotoAlbumsPage() {
-  const [albumsData, setAlbumsData] = useState<NewsListResponse>({
-    data: [],
-    meta: {},
-  });
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
 
   const pageSize = 18;
 
-  useEffect(() => {
-    setIsLoading(true);
-    getPhotoAlbums(currentPage, pageSize).then((data) => {
-      setAlbumsData(data);
-      setIsLoading(false);
-    });
-  }, [currentPage]);
+  const {
+    data: albumsData,
+    isFetching,
+    isError,
+  } = useGetPhotoAlbumsQuery({
+    page: currentPage,
+    pageSize,
+  });
+
+  const fallbackData: NewsListResponse = { data: [], meta: {} };
+  const mergedData = albumsData ?? fallbackData;
 
   // Фильтруем только новости с галереей
-  const albumsList = albumsData.data.filter(
+  const albumsList = mergedData.data.filter(
     (news) => news.media?.gallery && news.media.gallery.length > 0
   );
-  const totalPages = albumsData.meta?.pagination?.pageCount || 1;
+  const totalPages = mergedData.meta?.pagination?.pageCount || 1;
+  const isLoading = isFetching;
 
   // Генерация номеров страниц для пагинации
   const getPageNumbers = () => {
@@ -188,7 +158,13 @@ export default function PhotoAlbumsPage() {
         </div>
 
         {/* Блок фотоальбомов */}
-        {isLoading ? (
+        {isError ? (
+          <div className="px-[25px] md:px-[36px] lg:px-[63px] flex justify-center items-center py-20">
+            <div className="text-base md:text-xl text-gray-600">
+              Не удалось загрузить фотоальбомы. Попробуйте обновить страницу.
+            </div>
+          </div>
+        ) : isLoading ? (
           <div className="px-[25px] md:px-[36px] lg:px-[63px] flex justify-center items-center py-20">
             <div className="text-base md:text-xl text-gray-600">
               Загрузка...

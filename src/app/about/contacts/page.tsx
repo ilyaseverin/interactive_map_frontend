@@ -1,80 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import ContactForm from "@/components/forms/ContactForm";
 import ContactsInfo from "@/components/cards/ContactsInfo";
-
-// Интерфейс для данных контактов
-interface ContactData {
-  id: number;
-  attributes: {
-    main: {
-      address: string;
-      website: string;
-      email: string;
-      map_embed?: string;
-      phones: Array<{
-        id: number;
-        label: string;
-        number: string;
-      }>;
-    };
-  };
-}
-
-interface ContactsResponse {
-  data: ContactData | null;
-  meta: Record<string, unknown>;
-}
-
-// Функция для получения данных контактов из Strapi
-async function getContactsData(): Promise<ContactsResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/contact-page?populate[main][populate][phones]=true`,
-      {
-        cache: "no-store", // Всегда без кэша
-      }
-    );
-
-    if (!res.ok) {
-      console.error(
-        "Failed to fetch contacts data:",
-        res.status,
-        res.statusText
-      );
-      return { data: null, meta: {} };
-    }
-
-    const data = await res.json();
-    console.log("Contacts data from API:", data); // Для отладки
-    return data;
-  } catch (error) {
-    console.error("Error fetching contacts data:", error);
-    return { data: null, meta: {} };
-  }
-}
+import { useGetContactsQuery } from "@/services/strapiApi";
 
 export default function ContactsPage() {
-  const [contactsData, setContactsData] = useState<ContactData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const data = await getContactsData();
-        setContactsData(data.data);
-      } catch (error) {
-        console.error("Error loading contacts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContacts();
-  }, []);
+  const { data, isFetching, isError } = useGetContactsQuery();
+  const contactsData = data?.data ?? null;
 
   // Статические данные как fallback (из макета)
   const staticContacts = {
@@ -100,7 +32,7 @@ export default function ContactsPage() {
       }
     : staticContacts;
 
-  if (loading) {
+  if (isFetching && !contactsData) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -113,6 +45,11 @@ export default function ContactsPage() {
 
   return (
     <div className="w-full">
+      {isError && (
+        <div className="mb-6 rounded-lg bg-yellow-100 px-4 py-3 text-yellow-800">
+          Не удалось загрузить актуальные контакты. Показаны резервные данные.
+        </div>
+      )}
       {/* Контактная информация */}
       <ContactsInfo
         address={contacts.address}

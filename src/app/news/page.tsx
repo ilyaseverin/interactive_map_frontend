@@ -1,41 +1,10 @@
 "use client";
 
-import { NewsListResponse } from "@/types/strapi";
+import type { NewsListResponse } from "@/types/strapi";
 import Link from "next/link";
 import NewsCard from "@/components/cards/NewsCard";
-import { useEffect, useState } from "react";
-
-// Функция для получения новостей из Strapi
-async function getNews(
-  page: number = 1,
-  pageSize: number = 9,
-  category?: string
-): Promise<NewsListResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  try {
-    const categoryFilter = category
-      ? `&filters[basic_info][category][$eq]=${encodeURIComponent(category)}`
-      : "";
-
-    const res = await fetch(
-      `${apiUrl}/api/news?pagination[page]=${page}&pagination[pageSize]=${pageSize}${categoryFilter}&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links]=*&populate[meta_info][populate][tags]=*&sort=basic_info.published_at_date:desc`,
-      {
-        cache: "no-store", // Всегда без кэша
-      }
-    );
-
-    if (!res.ok) {
-      console.error("Failed to fetch news:", res.status, res.statusText);
-      return { data: [], meta: {} };
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching news:", error);
-    return { data: [], meta: {} };
-  }
-}
+import { useState } from "react";
+import { useGetNewsQuery } from "@/services/strapiApi";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -49,26 +18,27 @@ function formatDate(dateString: string): string {
 
 // Клиентский компонент
 export default function NewsPage() {
-  const [newsData, setNewsData] = useState<NewsListResponse>({
-    data: [],
-    meta: {},
-  });
   const [currentPage, setCurrentPage] = useState(1);
   const [category, setCategory] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
 
   const pageSize = 9;
 
-  useEffect(() => {
-    setIsLoading(true);
-    getNews(currentPage, pageSize, category).then((data) => {
-      setNewsData(data);
-      setIsLoading(false);
-    });
-  }, [currentPage, category]);
+  const {
+    data: newsData,
+    isFetching,
+    isError,
+  } = useGetNewsQuery({
+    page: currentPage,
+    pageSize,
+    category,
+  });
 
-  const newsList = newsData.data;
-  const totalPages = newsData.meta?.pagination?.pageCount || 1;
+  const fallbackData: NewsListResponse = { data: [], meta: {} };
+  const mergedData = newsData ?? fallbackData;
+
+  const newsList = mergedData.data;
+  const totalPages = mergedData.meta?.pagination?.pageCount || 1;
+  const isLoading = isFetching;
 
   // Генерация номеров страниц для пагинации
   const getPageNumbers = () => {
@@ -383,7 +353,13 @@ export default function NewsPage() {
         </div>
 
         {/* Блок новостей */}
-        {isLoading ? (
+        {isError ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="text-xl text-gray-600">
+              Не удалось загрузить новости. Попробуйте обновить страницу.
+            </div>
+          </div>
+        ) : isLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="text-xl text-gray-600">Загрузка...</div>
           </div>

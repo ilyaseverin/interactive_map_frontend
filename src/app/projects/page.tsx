@@ -1,36 +1,10 @@
 "use client";
 
-import { ProjectListResponse } from "@/types/strapi";
+import type { ProjectListResponse } from "@/types/strapi";
 import Link from "next/link";
 import ProjectListCard from "@/components/cards/ProjectListCard";
-import { useEffect, useState } from "react";
-
-// Функция для получения проектов из Strapi
-async function getProjects(
-  page: number = 1,
-  pageSize: number = 9
-): Promise<ProjectListResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/projects?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&sort=publishedAt:desc`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      console.error("Failed to fetch projects:", res.status, res.statusText);
-      return { data: [], meta: {} };
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    return { data: [], meta: {} };
-  }
-}
+import { useState } from "react";
+import { useGetProjectsQuery } from "@/services/strapiApi";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -44,25 +18,21 @@ function formatDate(dateString: string): string {
 
 // Клиентский компонент
 export default function ProjectsPage() {
-  const [projectsData, setProjectsData] = useState<ProjectListResponse>({
-    data: [],
-    meta: {},
-  });
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
 
   const pageSize = 9;
 
-  useEffect(() => {
-    setIsLoading(true);
-    getProjects(currentPage, pageSize).then((data) => {
-      setProjectsData(data);
-      setIsLoading(false);
-    });
-  }, [currentPage]);
+  const { data: projectsData, isFetching, isError } = useGetProjectsQuery({
+    page: currentPage,
+    pageSize,
+  });
 
-  const projectsList = projectsData.data;
-  const totalPages = projectsData.meta?.pagination?.pageCount || 1;
+  const fallbackData: ProjectListResponse = { data: [], meta: {} };
+  const mergedData = projectsData ?? fallbackData;
+
+  const projectsList = mergedData.data;
+  const totalPages = mergedData.meta?.pagination?.pageCount || 1;
+  const isLoading = isFetching;
 
   // Генерация номеров страниц для пагинации
   const getPageNumbers = () => {
@@ -157,7 +127,13 @@ export default function ProjectsPage() {
         </div>
 
         {/* Блок проектов */}
-        {isLoading ? (
+        {isError ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="text-xl text-gray-600">
+              Не удалось загрузить проекты. Попробуйте обновить страницу.
+            </div>
+          </div>
+        ) : isLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="text-xl text-gray-600">Загрузка...</div>
           </div>
