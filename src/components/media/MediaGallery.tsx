@@ -47,7 +47,7 @@ export default function MediaGallery({
   if (images.length === 0) return null;
 
   return (
-    <div className="mb-[50px] lg:px-[20px] xl:px-[40px] 2xl:px-[96px]">
+    <div className="mb-[25px] lg:mb-[50px] lg:px-[20px] xl:px-[40px] 2xl:px-[96px]">
       {/* Контейнер для слайдера и pagination */}
       <div className="relative w-full">
         <Swiper
@@ -79,7 +79,7 @@ export default function MediaGallery({
           {hasPhotoAlbum && slug && (
             <Link
               href={`/photo-albums/${slug}`}
-              className="inline-flex items-center justify-center px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
+              className="inline-flex items-center justify-center h-[40px] md:h-[48px] lg:h-[56px] px-[24px] md:px-[20px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
             >
               К фотоальбому
             </Link>
@@ -89,7 +89,7 @@ export default function MediaGallery({
               href={videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
+              className="inline-flex items-center justify-center h-[40px] md:h-[48px] lg:h-[56px] px-[24px] md:px-[20px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
             >
               Смотреть видео
             </Link>
