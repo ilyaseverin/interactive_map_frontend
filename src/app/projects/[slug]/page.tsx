@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ProjectItem, StrapiImage } from "@/types/strapi";
 import Image from "next/image";
 import Link from "next/link";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { notFound } from "next/navigation";
 import MediaGallery from "@/components/media/MediaGallery";
 import DownloadLink from "@/components/DownloadLink";
@@ -259,19 +260,14 @@ export default async function ProjectDetailPage({
       {/* Основной контент */}
       <main className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[63px] pt-[20px] lg:pt-[29px]">
         {/* Хлебные крошки */}
-        <nav className="flex items-center gap-[14px] mb-[54px] text-[20px] font-normal font-montserrat leading-[1.219] lg:pl-[13px]">
-          <Link href="/home" className="text-black hover:text-[#1D4E89]">
-            Главная
-          </Link>
-          <span className="text-black">&gt;</span>
-          <Link href="/projects" className="text-black hover:text-[#1D4E89]">
-            Наши проекты
-          </Link>
-          <span className="text-black">&gt;</span>
-          <span className="text-black truncate max-w-[300px] lg:max-w-none">
-            {project.title}
-          </span>
-        </nav>
+        <Breadcrumbs
+          className="mb-[54px] lg:pl-[13px]"
+          items={[
+            { label: "Главная", href: "/home" },
+            { label: "Наши проекты", href: "/projects" },
+            { label: project.title },
+          ]}
+        />
 
         {/* Белая карточка с проектом */}
         <div className="bg-white/90 rounded-[15px] p-6 lg:p-[67px] mb-[83px]">

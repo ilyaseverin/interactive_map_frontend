@@ -5,6 +5,7 @@ import PhotoModal from "@/components/modals/PhotoModal";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useGetPhotoAlbumBySlugQuery } from "@/services/strapiApi";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export default function PhotoAlbumDetailPage() {
   const params = useParams();
@@ -92,24 +93,17 @@ export default function PhotoAlbumDetailPage() {
       {/* Основной контент */}
       <main className="w-full max-w-[1920px] mx-auto pt-[37px] lg:pt-[39px]">
         {/* Хлебные крошки */}
-        <nav className="px-4 sm:px-6 lg:px-[76px] flex items-center gap-[14px] mb-[37px] lg:mb-[37px] text-[20px] font-normal font-montserrat leading-[1.219]">
-          <Link href="/home" className="text-black hover:text-[#1D4E89]">
-            Главная
-          </Link>
-          <span className="text-black">&gt;</span>
-          <Link href="/news" className="text-black hover:text-[#1D4E89]">
-            Новости
-          </Link>
-          <span className="text-black">&gt;</span>
-          <Link
-            href="/photo-albums"
-            className="text-black hover:text-[#1D4E89]"
-          >
-            Фотоальбомы
-          </Link>
-          <span className="text-black">&gt;</span>
-          <span className="text-black">{album.title}</span>
-        </nav>
+        <div className="px-4 sm:px-6 lg:px-[76px]">
+          <Breadcrumbs
+            className="mb-[37px] lg:mb-[37px]"
+            items={[
+              { label: "Главная", href: "/home" },
+              { label: "Новости", href: "/news" },
+              { label: "Фотоальбомы", href: "/photo-albums" },
+              { label: album.title },
+            ]}
+          />
+        </div>
 
         {/* Заголовок и Кнопка Назад */}
         <div className="px-4 sm:px-6 lg:px-[80px] flex flex-col lg:flex-row lg:items-start lg:justify-between mb-[68px] lg:mb-[68px]">

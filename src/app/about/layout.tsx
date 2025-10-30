@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const subMenuItems = [
   { label: "Об учреждении", href: "/about/organization" },
@@ -26,15 +27,12 @@ export default function AboutLayout({
     >
       {/* Breadcrumb Navigation */}
       <div className="w-full px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] py-[16px] sm:py-[18px] lg:py-[21px]">
-        <nav className="flex items-center gap-2 text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-montserrat">
-          <Link href="/" className="text-black hover:text-gray-600">
-            Главная
-          </Link>
-          <span className="text-black">&gt;</span>
-          <Link href="/about" className="text-black hover:text-gray-600">
-            О центре
-          </Link>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "Главная", href: "/" },
+            { label: "О центре", href: "/about" },
+          ]}
+        />
       </div>
 
       {/* Submenu Navigation */}
