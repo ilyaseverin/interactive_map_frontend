@@ -18,7 +18,7 @@ async function getProjectBySlug(slug: string): Promise<ProjectItem | null> {
 
   try {
     const res = await fetch(
-      `${apiUrl}/api/projects?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos]=*&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&publicationState=live`,
+      `${apiUrl}/api/projects?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos][populate][video_file]=true&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&publicationState=live`,
       {
         cache: "no-store",
       }
@@ -239,9 +239,18 @@ export default async function ProjectDetailPage({
       ? [{ url: fullCoverUrl, alt: project.title }]
       : [];
 
-  // Видео ссылки
+  // Видео ссылки или загруженные видео файлы
   const videoLinks = project.media?.videos || [];
-  const firstVideoUrl = videoLinks.length > 0 ? videoLinks[0].url : undefined;
+  const firstVideoLink = videoLinks.length > 0 ? videoLinks[0] : undefined;
+  const firstVideoUrl = firstVideoLink?.url;
+  const firstVideoFile = firstVideoLink?.video_file;
+  const firstVideoFileUrl = firstVideoFile?.url
+    ? firstVideoFile.url.startsWith("http")
+      ? firstVideoFile.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+          firstVideoFile.url
+        }`
+    : undefined;
 
   // Аттачменты
   const attachments = (project.attachments_block?.attachments || []).filter(
@@ -305,11 +314,15 @@ export default async function ProjectDetailPage({
           )}
 
           {/* Галерея с кнопками */}
-          {sliderImages.length > 0 && (
+          {(sliderImages.length > 0 ||
+            firstVideoFileUrl ||
+            firstVideoUrl ||
+            videoLinks.length > 0) && (
             <MediaGallery
               images={sliderImages}
               hasPhotoAlbum={galleryImages.length > 0}
               videoUrl={firstVideoUrl}
+              videoFileUrl={firstVideoFileUrl}
               slug={project.slug}
             />
           )}

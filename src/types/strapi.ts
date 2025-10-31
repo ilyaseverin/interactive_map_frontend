@@ -42,8 +42,9 @@ export interface NewsContentInfo {
 export interface NewsVideoLink {
   id: number;
   provider: string;
-  url: string;
+  url?: string;
   open_in_vk?: boolean;
+  video_file?: StrapiImage | null;
 }
 
 export interface NewsMedia {
@@ -205,7 +206,7 @@ export interface ProjectMedia {
   id: number;
   cover?: StrapiImage | null;
   gallery?: StrapiImage[];
-  videos?: { id: number; provider?: string; url?: string }[];
+  videos?: { id: number; provider?: string; url?: string; video_file?: StrapiImage | null }[];
 }
 
 export interface ProjectItem {

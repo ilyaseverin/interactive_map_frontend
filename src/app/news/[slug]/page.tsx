@@ -17,7 +17,7 @@ async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
 
   try {
     const res = await fetch(
-      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links]=*&populate[meta_info][populate][tags]=*`,
+      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links][populate][video_file]=true&populate[meta_info][populate][tags]=*`,
       {
         cache: "no-store",
       }
@@ -263,9 +263,18 @@ export default async function NewsDetailPage({
       ? [{ url: fullCoverUrl, alt: news.title }]
       : [];
 
-  // Видео ссылки
+  // Видео ссылки или загруженные видео файлы
   const videoLinks = news.media?.video_links || [];
-  const firstVideoUrl = videoLinks.length > 0 ? videoLinks[0].url : undefined;
+  const firstVideoLink = videoLinks.length > 0 ? videoLinks[0] : undefined;
+  const firstVideoUrl = firstVideoLink?.url;
+  const firstVideoFile = firstVideoLink?.video_file;
+  const firstVideoFileUrl = firstVideoFile?.url
+    ? firstVideoFile.url.startsWith("http")
+      ? firstVideoFile.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+          firstVideoFile.url
+        }`
+    : undefined;
 
   // Разбиваем контент на параграфы
   const contentParagraphs =
@@ -328,12 +337,15 @@ export default async function NewsDetailPage({
           )}
 
           {/* Галерея (с клиентским компонентом для слайдера) */}
-          <MediaGallery
-            images={sliderImages}
-            hasPhotoAlbum={galleryImages.length > 0}
-            videoUrl={firstVideoUrl}
-            slug={news.slug}
-          />
+          {(sliderImages.length > 0 || firstVideoFileUrl || firstVideoUrl) && (
+            <MediaGallery
+              images={sliderImages}
+              hasPhotoAlbum={galleryImages.length > 0}
+              videoUrl={firstVideoUrl}
+              videoFileUrl={firstVideoFileUrl}
+              slug={news.slug}
+            />
+          )}
 
           {/* Текст новости */}
           {contentParagraphs.length > 0 && (
