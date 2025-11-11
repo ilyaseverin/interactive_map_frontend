@@ -3,6 +3,7 @@
 import type { NewsListResponse } from "@/types/strapi";
 import Link from "next/link";
 import NewsCard from "@/components/cards/NewsCard";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { useState } from "react";
 import { useGetNewsQuery } from "@/services/strapiApi";
 
@@ -87,16 +88,13 @@ export default function NewsPage() {
       {/* Основной контент */}
       <main className="w-full max-w-[1920px] mx-auto pt-[37px] md:pt-[39px] lg:pt-[39px]">
         {/* Хлебные крошки */}
-        <nav className="px-[30px] md:px-[47px] lg:px-[69px] flex items-center gap-[12px] md:gap-[12px] lg:gap-[14px] mb-[20px] md:mb-[37px] lg:mb-[37px] text-[12px] md:text-[20px] lg:text-[20px] font-normal font-montserrat leading-[1.219]">
-          <Link href="/home" className="text-black hover:text-[#1D4E89]">
-            Главная
-          </Link>
-          <span className="text-black">&gt;</span>
-          <span className="text-black">Новости</span>
-        </nav>
+        <Breadcrumbs
+          items={[{ label: "Главная", href: "/home" }, { label: "Новости" }]}
+          className="px-[19px] md:px-[36px] lg:px-[69px] mb-[15px] md:mb-[20px] lg:mb-[27px]"
+        />
 
         {/* Заголовок и Кнопка Назад */}
-        <div className="px-[30px] md:px-[47px] lg:px-[69px] flex flex-col md:flex-row md:items-start md:justify-between mb-[25px] md:mb-[57px] lg:mb-[57px] relative">
+        <div className="px-[19px] md:px-[36px] lg:px-[69px] flex flex-col md:flex-row md:items-start md:justify-between mb-[10px] md:mb-[20px] lg:mb-[27px] relative">
           {/* Заголовок */}
           <h1 className="text-[20px] md:text-[30px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219] mb-0 md:mb-0">
             Новости
@@ -163,7 +161,7 @@ export default function NewsPage() {
         </div>
 
         {/* Категории и Фото/Видео - мобильная версия (в три ряда) */}
-        <div className="px-[30px] md:hidden flex flex-col gap-[5px] mb-[30px] max-w-full overflow-hidden">
+        <div className="px-[19px] md:hidden flex flex-col gap-[5px] mb-[30px] max-w-full overflow-hidden">
           {/* Первый ряд: кнопка "Все" */}
           <div className="flex">
             <button
@@ -229,7 +227,7 @@ export default function NewsPage() {
         </div>
 
         {/* Категории и Фото/Видео - планшет (в два ряда) */}
-        <div className="hidden md:flex lg:hidden px-[47px] flex-col gap-[12px] mb-[64px]">
+        <div className="hidden md:flex lg:hidden px-[36px] flex-col gap-[12px] mb-[64px]">
           {/* Категории */}
           <div className="flex flex-row gap-[14px] flex-wrap">
             <button
@@ -368,7 +366,7 @@ export default function NewsPage() {
             <div className="text-xl text-gray-600">Новостей пока нет</div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-0 md:gap-x-[18px] lg:gap-x-[30px] gap-y-[25px] md:gap-y-[25px] lg:gap-y-[25px] mb-[60px] md:mb-[88px] lg:mb-[88px] px-[17px] md:px-[47px] lg:px-[69px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-0 md:gap-x-[18px] lg:gap-x-[30px] gap-y-[25px] md:gap-y-[25px] lg:gap-y-[25px] mb-[60px] px-[19px] md:px-[36px] lg:px-[69px]">
             {(() => {
               // Дублируем карточки, чтобы показать минимум 9 для демонстрации (3x3 сетка)
               const minCards = 10;
@@ -410,7 +408,7 @@ export default function NewsPage() {
 
         {/* Пагинация */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-[20px] md:gap-[36px] mb-[60px] md:mb-[150px] lg:mb-[150px] px-[30px] md:px-[90px] lg:px-[69px]">
+          <div className="flex items-center justify-center gap-[20px] md:gap-[36px] mb-[60px] md:mb-[150px] lg:mb-[150px] px-[19px] md:px-[36px] lg:px-[69px]">
             {/* Кнопка Назад - мобильная */}
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}

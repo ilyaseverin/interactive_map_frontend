@@ -283,10 +283,10 @@ export default async function NewsDetailPage({
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-[63px] pt-[20px] lg:pt-[29px]">
+      <main className="w-full max-w-[1920px] mx-auto px-[19px] md:px-[36px] lg:px-[63px] pt-[20px] md:pt-[30px] lg:pt-[30px]">
         {/* Хлебные крошки */}
         <Breadcrumbs
-          className="mb-[54px] lg:pl-[13px]"
+          className="mb-[30px] lg:mb-[30px] lg:pl-[17px]"
           items={[
             { label: "Главная", href: "/home" },
             { label: "Новости", href: "/news" },
@@ -295,7 +295,7 @@ export default async function NewsDetailPage({
         />
 
         {/* Белая карточка с новостью */}
-        <div className="bg-white/90 rounded-[15px] p-[19px] lg:p-[67px] mb-[83px]">
+        <div className="bg-white/90 rounded-[15px] p-[19px] md:p-[36px] lg:px-[80px] lg:py-[60px] mb-[83px]">
           {/* Мобилка/планшет: сверху дата слева, кнопка справа; ниже заголовок */}
           <div className="lg:hidden">
             <div className="flex items-center justify-between mb-[28px]">
@@ -331,7 +331,7 @@ export default async function NewsDetailPage({
 
           {/* Краткое описание */}
           {news.content_info?.excerpt && (
-            <p className="text-[12px] md:text-[16px] lg:text-[24px] font-semibold font-montserrat text-black leading-[1.219] mb-[46px]">
+            <p className="text-[12px] md:text-[16px] lg:text-[24px] font-semibold font-montserrat text-black leading-[1.219] mb-[46px] lg:mb-[61px]">
               {news.content_info.excerpt}
             </p>
           )}
@@ -349,7 +349,7 @@ export default async function NewsDetailPage({
 
           {/* Текст новости */}
           {contentParagraphs.length > 0 && (
-            <div className="mb-[25px] lg:mb-[64px] space-y-[36px] lg:px-[20px] xl:px-[40px] 2xl:px-[96px]">
+            <div className="mb-[25px] lg:mb-[64px] space-y-[36px] xl:px-[40px] 2xl:px-[96px]">
               {contentParagraphs.map((paragraph, index) => (
                 <p
                   key={index}
@@ -362,7 +362,7 @@ export default async function NewsDetailPage({
           )}
 
           {/* Нижняя часть: кнопка назад и дата */}
-          <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between gap-6 pt-[25px] md:pt-[64px] lg:px-[20px] xl:px-[40px] 2xl:px-[96px]">
+          <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between gap-6 pt-[25px] md:pt-[40px] lg:pt-[64px]">
             <BackButton />
             <div className="hidden md:block">
               <DateDisplay date={news.basic_info.published_at_date} />
