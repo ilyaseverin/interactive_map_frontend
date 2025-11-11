@@ -76,9 +76,9 @@ export default function PhotoAlbumsPage() {
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto pt-[37px] md:pt-[39px] lg:pt-[39px]">
+      <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[30px]">
         {/* Хлебные крошки */}
-        <nav className="px-[25px] md:px-[47px] lg:px-[76px] flex items-center gap-[5px] md:gap-[12px] lg:gap-[14px] mb-[20px] md:mb-[37px] lg:mb-[37px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat leading-[1.219]">
+        <nav className="px-[19px] md:px-[36px] lg:px-[80px] flex items-center gap-[5px] md:gap-[12px] lg:gap-[14px] mb-[15px] md:mb-[20px] lg:mb-[30px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat leading-[1.219]">
           <Link href="/home" className="text-black hover:text-[#1D4E89]">
             Главная
           </Link>
@@ -91,16 +91,16 @@ export default function PhotoAlbumsPage() {
         </nav>
 
         {/* Заголовок и Кнопка Назад */}
-        <div className="px-[25px] md:px-[47px] lg:px-[80px] flex flex-col md:flex-row md:items-start md:justify-between mb-[25px] md:mb-[58px] lg:mb-[58px] relative">
+        <div className="px-[19px] md:px-[36px] lg:px-[80px] flex flex-row items-center justify-between mb-[25px] md:mb-[40px] lg:mb-[60px]">
           {/* Заголовок */}
-          <h1 className="text-[20px] md:text-[30px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219] mb-0 md:mb-0">
+          <h1 className="text-[20px] md:text-[30px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219]">
             Фотоальбомы
           </h1>
 
           {/* Кнопка Назад - мобильная (только иконка) */}
           <Link
             href="/news"
-            className="absolute top-0 right-[25px] md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors"
+            className="md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group"
           >
             <svg
               width="18"
@@ -112,16 +112,18 @@ export default function PhotoAlbumsPage() {
             >
               <path
                 d="M2 7L16 7"
-                stroke="white"
+                stroke="currentColor"
                 strokeWidth="1"
                 strokeLinecap="round"
+                className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
               />
               <path
                 d="M10 2L16 7L10 12"
-                stroke="white"
+                stroke="currentColor"
                 strokeWidth="1"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
               />
             </svg>
           </Link>
@@ -159,25 +161,25 @@ export default function PhotoAlbumsPage() {
 
         {/* Блок фотоальбомов */}
         {isError ? (
-          <div className="px-[25px] md:px-[36px] lg:px-[63px] flex justify-center items-center py-20">
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] flex justify-center items-center py-20">
             <div className="text-base md:text-xl text-gray-600">
               Не удалось загрузить фотоальбомы. Попробуйте обновить страницу.
             </div>
           </div>
         ) : isLoading ? (
-          <div className="px-[25px] md:px-[36px] lg:px-[63px] flex justify-center items-center py-20">
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] flex justify-center items-center py-20">
             <div className="text-base md:text-xl text-gray-600">
               Загрузка...
             </div>
           </div>
         ) : albumsList.length === 0 ? (
-          <div className="px-[25px] md:px-[36px] lg:px-[63px] flex justify-center items-center py-20">
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] flex justify-center items-center py-20">
             <div className="text-base md:text-xl text-gray-600">
               Фотоальбомов пока нет
             </div>
           </div>
         ) : (
-          <div className="px-[25px] md:px-[36px] lg:px-[63px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-[20px] md:gap-x-[18px] md:gap-y-[36px] lg:gap-x-[30px] lg:gap-y-[39px] mb-[60px] md:mb-[88px] lg:mb-[88px]">
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-[15px] md:gap-x-[18px] md:gap-y-[36px] lg:gap-x-[30px] lg:gap-y-[39px] mb-[30px] md:mb-[50px] lg:mb-[88px]">
             {Array.from({ length: Math.max(10, albumsList.length) }).map(
               (_, i) => {
                 const news = albumsList[i % albumsList.length];
@@ -214,10 +216,10 @@ export default function PhotoAlbumsPage() {
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-colors ${
+              className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-all duration-150 ${
                 currentPage === 1
                   ? "bg-[#DBDBDB] cursor-not-allowed"
-                  : "bg-[#C62828] hover:bg-[#B71C1C]"
+                  : "bg-[#C62828] hover:bg-[#B71C1C] active:scale-95"
               }`}
             >
               <svg
@@ -268,7 +270,7 @@ export default function PhotoAlbumsPage() {
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`inline-flex items-center justify-center w-[35px] h-[35px] md:min-w-[51px] md:h-[48px] px-[10px] md:px-[20px] py-[10px] md:py-[12px] rounded-[8px] md:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat transition-colors leading-[1.219] ${
+                    className={`inline-flex items-center justify-center w-[35px] h-[35px] md:min-w-[51px] md:h-[48px] px-[10px] md:px-[20px] py-[10px] md:py-[12px] rounded-[8px] md:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat transition-all duration-150 leading-[1.219] active:scale-95 ${
                       currentPage === pageNum
                         ? "bg-[#C62828] text-[#EDF3F7]"
                         : "bg-white text-black border border-[#C62828] hover:bg-gray-50"
@@ -286,10 +288,10 @@ export default function PhotoAlbumsPage() {
                 setCurrentPage(Math.min(totalPages, currentPage + 1))
               }
               disabled={currentPage === totalPages}
-              className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-colors ${
+              className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-all duration-150 ${
                 currentPage === totalPages
                   ? "bg-[#DBDBDB] cursor-not-allowed"
-                  : "bg-[#C62828] hover:bg-[#B71C1C]"
+                  : "bg-[#C62828] hover:bg-[#B71C1C] active:scale-95"
               }`}
             >
               <svg
