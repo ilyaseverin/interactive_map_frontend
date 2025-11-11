@@ -20,8 +20,18 @@ export default function NewsCard({
   return (
     <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full mx-auto relative md:min-h-[500px] lg:min-h-[698px]">
       {/* Mobile Layout - Column with gap */}
-      <div className="flex flex-col py-[22px] px-[19px] gap-[5px] md:hidden">
-        {/* 1. Заголовок - fill width, max 2 lines */}
+      <div className="flex flex-col pt-[23px] pb-[22px] px-[23px] gap-[10px] md:hidden">
+        {/* 1. Изображение - адаптивная ширина с фиксированным aspect ratio */}
+        <div className="relative w-full aspect-[241/143] rounded-[10px] overflow-hidden">
+          <Image src={image} alt={title} fill className="object-cover" />
+        </div>
+
+        {/* 2. Дата - text aligned right */}
+        <time className="text-[10px] font-normal font-montserrat text-black leading-[2] text-right">
+          {date}
+        </time>
+
+        {/* 3. Заголовок - fill width, max 2 lines */}
         <h3
           className="text-[12px] font-bold font-montserrat text-black leading-[1.219] uppercase"
           style={{
@@ -35,34 +45,23 @@ export default function NewsCard({
           {title}
         </h3>
 
-        {/* 2. Дата - адаптивная ширина, text aligned right */}
-        <time className="text-[10px] font-normal font-montserrat text-black leading-[2] text-right self-start">
-          {date}
-        </time>
-
-        {/* 3. Изображение - адаптивная ширина с фиксированным aspect ratio */}
-        <div className="relative w-full aspect-[240/143] rounded-[15px] overflow-hidden">
-          <Image src={image} alt={title} fill className="object-cover" />
-        </div>
-
-        {/* 4. Описание - fill width, max 5 lines */}
+        {/* 4. Описание - max 5 lines */}
         <p
-          className="text-[12px] font-normal font-montserrat text-black leading-[1.219]"
+          className="text-[12px] font-normal font-montserrat text-black leading-[1.219] overflow-hidden"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 5,
             WebkitBoxOrient: "vertical",
-            overflow: "hidden",
             textOverflow: "ellipsis",
           }}
         >
           {description}
         </p>
 
-        {/* 5. Кнопка - адаптивная ширина */}
+        {/* 5. Кнопка - fill width */}
         <Link
           href={href}
-          className="inline-flex items-center justify-center w-full h-[40px] px-[25px] py-[10px] border border-[#1D4E89] text-[#1D4E89] text-[12px] font-normal font-montserrat rounded-lg hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap mt-[5px]"
+          className="inline-flex items-center justify-center w-full h-[40px] px-[25px] py-[10px] border border-[#1D4E89] text-[#1D4E89] text-[12px] font-normal font-montserrat rounded-[8px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap"
         >
           Читать подробнее..
         </Link>
@@ -111,7 +110,7 @@ export default function NewsCard({
         {/* Кнопка */}
         <Link
           href={href}
-          className="inline-flex items-center justify-center w-fit h-[52px] px-[20px] py-[12px] border border-[#1D4E89] text-[#1D4E89] text-[16px] font-normal font-montserrat rounded-[10px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap"
+          className="inline-flex items-center justify-center w-fit h-[52px] px-[20px] py-[12px] border border-[#1D4E89] text-[#1D4E89] text-[16px] font-normal font-montserrat rounded-[10px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap self-center"
         >
           Читать подробнее..
         </Link>
@@ -157,10 +156,10 @@ export default function NewsCard({
           {description}
         </p>
 
-        {/* Кнопка - адаптивная ширина */}
+        {/* Кнопка - центрированная */}
         <Link
           href={href}
-          className="absolute left-[48px] top-[599px] inline-flex items-center justify-center min-w-[200px] max-w-[249px] w-[43%] h-[63px] px-[clamp(16px,1.5vw,24px)] py-[16px] border border-[#1D4E89] text-[#1D4E89] text-[clamp(16px,1.25vw,20px)] font-normal font-montserrat rounded-[12px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap gap-[16px]"
+          className="absolute left-1/2 -translate-x-1/2 top-[599px] inline-flex items-center justify-center min-w-[200px] max-w-[249px] w-[43%] h-[63px] px-[clamp(16px,1.5vw,24px)] py-[16px] border border-[#1D4E89] text-[#1D4E89] text-[clamp(16px,1.25vw,20px)] font-normal font-montserrat rounded-[12px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap gap-[16px]"
         >
           Читать подробнее..
         </Link>
