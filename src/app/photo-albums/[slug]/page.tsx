@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import PhotoCard from "@/components/cards/PhotoCard";
-import PhotoModal from "@/components/modals/PhotoModal";
+import MediaModal from "@/components/modals/MediaModal";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useGetPhotoAlbumBySlugQuery } from "@/services/strapiApi";
@@ -214,14 +214,15 @@ export default function PhotoAlbumDetailPage() {
 
       {/* Попап для просмотра фото */}
       {selectedPhoto && (
-        <PhotoModal
+        <MediaModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          imageUrl={selectedPhoto.url}
+          mediaUrl={selectedPhoto.url}
           title={selectedPhoto.title}
           date={selectedPhoto.date}
           alt={selectedPhoto.alt}
-          imageName={selectedPhoto.imageName}
+          mediaName={selectedPhoto.imageName}
+          mediaType="image"
         />
       )}
     </div>
