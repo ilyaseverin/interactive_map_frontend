@@ -96,7 +96,7 @@ export default function PersonCard({ person }: PersonCardProps) {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-y-[8px] gap-x-[20px] xs:gap-x-[25px] sm:gap-x-[30px] md:gap-y-0 md:gap-x-0">
+            <div className="flex flex-wrap gap-y-[8px] gap-x-[20px] xs:gap-x-[25px] sm:gap-x-[30px] md:flex-nowrap md:gap-y-0 md:gap-x-0">
               <div className="flex items-center gap-[7px] xs:gap-[8px] sm:gap-[9px] md:gap-[10px] lg:gap-[14px] min-w-0">
                 <div className="flex-shrink-0 w-[29.82px] h-[29.82px] xs:w-[30px] xs:h-[30px] sm:w-[30px] sm:h-[30px] md:w-[29.82px] md:h-[29.82px] lg:w-[40px] lg:h-[40px]">
                   <Image
