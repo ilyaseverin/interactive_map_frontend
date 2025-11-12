@@ -34,7 +34,7 @@ export default function Breadcrumbs({
             ) : (
               <Link
                 href={item.href}
-                className="text-black hover:text-[#1D4E89] break-words md:break-normal"
+                className="text-black hover:underline break-words md:break-normal"
               >
                 {item.label}
               </Link>

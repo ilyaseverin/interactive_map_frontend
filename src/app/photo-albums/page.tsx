@@ -3,6 +3,7 @@
 import type { NewsListResponse } from "@/types/strapi";
 import Link from "next/link";
 import PhotoAlbumCard from "@/components/cards/PhotoAlbumCard";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { useState } from "react";
 import { useGetPhotoAlbumsQuery } from "@/services/strapiApi";
 
@@ -78,17 +79,14 @@ export default function PhotoAlbumsPage() {
       {/* Основной контент */}
       <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[30px]">
         {/* Хлебные крошки */}
-        <nav className="px-[19px] md:px-[36px] lg:px-[80px] flex items-center gap-[5px] md:gap-[12px] lg:gap-[14px] mb-[15px] md:mb-[20px] lg:mb-[30px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat leading-[1.219]">
-          <Link href="/home" className="text-black hover:text-[#1D4E89]">
-            Главная
-          </Link>
-          <span className="text-black">&gt;</span>
-          <Link href="/news" className="text-black hover:text-[#1D4E89]">
-            Новости
-          </Link>
-          <span className="text-black">&gt;</span>
-          <span className="text-black">Фотоальбомы</span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "Главная", href: "/home" },
+            { label: "Новости", href: "/news" },
+            { label: "Фотоальбомы" },
+          ]}
+          className="px-[19px] md:px-[36px] lg:px-[80px] mb-[15px] md:mb-[20px] lg:mb-[30px]"
+        />
 
         {/* Заголовок и Кнопка Назад */}
         <div className="px-[19px] md:px-[36px] lg:px-[80px] flex flex-row items-center justify-between mb-[25px] md:mb-[40px] lg:mb-[60px]">

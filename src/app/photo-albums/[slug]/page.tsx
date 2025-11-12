@@ -91,35 +91,69 @@ export default function PhotoAlbumDetailPage() {
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto pt-[37px] lg:pt-[39px]">
+      <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[30px]">
         {/* Хлебные крошки */}
-        <div className="px-4 sm:px-6 lg:px-[76px]">
-          <Breadcrumbs
-            className="mb-[37px] lg:mb-[37px]"
-            items={[
-              { label: "Главная", href: "/home" },
-              { label: "Новости", href: "/news" },
-              { label: "Фотоальбомы", href: "/photo-albums" },
-              { label: album.title },
-            ]}
-          />
-        </div>
+        <Breadcrumbs
+          className="px-[19px] md:px-[36px] lg:px-[80px] mb-[15px] md:mb-[20px] lg:mb-[30px]"
+          items={[
+            { label: "Главная", href: "/home" },
+            { label: "Новости", href: "/news" },
+            { label: "Фотоальбомы", href: "/photo-albums" },
+            { label: album.title },
+          ]}
+        />
 
         {/* Заголовок и Кнопка Назад */}
-        <div className="px-4 sm:px-6 lg:px-[80px] flex flex-col lg:flex-row lg:items-start lg:justify-between mb-[68px] lg:mb-[68px]">
-          {/* Заголовок */}
-          <h1 className="text-[40px] font-bold font-montserrat text-black leading-[1.219] mb-4 lg:mb-0 max-w-[1103px]">
+        <div className="px-[19px] md:px-[36px] lg:px-[80px] flex flex-row items-center justify-between mb-[25px] md:mb-[33px] lg:mb-[60px]">
+          {/* Заголовок - мобильный */}
+          <h1 className="md:hidden text-[20px] font-bold font-montserrat text-black leading-[1.219]">
+            Фотографии
+          </h1>
+
+          {/* Заголовок - планшет и десктоп */}
+          <h1 className="hidden md:block text-[30px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219] md:max-w-[468px] lg:max-w-[1103px]">
             {album.title}
           </h1>
 
-          {/* Кнопка Назад */}
+          {/* Кнопка Назад - мобильная */}
           <Link
             href="/photo-albums"
-            className="inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] self-start lg:self-auto"
+            className="md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group shrink-0"
           >
             <svg
-              width="29"
-              height="17"
+              width="18"
+              height="13"
+              viewBox="0 0 18 13"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="rotate-180"
+            >
+              <path
+                d="M2 7L16 7"
+                stroke="currentColor"
+                strokeWidth="1"
+                strokeLinecap="round"
+                className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
+              />
+              <path
+                d="M10 2L16 7L10 12"
+                stroke="currentColor"
+                strokeWidth="1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
+              />
+            </svg>
+          </Link>
+
+          {/* Кнопка Назад - планшет и десктоп */}
+          <Link
+            href="/photo-albums"
+            className="hidden md:inline-flex items-center justify-center gap-[10px] px-[24px] py-[11px] lg:py-[16px] border border-[#C62828] text-[#C62828] text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] shrink-0"
+          >
+            <svg
+              width="33"
+              height="25"
               viewBox="0 0 29 17"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -145,13 +179,13 @@ export default function PhotoAlbumDetailPage() {
 
         {/* Блок фотографий */}
         {photos.length === 0 ? (
-          <div className="px-4 sm:px-6 lg:px-[102px] flex justify-center items-center py-20">
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] flex justify-center items-center py-20">
             <div className="text-xl text-gray-600">
               В этом альбоме пока нет фотографий
             </div>
           </div>
         ) : (
-          <div className="px-4 sm:px-6 lg:px-[102px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] gap-y-[39px] mb-[150px] lg:mb-[150px]">
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-[30px] md:gap-x-[18px] md:gap-y-[28px] lg:gap-x-[30px] lg:gap-y-[39px] mb-[60px] md:mb-[88px] lg:mb-[150px]">
             {Array.from({ length: Math.max(18, photos.length) }).map((_, i) => {
               const photo = photos[i % photos.length];
               const photoUrl = photo.url.startsWith("http")
@@ -165,7 +199,7 @@ export default function PhotoAlbumDetailPage() {
                 <div
                   key={`${photo.id}-${i}`}
                   onClick={() => handlePhotoClick(photo, i)}
-                  className="cursor-pointer hover:opacity-90 transition-opacity"
+                  className="cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
                 >
                   <PhotoCard
                     image={photoUrl}
