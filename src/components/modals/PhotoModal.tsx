@@ -101,7 +101,7 @@ export default function PhotoModal({
                   </div>
 
                   {/* Текст и кнопка под фото */}
-                  <div className="flex flex-col sm:flex-col lg:flex-row items-center sm:items-start lg:items-end justify-between gap-4 sm:gap-[20px] lg:gap-4 pb-[20px] sm:pb-0">
+                  <div className="flex flex-col sm:flex-col lg:flex-row items-center sm:items-start lg:items-end justify-between gap-4 sm:gap-[20px] lg:gap-4 pb-[20px] sm:pb-0 px-[10px] min-[321px]:px-[15px] sm:px-0">
                     {/* Текст под фото */}
                     <div className="w-full sm:flex-1 min-w-0 text-left lg:ml-[8px] flex flex-col">
                       {/* На мобильной и планшете: сначала дата, потом заголовок */}
