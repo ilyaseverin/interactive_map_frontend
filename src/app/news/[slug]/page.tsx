@@ -192,7 +192,7 @@ function BackIconButton() {
     <Link
       href="/news"
       aria-label="Назад к новостям"
-      className="inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] text-white hover:opacity-90 transition-opacity"
+      className="inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group"
     >
       <svg
         width="18"
@@ -200,19 +200,22 @@ function BackIconButton() {
         viewBox="0 0 18 13"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="rotate-180"
       >
         <path
-          d="M1 6.5L17 6.5"
+          d="M2 6.5L16 6.5"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1"
           strokeLinecap="round"
+          className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
         />
         <path
-          d="M7 1L1 6.5L7 12"
+          d="M10 1.5L16 6.5L10 11.5"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"
+          className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
         />
       </svg>
     </Link>
@@ -338,13 +341,15 @@ export default async function NewsDetailPage({
 
           {/* Галерея (с клиентским компонентом для слайдера) */}
           {(sliderImages.length > 0 || firstVideoFileUrl || firstVideoUrl) && (
-            <MediaGallery
-              images={sliderImages}
-              hasPhotoAlbum={galleryImages.length > 0}
-              videoUrl={firstVideoUrl}
-              videoFileUrl={firstVideoFileUrl}
-              slug={news.slug}
-            />
+            <div className="xl:px-[40px] 2xl:px-[96px]">
+              <MediaGallery
+                images={sliderImages}
+                hasPhotoAlbum={galleryImages.length > 0}
+                videoUrl={firstVideoUrl}
+                videoFileUrl={firstVideoFileUrl}
+                slug={news.slug}
+              />
+            </div>
           )}
 
           {/* Текст новости */}

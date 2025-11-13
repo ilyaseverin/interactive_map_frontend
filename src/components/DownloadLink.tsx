@@ -40,25 +40,25 @@ export default function DownloadLink({
     <a
       href={url}
       onClick={handleDownload}
-      className="flex items-start gap-[11px] hover:opacity-80 transition-opacity group cursor-pointer"
+      className="flex items-start gap-[11px] lg:gap-[8px] hover:opacity-80 transition-opacity group cursor-pointer"
     >
       {/* Иконка файла */}
-      <div className="w-[41px] h-[41px] flex-shrink-0 relative">
+      <div className="w-[30px] h-[30px] md:w-[41px] md:h-[41px] lg:w-[68px] lg:h-[68px] flex-shrink-0 relative">
         <Image
           src="/images/document-icon.png"
           alt="Документ"
-          width={41}
-          height={41}
+          width={68}
+          height={68}
           className="object-contain"
         />
       </div>
       {/* Название и размер */}
-      <div className="flex flex-col gap-[3px] min-w-0 flex-1">
-        <p className="text-[20px] font-normal font-montserrat text-black leading-[1.219] break-words group-hover:underline">
+      <div className="flex flex-col gap-[3px] lg:gap-[10px] min-w-0 flex-1 lg:pt-[5px]">
+        <p className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-black leading-[1.219] break-words group-hover:underline">
           {fileName}
         </p>
         {fileSize && (
-          <p className="text-[15px] font-normal font-montserrat text-[#737373] leading-[1.219]">
+          <p className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#737373] leading-[1.219]">
             {fileSize}
           </p>
         )}

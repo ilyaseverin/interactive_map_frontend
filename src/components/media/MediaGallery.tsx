@@ -50,10 +50,10 @@ export default function MediaGallery({
   if (images.length === 0 && !videoFileUrl) return null;
 
   return (
-    <div className="mb-[25px] lg:mb-[50px] lg:px-[20px] xl:px-[40px] 2xl:px-[96px]">
+    <div className="mb-[25px] lg:mb-[50px]">
       {/* Галерея изображений (слайдер) */}
       {images.length > 0 && (
-        <div className="relative w-full mb-[25px] lg:mb-[30px]">
+        <div className="relative w-full mb-[15px] md:mb-[25px] lg:mb-[30px]">
           <Swiper
             {...swiperConfig}
             className="media-detail-swiper w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9] rounded-[15px] shadow-[0px_5px_12px_0px_rgba(0,0,0,0.25)]"
@@ -80,7 +80,7 @@ export default function MediaGallery({
 
       {/* Кнопки для фотоальбома и видео ссылки */}
       {(hasPhotoAlbum || videoUrl || videoFileUrl) && (
-        <div className="flex flex-col sm:flex-row gap-[15px] mt-[32px] justify-end">
+        <div className="flex flex-col sm:flex-row gap-[10px] md:gap-[15px] mt-0 md:mt-[32px] justify-end">
           {hasPhotoAlbum && slug && (
             <Link
               href={`/photo-albums/${slug}`}
