@@ -84,7 +84,7 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto pt-[37px] md:pt-[39px] lg:pt-[39px]">
+      <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[40px]">
         {/* Хлебные крошки */}
         <Breadcrumbs
           items={[

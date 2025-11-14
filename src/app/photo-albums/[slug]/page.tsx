@@ -91,7 +91,7 @@ export default function PhotoAlbumDetailPage() {
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[30px]">
+      <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[40px]">
         {/* Хлебные крошки */}
         <Breadcrumbs
           className="px-[19px] md:px-[36px] lg:px-[80px] mb-[15px] md:mb-[20px] lg:mb-[30px]"

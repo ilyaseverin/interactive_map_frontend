@@ -86,7 +86,7 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto pt-[37px] md:pt-[39px] lg:pt-[39px]">
+      <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[40px]">
         {/* Хлебные крошки */}
         <Breadcrumbs
           items={[{ label: "Главная", href: "/home" }, { label: "Новости" }]}
@@ -103,7 +103,7 @@ export default function NewsPage() {
           {/* Кнопка Назад - мобильная (только иконка) */}
           <Link
             href="/home"
-            className="absolute top-0 right-[30px] md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors"
+            className="absolute top-0 right-[19px] md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors"
           >
             <svg
               width="18"
@@ -160,16 +160,16 @@ export default function NewsPage() {
           </Link>
         </div>
 
-        {/* Категории и Фото/Видео - мобильная версия (в три ряда) */}
-        <div className="px-[19px] md:hidden flex flex-col gap-[5px] mb-[30px] max-w-full overflow-hidden">
-          {/* Первый ряд: кнопка "Все" */}
-          <div className="flex">
+        {/* Категории и Фото/Видео - мобильная версия (в два ряда) */}
+        <div className="px-[19px] md:hidden flex flex-col gap-[5px] pt-[10px] mb-[30px] max-w-full overflow-hidden">
+          {/* Первый ряд: "Все", "Главные" и "Региональные" */}
+          <div className="flex gap-[5px]">
             <button
               onClick={() => {
                 setCategory(undefined);
                 setCurrentPage(1);
               }}
-              className={`px-[25px] py-[10px] h-[40px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[2.5] transition-colors flex items-center justify-center whitespace-nowrap ${
+              className={`px-[18px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === undefined
                   ? "bg-[#1D4E89] text-[#FFFEFE]"
                   : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
@@ -177,16 +177,12 @@ export default function NewsPage() {
             >
               Все
             </button>
-          </div>
-
-          {/* Второй ряд: "Главные" и "Региональные" */}
-          <div className="flex gap-[5px]">
             <button
               onClick={() => {
                 setCategory("Главные");
                 setCurrentPage(1);
               }}
-              className={`px-[25px] py-[10px] h-[40px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[2.5] transition-colors flex items-center justify-center whitespace-nowrap ${
+              className={`px-[18px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === "Главные"
                   ? "bg-[#1D4E89] text-[#FFFEFE]"
                   : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
@@ -199,7 +195,7 @@ export default function NewsPage() {
                 setCategory("Региональные");
                 setCurrentPage(1);
               }}
-              className={`px-[25px] py-[10px] h-[40px] w-[153px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[2.5] transition-colors flex items-center justify-center whitespace-nowrap ${
+              className={`px-[16px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap flex-shrink ${
                 category === "Региональные"
                   ? "bg-[#1D4E89] text-[#FFFEFE]"
                   : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
@@ -209,17 +205,17 @@ export default function NewsPage() {
             </button>
           </div>
 
-          {/* Третий ряд: Фотоальбомы и Видео */}
+          {/* Второй ряд: Фотоальбомы и Видео */}
           <div className="flex gap-[5px] min-w-0">
             <Link
               href="/photo-albums"
-              className="inline-flex items-center justify-center px-[25px] py-[10px] h-[40px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1] whitespace-nowrap min-w-0 flex-shrink"
+              className="inline-flex items-center justify-center px-[18px] py-[8px] h-[36px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.2] whitespace-nowrap min-w-0 flex-shrink"
             >
               К фотоальбомам
             </Link>
             <Link
               href="/videos"
-              className="inline-flex items-center justify-center px-[25px] py-[10px] h-[40px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1] whitespace-nowrap min-w-0 flex-shrink"
+              className="inline-flex items-center justify-center px-[18px] py-[8px] h-[36px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.2] whitespace-nowrap min-w-0 flex-shrink"
             >
               К видео
             </Link>

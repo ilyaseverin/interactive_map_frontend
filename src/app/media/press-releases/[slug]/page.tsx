@@ -302,7 +302,7 @@ export default async function PressReleaseDetailPage({
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto px-[19px] md:px-[36px] lg:px-[63px] pt-[20px] lg:pt-[29px]">
+      <main className="w-full max-w-[1920px] mx-auto px-[19px] md:px-[36px] lg:px-[63px] pt-[15px] md:pt-[20px] lg:pt-[40px]">
         {/* Хлебные крошки */}
         <Breadcrumbs
           className="mb-[30px] md:mb-[30px] lg:mb-[30px] lg:pl-0"

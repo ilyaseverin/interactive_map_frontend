@@ -27,7 +27,7 @@ export default function AboutLayout({
       style={{ backgroundColor: "rgba(241, 242, 243, 1)" }}
     >
       {/* Breadcrumb Navigation */}
-      <div className="w-full px-[19px] sm:px-[32px] md:px-[36px] lg:px-[64px] xl:px-[80px] py-[16px] sm:py-[18px] lg:py-[21px] xl:py-[39px]">
+      <div className="w-full px-[19px] sm:px-[32px] md:px-[36px] lg:px-[64px] xl:px-[80px] pt-[15px] sm:pt-[20px] lg:pt-[40px] pb-[16px] sm:pb-[18px] lg:pb-[21px] xl:pb-[39px]">
         <div className="flex items-center justify-between">
           <Breadcrumbs
             items={[
