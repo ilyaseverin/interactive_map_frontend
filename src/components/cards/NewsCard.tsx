@@ -119,42 +119,45 @@ export default function NewsCard({
       {/* Desktop Layout - Absolute positioning с адаптивностью */}
       <div className="hidden lg:block">
         {/* Изображение - адаптивная ширина */}
-        <div className="absolute left-[11px] top-[11px] right-[11px] h-[min(331px,47.4%)] max-h-[331px] rounded-[15px] overflow-hidden">
+        <div className="absolute left-[23px] top-[23px] right-[23px] h-[min(331px,47.4%)] max-h-[331px] rounded-[15px] overflow-hidden">
           <Image src={image} alt={title} fill className="object-cover" />
         </div>
 
         {/* Дата - адаптивное позиционирование */}
-        <time className="absolute right-[43px] top-[356px] text-[clamp(12px,0.875vw,14px)] font-normal font-montserrat text-black leading-[1.429]">
+        <time className="absolute right-[55px] top-[364px] text-[clamp(12px,0.875vw,14px)] font-normal font-montserrat text-black leading-[1.429]">
           {date}
         </time>
 
-        {/* Заголовок - адаптивная ширина */}
-        <h3
-          className="absolute left-[48px] right-[84px] top-[379px] text-[clamp(16px,1.125vw,18px)] font-bold font-montserrat text-black leading-[1.556] uppercase"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {title}
-        </h3>
+        {/* Контейнер с текстовым контентом */}
+        <div className="absolute left-[60px] right-[50px] top-[394px] flex flex-col gap-[10px]">
+          {/* Заголовок */}
+          <h3
+            className="pr-[34px] text-[clamp(16px,1.125vw,18px)] font-bold font-montserrat text-black leading-[1.556] uppercase"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {title}
+          </h3>
 
-        {/* Описание - адаптивная ширина */}
-        <p
-          className="absolute left-[49px] right-[38px] top-[458px] text-[clamp(16px,1.125vw,18px)] font-normal font-montserrat text-black leading-[1.556]"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 4,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {description}
-        </p>
+          {/* Описание */}
+          <p
+            className="text-[clamp(16px,1.125vw,18px)] font-normal font-montserrat text-black leading-[1.556]"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 4,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {description}
+          </p>
+        </div>
 
         {/* Кнопка - центрированная */}
         <Link
@@ -164,9 +167,6 @@ export default function NewsCard({
           Читать подробнее..
         </Link>
       </div>
-
-      {/* Spacer for desktop absolute positioning */}
-      <div className="hidden lg:block lg:h-[698px]" />
     </article>
   );
 }
