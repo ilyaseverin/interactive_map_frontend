@@ -112,17 +112,18 @@ export default function MediaModal({
       {/* Фон затемнения */}
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-gray-500/60 transition-opacity duration-300 ease-out data-[closed]:opacity-0"
+        className="fixed inset-0 bg-gray-500/60 transition-opacity duration-300 ease-out data-[closed]:opacity-0 z-40"
+        onClick={onClose}
       />
 
-      <div className="fixed inset-0 overflow-y-auto">
+      <div className="fixed inset-0 overflow-y-auto z-40">
         <div
           className="flex min-h-full items-center justify-center px-[25px] py-4 sm:p-4 text-center"
           onClick={onClose}
         >
           <DialogPanel
             transition
-            className="relative w-full sm:max-w-[648px] lg:max-w-[1262px] h-auto sm:h-[525px] lg:h-[736px] max-h-[90vh] transform overflow-hidden rounded-[10px] sm:rounded-[15px] lg:rounded-[15px] bg-[#FEFEFE] text-left align-middle shadow-xl transition-all duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+            className="relative w-full sm:max-w-[648px] lg:max-w-[1262px] h-auto sm:h-[525px] lg:h-[736px] max-h-[90vh] transform overflow-hidden rounded-[10px] sm:rounded-[15px] lg:rounded-[15px] bg-[#FEFEFE] text-left align-middle shadow-xl transition-all duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 z-50"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Крестик закрытия */}

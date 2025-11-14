@@ -256,16 +256,20 @@ export default function VideosPage() {
                 return (
                   <div
                     key={`${news.id}-${i}`}
-                    onClick={() =>
-                      handleVideoClick(
-                        fullVideoUrl,
-                        news.title,
-                        relativeDate,
-                        isVKVideo,
-                        videoFileName
-                      )
-                    }
-                    className="cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
+                    onClick={() => {
+                      if (!isModalOpen) {
+                        handleVideoClick(
+                          fullVideoUrl,
+                          news.title,
+                          relativeDate,
+                          isVKVideo,
+                          videoFileName
+                        );
+                      }
+                    }}
+                    className={`cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150 ${
+                      isModalOpen ? "pointer-events-none" : ""
+                    }`}
                   >
                     <VideoCard
                       thumbnail={fullThumbnailUrl}

@@ -198,8 +198,14 @@ export default function PhotoAlbumDetailPage() {
               return (
                 <div
                   key={`${photo.id}-${i}`}
-                  onClick={() => handlePhotoClick(photo, i)}
-                  className="cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
+                  onClick={() => {
+                    if (!isModalOpen) {
+                      handlePhotoClick(photo, i);
+                    }
+                  }}
+                  className={`cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150 ${
+                    isModalOpen ? "pointer-events-none" : ""
+                  }`}
                 >
                   <PhotoCard
                     image={photoUrl}
