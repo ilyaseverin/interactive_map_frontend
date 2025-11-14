@@ -220,8 +220,20 @@ export default function VideosPage() {
                     }${thumbnailUrl}`;
 
                 // Получаем URL видео
-                const videoUrl = video.video_file?.url || video.url || "";
-                const fullVideoUrl = videoUrl.startsWith("http")
+                // Если есть внешняя ссылка (url), используем её, иначе используем локальный файл
+                const videoUrl = video.url || video.video_file?.url || "";
+
+                // Определяем тип видео по URL
+                const isExternalVideo =
+                  videoUrl.includes("youtube.com") ||
+                  videoUrl.includes("youtu.be") ||
+                  videoUrl.includes("rutube.ru") ||
+                  videoUrl.includes("vk.com") ||
+                  video.open_in_vk;
+
+                const fullVideoUrl = isExternalVideo
+                  ? videoUrl
+                  : videoUrl.startsWith("http")
                   ? videoUrl
                   : `${
                       process.env.NEXT_PUBLIC_STRAPI_URL ||
@@ -232,8 +244,14 @@ export default function VideosPage() {
                   ? getRelativeTime(news.basic_info.published_at_date)
                   : undefined;
 
-                // Получаем имя файла видео
+                // Получаем имя файла видео (только для локальных файлов)
                 const videoFileName = video.video_file?.name;
+
+                // Определяем, является ли видео VK видео
+                const isVKVideo =
+                  video.open_in_vk ||
+                  videoUrl.includes("vk.com") ||
+                  /video(-?\d+)_(\d+)/.test(videoUrl);
 
                 return (
                   <div
@@ -243,7 +261,7 @@ export default function VideosPage() {
                         fullVideoUrl,
                         news.title,
                         relativeDate,
-                        video.open_in_vk,
+                        isVKVideo,
                         videoFileName
                       )
                     }

@@ -16,13 +16,12 @@ export const getRelativeTime = (dateString: string): string => {
   if (diffInDays === 3) return "3 дня назад";
   if (diffInDays === 4) return "4 дня назад";
   if (diffInDays < 7) return `${diffInDays} дней назад`;
-  if (diffInDays < 14) return "неделю назад";
+  if (diffInDays < 14) return "Неделю назад";
   if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} недели назад`;
-  if (diffInDays < 60) return "месяц назад";
+  if (diffInDays < 60) return "Месяц назад";
   return date.toLocaleDateString("ru-RU", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 };
-

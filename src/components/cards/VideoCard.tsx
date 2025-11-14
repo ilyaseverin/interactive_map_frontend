@@ -21,7 +21,7 @@ export default function VideoCard({
       {/* Контейнер превью - Mobile & Tablet: padding 19px, Desktop: padding 0 */}
       <div className="pt-[19px] px-[19px] xl:p-0">
         {/* Превью видео - Mobile: 244x147, Tablet: 301x183, Desktop: 552x331 */}
-        <div className="relative w-full aspect-[244/147] md:aspect-[301/183] xl:aspect-[552/331] rounded-[10px] xl:rounded-none overflow-hidden">
+        <div className="relative w-full aspect-[244/147] md:aspect-[301/183] xl:aspect-[552/331] rounded-[10px] xl:rounded-t-[15px] overflow-hidden">
           <Image
             src={thumbnail}
             alt={alt}

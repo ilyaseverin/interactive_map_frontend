@@ -38,10 +38,72 @@ export default function MediaModal({
 
   // Функция для получения embed URL для VK видео
   const getVKEmbedUrl = (url: string) => {
+    // Если уже embed URL - добавляем autoplay и mute=0 (попытка включить звук)
+    if (url.includes("video_ext.php")) {
+      let embedUrl = url;
+
+      // Убираем mute параметры если есть
+      embedUrl = embedUrl
+        .replace(/[?&]mute=\d+/g, "")
+        .replace(/[?&]muted=\d+/g, "");
+
+      // Добавляем autoplay и mute=0
+      if (!embedUrl.includes("autoplay=1")) {
+        embedUrl += embedUrl.includes("?") ? "&autoplay=1" : "?autoplay=1";
+      }
+      if (!embedUrl.includes("mute=0")) {
+        embedUrl += embedUrl.includes("?") ? "&mute=0" : "?mute=0";
+      }
+
+      return embedUrl;
+    }
+
+    // Преобразуем формат video-123456_789012 или https://vk.com/video-123456_789012
     const match = url.match(/video(-?\d+)_(\d+)/);
     if (match) {
-      return `https://vk.com/video_ext.php?oid=${match[1]}&id=${match[2]}&autoplay=1`;
+      return `https://vk.com/video_ext.php?oid=${match[1]}&id=${match[2]}&autoplay=1&mute=0`;
     }
+
+    return url;
+  };
+
+  // Функция для получения embed URL для YouTube
+  const getYouTubeEmbedUrl = (url: string) => {
+    // Если уже embed URL - добавляем autoplay если его нет
+    if (url.includes("youtube.com/embed")) {
+      if (url.includes("autoplay")) {
+        return url;
+      }
+      return url.includes("?") ? `${url}&autoplay=1` : `${url}?autoplay=1`;
+    }
+
+    // Преобразуем формат youtube.com/watch?v=ID, youtu.be/ID или youtube.com/v/ID
+    const match = url.match(
+      /(?:youtube\.com\/(?:watch\?v=|v\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/
+    );
+    if (match) {
+      return `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`;
+    }
+
+    return url;
+  };
+
+  // Функция для получения embed URL для Rutube
+  const getRutubeEmbedUrl = (url: string) => {
+    // Если уже embed URL - добавляем autoplay если его нет
+    if (url.includes("rutube.ru/play/embed")) {
+      if (url.includes("autoplay")) {
+        return url;
+      }
+      return url.includes("?") ? `${url}&autoplay=1` : `${url}?autoplay=1`;
+    }
+
+    // Преобразуем формат rutube.ru/video/ID или rutube.ru/tracks/ID
+    const match = url.match(/rutube\.ru\/(?:video|tracks)\/([a-zA-Z0-9_-]+)/);
+    if (match) {
+      return `https://rutube.ru/play/embed/${match[1]}?autoplay=1`;
+    }
+
     return url;
   };
 
@@ -102,16 +164,25 @@ export default function MediaModal({
                     isVKVideo ? (
                       <iframe
                         src={getVKEmbedUrl(mediaUrl)}
-                        className="w-full h-full"
+                        className="w-full h-full border-0"
                         allow="autoplay; encrypted-media; fullscreen; picture-in-picture;"
                         allowFullScreen
+                        frameBorder="0"
+                        scrolling="no"
                       />
                     ) : mediaUrl.includes("youtube.com") ||
                       mediaUrl.includes("youtu.be") ? (
                       <iframe
-                        src={mediaUrl.replace("watch?v=", "embed/")}
+                        src={getYouTubeEmbedUrl(mediaUrl)}
                         className="w-full h-full"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : mediaUrl.includes("rutube.ru") ? (
+                      <iframe
+                        src={getRutubeEmbedUrl(mediaUrl)}
+                        className="w-full h-full"
+                        allow="autoplay; fullscreen; picture-in-picture"
                         allowFullScreen
                       />
                     ) : (
@@ -156,7 +227,8 @@ export default function MediaModal({
                 {/* Кнопка скачать (только для локальных файлов, не для внешних ссылок) */}
                 {!isVKVideo &&
                   !mediaUrl.includes("youtube.com") &&
-                  !mediaUrl.includes("youtu.be") && (
+                  !mediaUrl.includes("youtu.be") &&
+                  !mediaUrl.includes("rutube.ru") && (
                     <button
                       onClick={async () => {
                         try {
