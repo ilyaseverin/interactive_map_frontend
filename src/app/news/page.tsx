@@ -4,6 +4,7 @@ import type { NewsListResponse } from "@/types/strapi";
 import Link from "next/link";
 import NewsCard from "@/components/cards/NewsCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import Pagination from "@/components/Pagination";
 import { useState } from "react";
 import { useGetNewsQuery } from "@/services/strapiApi";
 
@@ -40,48 +41,6 @@ export default function NewsPage() {
   const newsList = mergedData.data;
   const totalPages = mergedData.meta?.pagination?.pageCount || 1;
   const isLoading = isFetching;
-
-  // Генерация номеров страниц для пагинации
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const maxVisiblePages = 5;
-
-    if (totalPages <= maxVisiblePages) {
-      // Если страниц мало, показываем все
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      // Всегда показываем первую страницу
-      pages.push(1);
-
-      if (currentPage > 3) {
-        pages.push("...");
-      }
-
-      // Показываем страницы вокруг текущей
-      for (
-        let i = Math.max(2, currentPage - 1);
-        i <= Math.min(totalPages - 1, currentPage + 1);
-        i++
-      ) {
-        if (!pages.includes(i)) {
-          pages.push(i);
-        }
-      }
-
-      if (currentPage < totalPages - 2) {
-        pages.push("...");
-      }
-
-      // Всегда показываем последнюю страницу
-      if (totalPages > 1) {
-        pages.push(totalPages);
-      }
-    }
-
-    return pages;
-  };
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
@@ -363,162 +322,38 @@ export default function NewsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-0 md:gap-x-[18px] lg:gap-x-[30px] gap-y-[25px] md:gap-y-[25px] lg:gap-y-[25px] mb-[60px] px-[19px] md:px-[36px] lg:px-[69px]">
-            {(() => {
-              // Дублируем карточки, чтобы показать минимум 9 для демонстрации (3x3 сетка)
-              const minCards = 10;
-              const displayCards = [];
+            {newsList.map((news) => {
+              const coverUrl = news.media?.cover?.url;
+              const fullCoverUrl = coverUrl
+                ? coverUrl.startsWith("http")
+                  ? coverUrl
+                  : `${
+                      process.env.NEXT_PUBLIC_STRAPI_URL ||
+                      "http://localhost:1337"
+                    }${coverUrl}`
+                : "/images/news/news-1.png";
 
-              if (newsList.length > 0) {
-                let cardIndex = 0;
-                for (let i = 0; i < Math.max(minCards, newsList.length); i++) {
-                  const news = newsList[cardIndex % newsList.length];
-                  const coverUrl = news.media?.cover?.url;
-                  const fullCoverUrl = coverUrl
-                    ? coverUrl.startsWith("http")
-                      ? coverUrl
-                      : `${
-                          process.env.NEXT_PUBLIC_STRAPI_URL ||
-                          "http://localhost:1337"
-                        }${coverUrl}`
-                    : "/images/news/news-1.png";
-
-                  displayCards.push(
-                    <NewsCard
-                      key={`${news.id}-${i}`}
-                      image={fullCoverUrl}
-                      date={formatDate(news.basic_info.published_at_date)}
-                      title={news.title}
-                      description={news.content_info?.excerpt || ""}
-                      href={`/news/${news.slug}`}
-                    />
-                  );
-
-                  cardIndex++;
-                }
-              }
-
-              return displayCards;
-            })()}
+              return (
+                <NewsCard
+                  key={news.id}
+                  image={fullCoverUrl}
+                  date={formatDate(news.basic_info.published_at_date)}
+                  title={news.title}
+                  description={news.content_info?.excerpt || ""}
+                  href={`/news/${news.slug}`}
+                />
+              );
+            })}
           </div>
         )}
 
         {/* Пагинация */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-[20px] md:gap-[36px] mb-[60px] md:mb-[150px] lg:mb-[150px] px-[19px] md:px-[36px] lg:px-[69px]">
-            {/* Кнопка Назад - мобильная */}
-            <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-colors ${
-                currentPage === 1
-                  ? "bg-[#DBDBDB] cursor-not-allowed"
-                  : "bg-[#C62828] hover:bg-[#B71C1C]"
-              }`}
-            >
-              <svg
-                width="14"
-                height="0"
-                viewBox="0 0 14 0"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M14 0L0 0"
-                  stroke={currentPage === 1 ? "#B8B8B8" : "#FFFFFF"}
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-
-            {/* Кнопка Назад - планшет и десктоп */}
-            <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className={`hidden md:inline-flex items-center justify-center px-[20px] py-[12px] md:w-[132px] md:h-[48px] lg:w-auto lg:px-[24px] lg:py-[16px] rounded-[10px] lg:rounded-[12px] text-[16px] lg:text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
-                currentPage === 1
-                  ? "bg-[#DBDBDB] text-[#B8B8B8] cursor-not-allowed"
-                  : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C]"
-              }`}
-            >
-              Назад
-            </button>
-
-            {/* Номера страниц */}
-            <div className="flex items-center gap-[4px]">
-              {getPageNumbers().map((page, index) => {
-                if (page === "...") {
-                  return (
-                    <span
-                      key={`ellipsis-${index}`}
-                      className="px-[10px] md:px-[15px] lg:px-[16px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-black"
-                    >
-                      ...
-                    </span>
-                  );
-                }
-
-                const pageNum = page as number;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`inline-flex items-center justify-center w-[35px] h-[35px] md:w-[51px] md:h-[48px] lg:w-auto lg:min-w-[56px] lg:px-[24px] lg:py-[16px] rounded-[8px] md:rounded-[10px] lg:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat transition-colors leading-[1.219] ${
-                      currentPage === pageNum
-                        ? "bg-[#C62828] text-[#EDF3F7]"
-                        : "bg-white text-black border border-[#C62828] hover:bg-gray-50"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Кнопка Вперед - мобильная */}
-            <button
-              onClick={() =>
-                setCurrentPage(Math.min(totalPages, currentPage + 1))
-              }
-              disabled={currentPage === totalPages}
-              className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-colors ${
-                currentPage === totalPages
-                  ? "bg-[#DBDBDB] cursor-not-allowed"
-                  : "bg-[#C62828] hover:bg-[#B71C1C]"
-              }`}
-            >
-              <svg
-                width="14"
-                height="0"
-                viewBox="0 0 14 0"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0L14 0"
-                  stroke={currentPage === totalPages ? "#B8B8B8" : "#FFFFFF"}
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-
-            {/* Кнопка Вперед - планшет и десктоп */}
-            <button
-              onClick={() =>
-                setCurrentPage(Math.min(totalPages, currentPage + 1))
-              }
-              disabled={currentPage === totalPages}
-              className={`hidden md:inline-flex items-center justify-center px-[20px] py-[12px] md:w-[132px] md:h-[48px] lg:w-auto lg:px-[24px] lg:py-[16px] rounded-[10px] lg:rounded-[12px] text-[16px] lg:text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
-                currentPage === totalPages
-                  ? "bg-[#DBDBDB] text-[#B8B8B8] cursor-not-allowed"
-                  : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C]"
-              }`}
-            >
-              Вперед
-            </button>
-          </div>
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          className="px-[19px] md:px-[36px] lg:px-[69px]"
+        />
       </main>
     </div>
   );
