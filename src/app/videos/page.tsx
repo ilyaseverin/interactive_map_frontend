@@ -4,12 +4,24 @@ import Link from "next/link";
 import VideoCard from "@/components/cards/VideoCard";
 import MediaModal from "@/components/modals/MediaModal";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useState } from "react";
-import { useGetVideosQuery } from "@/services/strapiApi";
-import type { NewsListResponse } from "@/types/strapi";
+import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useGetProjectsQuery, useGetVideosQuery } from "@/services/strapiApi";
+import type {
+  NewsItem,
+  NewsListResponse,
+  ProjectItem,
+  ProjectListResponse,
+} from "@/types/strapi";
 import { getRelativeTime } from "@/utils/dateUtils";
 
 export default function VideosPage() {
+  const searchParams = useSearchParams();
+  const sourceParam = (searchParams.get("source") || "news") as
+    | "news"
+    | "projects";
+  const source = sourceParam === "projects" ? "projects" : "news";
+
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedVideo, setSelectedVideo] = useState<{
     url: string;
@@ -24,23 +36,72 @@ export default function VideosPage() {
 
   const {
     data: videosData,
-    isFetching,
-    isError,
-  } = useGetVideosQuery({
-    page: currentPage,
-    pageSize,
-  });
-
-  const fallbackData: NewsListResponse = { data: [], meta: {} };
-  const mergedData = videosData ?? fallbackData;
-
-  // Фильтруем только новости с видео
-  const videosList = mergedData.data.filter(
-    (news) => news.media?.video_links && news.media.video_links.length > 0
+    isFetching: isNewsFetching,
+    isError: isNewsError,
+  } = useGetVideosQuery(
+    {
+      page: currentPage,
+      pageSize,
+    },
+    { skip: source !== "news" }
   );
 
-  const totalPages = mergedData.meta?.pagination?.pageCount || 1;
-  const isLoading = isFetching;
+  const {
+    data: projectsData,
+    isFetching: isProjectsFetching,
+    isError: isProjectsError,
+  } = useGetProjectsQuery(
+    {
+      page: currentPage,
+      pageSize,
+    },
+    { skip: source !== "projects" }
+  );
+
+  const isError = isNewsError || isProjectsError;
+  const isLoading = isNewsFetching || isProjectsFetching;
+
+  const {
+    videosList,
+    totalPages,
+  }: { videosList: (NewsItem | ProjectItem)[]; totalPages: number } =
+    useMemo(() => {
+      if (source === "projects") {
+        const fallback: ProjectListResponse = { data: [], meta: {} };
+        const merged = (projectsData ?? fallback) as ProjectListResponse;
+
+        const items =
+          merged.data?.filter(
+            (project: ProjectItem) =>
+              project.media?.videos && project.media.videos.length > 0
+          ) || [];
+
+        const pages =
+          merged.meta?.pagination?.pageCount &&
+          merged.meta.pagination.pageCount > 0
+            ? merged.meta.pagination.pageCount
+            : 1;
+
+        return { videosList: items, totalPages: pages };
+      }
+
+      const fallback: NewsListResponse = { data: [], meta: {} };
+      const merged = (videosData ?? fallback) as NewsListResponse;
+
+      const items =
+        merged.data?.filter(
+          (news: NewsItem) =>
+            news.media?.video_links && news.media.video_links.length > 0
+        ) || [];
+
+      const pages =
+        merged.meta?.pagination?.pageCount &&
+        merged.meta.pagination.pageCount > 0
+          ? merged.meta.pagination.pageCount
+          : 1;
+
+      return { videosList: items, totalPages: pages };
+    }, [projectsData, source, videosData]);
 
   // Функция для открытия попапа с видео
   const handleVideoClick = (
@@ -104,11 +165,19 @@ export default function VideosPage() {
       <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[40px]">
         {/* Хлебные крошки */}
         <Breadcrumbs
-          items={[
-            { label: "Главная", href: "/home" },
-            { label: "Новости", href: "/news" },
-            { label: "Видео" },
-          ]}
+          items={
+            source === "projects"
+              ? [
+                  { label: "Главная", href: "/home" },
+                  { label: "Наши проекты", href: "/projects" },
+                  { label: "Видео" },
+                ]
+              : [
+                  { label: "Главная", href: "/home" },
+                  { label: "Новости", href: "/news" },
+                  { label: "Видео" },
+                ]
+          }
           className="px-[19px] md:px-[36px] lg:px-[80px] mb-[15px] md:mb-[20px] lg:mb-[30px]"
         />
 
@@ -121,7 +190,7 @@ export default function VideosPage() {
 
           {/* Кнопка Назад - мобильная (только иконка) */}
           <Link
-            href="/news"
+            href={source === "projects" ? "/projects" : "/news"}
             className="md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group"
           >
             <svg
@@ -152,7 +221,7 @@ export default function VideosPage() {
 
           {/* Кнопка Назад - планшет и десктоп (с текстом) */}
           <Link
-            href="/news"
+            href={source === "projects" ? "/projects" : "/news"}
             className="hidden md:inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] md:px-[24px] md:py-[12px] border border-[#C62828] text-[#C62828] text-[16px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
           >
             <svg
@@ -204,7 +273,84 @@ export default function VideosPage() {
           <div className="px-[19px] md:px-[36px] lg:px-[60px] xl:px-[72px] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-[20px] md:gap-x-[18px] md:gap-y-[18px] xl:gap-x-[60px] xl:gap-y-[39px] mb-[30px] md:mb-[50px] lg:mb-[88px]">
             {Array.from({ length: Math.max(15, videosList.length) }).map(
               (_, i) => {
-                const news = videosList[i % videosList.length];
+                const item = videosList[i % videosList.length];
+
+                if (source === "projects") {
+                  const project = item as ProjectItem;
+                  const video = project.media?.videos?.[0];
+
+                  if (!video) return null;
+
+                  const thumbnailUrl =
+                    project.media?.cover?.url ||
+                    project.media?.gallery?.[0]?.url ||
+                    "/images/news/news-1.png";
+                  const fullThumbnailUrl = thumbnailUrl.startsWith("http")
+                    ? thumbnailUrl
+                    : `${
+                        process.env.NEXT_PUBLIC_STRAPI_URL ||
+                        "http://localhost:1337"
+                      }${thumbnailUrl}`;
+
+                  const videoUrl = video.url || video.video_file?.url || "";
+
+                  const isExternalVideo =
+                    videoUrl.includes("youtube.com") ||
+                    videoUrl.includes("youtu.be") ||
+                    videoUrl.includes("rutube.ru") ||
+                    videoUrl.includes("vk.com");
+
+                  const fullVideoUrl = isExternalVideo
+                    ? videoUrl
+                    : videoUrl.startsWith("http")
+                    ? videoUrl
+                    : `${
+                        process.env.NEXT_PUBLIC_STRAPI_URL ||
+                        "http://localhost:1337"
+                      }${videoUrl}`;
+
+                  const relativeDate = project.publishedAt
+                    ? getRelativeTime(project.publishedAt)
+                    : undefined;
+
+                  const videoFileName = video.video_file?.name;
+
+                  const isVKVideo =
+                    videoUrl.includes("vk.com") ||
+                    /video(-?\d+)_(\d+)/.test(videoUrl);
+
+                  return (
+                    <div
+                      key={`${project.id}-${i}`}
+                      onClick={() => {
+                        if (!isModalOpen) {
+                          handleVideoClick(
+                            fullVideoUrl,
+                            project.title,
+                            relativeDate,
+                            isVKVideo,
+                            videoFileName
+                          );
+                        }
+                      }}
+                      className={`cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150 ${
+                        isModalOpen ? "pointer-events-none" : ""
+                      }`}
+                    >
+                      <VideoCard
+                        thumbnail={fullThumbnailUrl}
+                        title={project.title}
+                        date={relativeDate}
+                        duration="2:02"
+                        alt={
+                          project.media?.cover?.alternativeText || project.title
+                        }
+                      />
+                    </div>
+                  );
+                }
+
+                const news = item as NewsItem;
                 const video = news.media?.video_links?.[0];
 
                 if (!video) return null;

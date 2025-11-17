@@ -63,7 +63,7 @@ export default function Header() {
       href: "/media",
       subMenu: [
         { label: "Пресс-релизы", href: "/press-releases" },
-        { label: "Фотоальбомы", href: "/media/photo-albums" },
+        { label: "Фотоальбомы", href: "/photo-albums?source=press" },
       ],
     },
     { label: "Контакты", href: "/contacts" },

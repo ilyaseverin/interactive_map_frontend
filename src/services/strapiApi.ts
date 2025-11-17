@@ -216,6 +216,7 @@ export const strapiApi = createApi({
           "populate[content_info]": "*",
           "populate[media][populate][cover]": "true",
           "populate[media][populate][gallery]": "true",
+          "populate[media][populate][videos][populate][video_file]": "true",
           sort: "publishedAt:desc",
         },
       }),

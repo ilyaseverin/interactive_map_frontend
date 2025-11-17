@@ -401,6 +401,7 @@ export default async function ProjectDetailPage({
                 videoUrl={firstVideoUrl}
                 videoFileUrl={firstVideoFileUrl}
                 slug={project.slug}
+                sourceType="projects"
               />
             </div>
           )}

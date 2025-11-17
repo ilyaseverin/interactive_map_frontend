@@ -164,13 +164,13 @@ export default function ProjectsPage() {
         {/* Кнопки Фото/Видео - мобильная версия */}
         <div className="px-[19px] md:hidden flex gap-[5px] pt-[10px] mb-[20px] max-w-full overflow-hidden">
           <Link
-            href="/photo-albums"
+            href="/photo-albums?source=projects"
             className="inline-flex items-center justify-center px-[25px] py-[10px] h-[40px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1] whitespace-nowrap min-w-0 flex-shrink"
           >
             К фотоальбомам
           </Link>
           <Link
-            href="/videos"
+            href="/videos?source=projects"
             className="inline-flex items-center justify-center px-[25px] py-[10px] h-[40px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1] whitespace-nowrap min-w-0 flex-shrink"
           >
             К видео
@@ -180,13 +180,13 @@ export default function ProjectsPage() {
         {/* Кнопки Фото/Видео - планшет */}
         <div className="hidden md:flex lg:hidden px-[36px] flex-row gap-[14px] mb-[40px] flex-wrap">
           <Link
-            href="/photo-albums"
+            href="/photo-albums?source=projects"
             className="inline-flex items-center justify-center px-[20px] py-[12px] min-h-[48px] rounded-[10px] bg-white text-[#C62828] text-[16px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.875] whitespace-nowrap"
           >
             К фотоальбомам
           </Link>
           <Link
-            href="/videos"
+            href="/videos?source=projects"
             className="inline-flex items-center justify-center px-[20px] py-[12px] min-h-[48px] rounded-[10px] bg-white text-[#C62828] text-[16px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.875] whitespace-nowrap"
           >
             К видео
@@ -198,13 +198,13 @@ export default function ProjectsPage() {
           {/* Кнопки Фотоальбомы / Видео */}
           <div className="flex gap-[15px] flex-wrap">
             <Link
-              href="/photo-albums"
+              href="/photo-albums?source=projects"
               className="inline-flex items-center justify-center px-[20px] xl:px-[24px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[12px] bg-white text-[#C62828] text-[18px] xl:text-[20px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.219] whitespace-nowrap"
             >
               К фотоальбомам
             </Link>
             <Link
-              href="/videos"
+              href="/videos?source=projects"
               className="inline-flex items-center justify-center px-[20px] xl:px-[24px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[12px] bg-white text-[#C62828] text-[18px] xl:text-[20px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.219] whitespace-nowrap"
             >
               К видео

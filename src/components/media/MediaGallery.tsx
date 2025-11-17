@@ -21,6 +21,7 @@ interface MediaGalleryProps {
   videoUrl?: string;
   videoFileUrl?: string;
   slug?: string;
+  sourceType?: "news" | "projects" | "press";
 }
 
 // Swiper Configuration - скопировано из HeroSlider
@@ -45,6 +46,7 @@ export default function MediaGallery({
   videoUrl,
   videoFileUrl,
   slug,
+  sourceType = "news",
 }: MediaGalleryProps) {
   // Если нет ни изображений, ни видео файла - не показываем компонент
   if (images.length === 0 && !videoFileUrl) return null;
@@ -83,7 +85,7 @@ export default function MediaGallery({
         <div className="flex flex-col sm:flex-row gap-[10px] md:gap-[15px] mt-0 md:mt-[32px] justify-end">
           {hasPhotoAlbum && slug && (
             <Link
-              href={`/photo-albums/${slug}`}
+              href={`/photo-albums/${slug}?source=${sourceType}`}
               className="inline-flex items-center justify-center h-[40px] md:h-[48px] lg:h-[56px] px-[24px] md:px-[20px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
             >
               К фотоальбому

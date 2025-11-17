@@ -208,13 +208,13 @@ export default function NewsPage() {
           {/* Второй ряд: Фотоальбомы и Видео */}
           <div className="flex gap-[5px] min-w-0">
             <Link
-              href="/photo-albums"
+              href="/photo-albums?source=news"
               className="inline-flex items-center justify-center px-[18px] py-[8px] h-[36px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.2] whitespace-nowrap min-w-0 flex-shrink"
             >
               К фотоальбомам
             </Link>
             <Link
-              href="/videos"
+              href="/videos?source=news"
               className="inline-flex items-center justify-center px-[18px] py-[8px] h-[36px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.2] whitespace-nowrap min-w-0 flex-shrink"
             >
               К видео
@@ -270,13 +270,13 @@ export default function NewsPage() {
           {/* Кнопки Фотоальбомы / Видео */}
           <div className="flex gap-[14px] flex-wrap">
             <Link
-              href="/photo-albums"
+              href="/photo-albums?source=news"
               className="inline-flex items-center justify-center px-[20px] py-[12px] min-h-[48px] rounded-[10px] bg-white text-[#C62828] text-[16px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.875] whitespace-nowrap"
             >
               К фотоальбомам
             </Link>
             <Link
-              href="/videos"
+              href="/videos?source=news"
               className="inline-flex items-center justify-center px-[20px] py-[12px] min-h-[48px] rounded-[10px] bg-white text-[#C62828] text-[16px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.875] whitespace-nowrap"
             >
               К видео
@@ -332,13 +332,13 @@ export default function NewsPage() {
           {/* Кнопки Фотоальбомы / Видео */}
           <div className="flex gap-[15px] flex-wrap">
             <Link
-              href="/photo-albums"
+              href="/photo-albums?source=news"
               className="inline-flex items-center justify-center px-[20px] xl:px-[24px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[12px] bg-white text-[#C62828] text-[18px] xl:text-[20px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.219] whitespace-nowrap"
             >
               К фотоальбомам
             </Link>
             <Link
-              href="/videos"
+              href="/videos?source=news"
               className="inline-flex items-center justify-center px-[20px] xl:px-[24px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[12px] bg-white text-[#C62828] text-[18px] xl:text-[20px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.219] whitespace-nowrap"
             >
               К видео

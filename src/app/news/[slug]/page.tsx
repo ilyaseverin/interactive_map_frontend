@@ -348,6 +348,7 @@ export default async function NewsDetailPage({
                 videoUrl={firstVideoUrl}
                 videoFileUrl={firstVideoFileUrl}
                 slug={news.slug}
+                sourceType="news"
               />
             </div>
           )}

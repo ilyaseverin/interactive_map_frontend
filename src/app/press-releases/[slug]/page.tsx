@@ -394,6 +394,7 @@ export default async function PressReleaseDetailPage({
                 images={sliderImages}
                 hasPhotoAlbum={galleryImages.length > 0}
                 slug={pressRelease.slug}
+                sourceType="press"
               />
             </div>
           )}

@@ -161,7 +161,7 @@ export default function PressReleasesPage() {
 
               {/* Кнопка К фотоальбомам - только на десктопе */}
               <Link
-                href="/media/photo-albums"
+                href="/photo-albums?source=press"
                 className="hidden lg:inline-flex items-center justify-center px-[24px] py-[16px] h-[48px] text-[#C62828] border border-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
               >
                 К фотоальбомам
@@ -171,7 +171,7 @@ export default function PressReleasesPage() {
 
           {/* Кнопка К фотоальбомам - мобильная версия */}
           <Link
-            href="/media/photo-albums"
+            href="/photo-albums?source=press"
             className="md:hidden inline-flex items-center justify-center px-[25px] py-[10px] h-[35px] text-[#C62828] border border-[#C62828] text-[12px] font-normal font-montserrat rounded-[8px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
           >
             К фотоальбомам
@@ -179,7 +179,7 @@ export default function PressReleasesPage() {
 
           {/* Кнопка К фотоальбомам - только на планшете, слева ниже */}
           <Link
-            href="/media/photo-albums"
+            href="/photo-albums?source=press"
             className="hidden md:inline-flex lg:hidden items-center justify-center px-[24px] py-[16px] h-[48px] text-[#C62828] border border-[#C62828] text-[16px] font-normal font-montserrat rounded-[10px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
           >
             К фотоальбомам
