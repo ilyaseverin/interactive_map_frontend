@@ -56,32 +56,16 @@ export default function VideoCard({
 
       {/* Описание - Mobile: 233x51 padding:20/9/19, Tablet: 281x66 padding:23/11/24, Desktop: 508x48 padding:22/23/27 */}
       <div className="px-[20px] pt-[9px] pb-[19px] md:px-[23px] md:pt-[11px] md:pb-[24px] xl:px-[22px] xl:pt-[23px] xl:pb-[27px]">
-        {/* Desktop: заголовок + дата inline, обрезается троеточием */}
-        <div className="hidden xl:block h-[48px] overflow-hidden">
-          <p className="text-[20px] font-montserrat font-normal leading-[1.219] text-black line-clamp-2">
-            {title}
-            {date && (
-              <span className="whitespace-nowrap">
-                {" "}
-                <span className="font-bold">•</span> {date}
-              </span>
-            )}
+        {/* Заголовок */}
+        <p className="text-[12px] md:text-[16px] xl:text-[20px] font-montserrat font-normal leading-[1.219] text-black line-clamp-2 mb-[6px] md:mb-[7px] xl:mb-[10px]">
+          {title}
+        </p>
+        {/* Дата - под заголовком на всех версиях */}
+        {date && (
+          <p className="text-[12px] md:text-[16px] xl:text-[20px] font-montserrat font-normal leading-[1.219] text-black">
+            {date}
           </p>
-        </div>
-
-        {/* Mobile & Tablet: заголовок + дата отдельно (БЕЗ точки) */}
-        <div className="xl:hidden">
-          {/* Заголовок */}
-          <p className="text-[12px] md:text-[16px] font-montserrat font-normal leading-[1.219] text-black line-clamp-2 mb-[6px] md:mb-[7px]">
-            {title}
-          </p>
-          {/* Дата - БЕЗ точки на мобилке и планшете */}
-          {date && (
-            <p className="text-[12px] md:text-[16px] font-montserrat font-normal leading-[1.219] text-black">
-              {date}
-            </p>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
