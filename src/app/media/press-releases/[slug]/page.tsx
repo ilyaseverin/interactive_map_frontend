@@ -319,7 +319,19 @@ export default async function PressReleaseDetailPage({
           {/* Мобилка/планшет: сверху дата слева, кнопка справа; ниже заголовок; ниже категория (только на мобилке) */}
           <div className="lg:hidden">
             <div className="flex items-center justify-between mb-[20px]">
-              <DateDisplay date={pressRelease.basic_info.published_at_date} />
+              <div className="flex items-center gap-4">
+                <DateDisplay date={pressRelease.basic_info.published_at_date} />
+                {/* Категория на планшете - рядом с датой */}
+                {pressRelease.basic_info.category && (
+                  <div className="hidden md:block">
+                    <div className="inline-flex items-center px-[17px] py-[10px] bg-[#EFEFEF] rounded-[11px]">
+                      <span className="text-[16px] font-medium font-montserrat text-[#737373] leading-[1.219]">
+                        {pressRelease.basic_info.category}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
               <div className="flex-shrink-0">
                 <div className="md:hidden">
                   <BackIconButton />
@@ -329,16 +341,6 @@ export default async function PressReleaseDetailPage({
                 </div>
               </div>
             </div>
-            {/* Категория на планшете - между датой и заголовком */}
-            {pressRelease.basic_info.category && (
-              <div className="hidden md:block mb-[20px]">
-                <div className="inline-flex items-center px-[17px] py-[10px] bg-[#EFEFEF] rounded-[11px]">
-                  <span className="text-[16px] font-medium font-montserrat text-[#737373] leading-[1.219]">
-                    {pressRelease.basic_info.category}
-                  </span>
-                </div>
-              </div>
-            )}
             <h1 className="text-[20px] md:text-[30px] font-bold font-montserrat text-black leading-[1.219] mb-[15px]">
               {pressRelease.title}
             </h1>
