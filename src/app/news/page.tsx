@@ -5,7 +5,8 @@ import Link from "next/link";
 import NewsCard from "@/components/cards/NewsCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Pagination from "@/components/Pagination";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useGetNewsQuery } from "@/services/strapiApi";
 
 // Функция для форматирования даты
@@ -18,10 +19,32 @@ function formatDate(dateString: string): string {
   });
 }
 
+// Функция для преобразования английского значения из URL в русское для API
+function mapUrlCategoryToApiCategory(
+  urlCategory: string | null
+): string | undefined {
+  if (urlCategory === "main") return "Главные";
+  if (urlCategory === "regional") return "Региональные";
+  return undefined;
+}
+
 // Клиентский компонент
 export default function NewsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [category, setCategory] = useState<string | undefined>(undefined);
+
+  // Читаем категорию из URL при загрузке и преобразуем в русское значение для API
+  const categoryParam = searchParams.get("category");
+  const [category, setCategory] = useState<string | undefined>(
+    mapUrlCategoryToApiCategory(categoryParam)
+  );
+
+  // Синхронизируем состояние с URL при изменении параметра
+  useEffect(() => {
+    const urlCategory = searchParams.get("category");
+    setCategory(mapUrlCategoryToApiCategory(urlCategory));
+  }, [searchParams]);
 
   const pageSize = 9;
 
@@ -127,6 +150,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory(undefined);
                 setCurrentPage(1);
+                router.push("/news");
               }}
               className={`px-[18px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === undefined
@@ -140,6 +164,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory("Главные");
                 setCurrentPage(1);
+                router.push("/news?category=main");
               }}
               className={`px-[18px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === "Главные"
@@ -153,6 +178,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory("Региональные");
                 setCurrentPage(1);
+                router.push("/news?category=regional");
               }}
               className={`px-[16px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap flex-shrink ${
                 category === "Региональные"
@@ -189,6 +215,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory(undefined);
                 setCurrentPage(1);
+                router.push("/news");
               }}
               className={`px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] font-normal font-montserrat leading-[1.875] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === undefined
@@ -202,6 +229,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory("Главные");
                 setCurrentPage(1);
+                router.push("/news?category=main");
               }}
               className={`px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] font-normal font-montserrat leading-[1.875] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === "Главные"
@@ -215,6 +243,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory("Региональные");
                 setCurrentPage(1);
+                router.push("/news?category=regional");
               }}
               className={`px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] font-normal font-montserrat leading-[1.875] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === "Региональные"
@@ -251,6 +280,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory(undefined);
                 setCurrentPage(1);
+                router.push("/news");
               }}
               className={`px-[40px] xl:px-[65px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[9px] text-[18px] xl:text-[20px] font-normal font-montserrat leading-[1.219] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === undefined
@@ -264,6 +294,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory("Главные");
                 setCurrentPage(1);
+                router.push("/news?category=main");
               }}
               className={`px-[40px] xl:px-[65px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[9px] text-[18px] xl:text-[20px] font-normal font-montserrat leading-[1.219] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === "Главные"
@@ -277,6 +308,7 @@ export default function NewsPage() {
               onClick={() => {
                 setCategory("Региональные");
                 setCurrentPage(1);
+                router.push("/news?category=regional");
               }}
               className={`px-[40px] xl:px-[65px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[9px] text-[18px] xl:text-[20px] font-normal font-montserrat leading-[1.219] transition-colors flex items-center justify-center whitespace-nowrap ${
                 category === "Региональные"

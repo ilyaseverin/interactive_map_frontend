@@ -16,7 +16,7 @@ export default function Logo({
 }: LogoProps) {
   return (
     <div className="flex items-center" style={{ gap }}>
-      <Link href="/" className="flex-shrink-0">
+      <Link href="/home" className="flex-shrink-0">
         <Image
           src="/images/logo-392dd2.png"
           alt="Патриот Центр 48"
@@ -26,7 +26,7 @@ export default function Logo({
         />
       </Link>
       <Link
-        href="/"
+        href="/home"
         className="font-normal font-montserrat text-black whitespace-nowrap"
         style={{ fontSize, lineHeight: lineHeight || "1.2" }}
       >

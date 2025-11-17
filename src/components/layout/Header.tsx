@@ -28,6 +28,8 @@ export default function Header() {
       subMenu: [
         { label: "Главные", href: "/news?category=main" },
         { label: "Региональные", href: "/news?category=regional" },
+        { label: "Фотоальбомы", href: "/photo-albums?source=news" },
+        { label: "Видео", href: "/videos?source=news" },
       ],
     },
     { label: "Карта", href: "/battle-glory" },
@@ -57,7 +59,15 @@ export default function Header() {
         },
       ],
     },
-    { label: "Наши проекты", href: "/projects" },
+    {
+      label: "Наши проекты",
+      href: "/projects",
+      subMenu: [
+        { label: "Проекты", href: "/projects" },
+        { label: "Фотоальбомы", href: "/photo-albums?source=projects" },
+        { label: "Видео", href: "/videos?source=projects" },
+      ],
+    },
     {
       label: "Для СМИ",
       href: "/media",
@@ -138,23 +148,29 @@ export default function Header() {
                     }
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link
-                      href={item.href}
-                      className={`text-[18px] font-normal font-montserrat leading-[32px] whitespace-nowrap block ${
-                        item.subMenu ? "px-[15px] py-[2px]" : ""
-                      } ${
-                        item.subMenu && activeDropdown === item.label
-                          ? "text-white rounded-t-[5px]"
-                          : "text-black hover:text-gray-600"
-                      }`}
-                      style={
-                        item.subMenu && activeDropdown === item.label
-                          ? { backgroundColor: "#1D4E89" }
-                          : {}
-                      }
-                    >
-                      {item.label}
-                    </Link>
+                    {item.subMenu ? (
+                      <span
+                        className={`text-[18px] font-normal font-montserrat leading-[32px] whitespace-nowrap block px-[15px] py-[2px] cursor-default ${
+                          activeDropdown === item.label
+                            ? "text-white rounded-t-[5px]"
+                            : "text-black hover:text-gray-600"
+                        }`}
+                        style={
+                          activeDropdown === item.label
+                            ? { backgroundColor: "#1D4E89" }
+                            : {}
+                        }
+                      >
+                        {item.label}
+                      </span>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="text-[18px] font-normal font-montserrat leading-[32px] whitespace-nowrap block text-black hover:text-gray-600"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
 
                     {/* Всплывающее подменю */}
                     {item.subMenu && activeDropdown === item.label && (
