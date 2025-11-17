@@ -162,7 +162,7 @@ export default function Footer() {
             Для СМИ
           </Link>
           <Link
-            href="/contacts"
+            href="/about/contacts"
             className="absolute left-[1014px] top-[103px] text-[20px] font-normal font-montserrat text-[#000000] leading-[1.6em] hover:opacity-70 transition-opacity"
           >
             Контакты
@@ -296,7 +296,7 @@ export default function Footer() {
                   Для СМИ
                 </Link>
                 <Link
-                  href="/contacts"
+                  href="/about/contacts"
                   className="text-sm font-normal font-montserrat text-[#000000] hover:opacity-70 transition-opacity"
                 >
                   Контакты
@@ -338,157 +338,146 @@ export default function Footer() {
 
         {/* Мобильная версия (до sm: до 640px) - точное соответствие Figma */}
         <div className="sm:hidden w-full">
-          <div className="w-full mx-auto bg-white pt-[31px] px-[13px] pb-[25px]">
-            {/* Frame 17 - главный контейнер (293px width, 11px gap) */}
-            <div className="flex flex-col items-center gap-[11px] w-[293px] mx-auto">
-              {/* Frame 19 (20px gap) */}
-              <div className="flex flex-col justify-center items-center gap-[20px]">
-                {/* Логотип */}
-                <Image
-                  src="/images/footer-logo-392dd2.png"
-                  alt="Патриот Центр 48"
-                  width={153}
-                  height={140}
-                  className="object-contain"
-                />
+          <div className="w-full mx-auto bg-white pt-[31px] px-[28px] pb-[25px]">
+            {/* Frame 17 - главный контейнер */}
+            <div className="flex flex-col items-center w-full">
+              {/* Логотип */}
+              <Image
+                src="/images/footer-logo-392dd2.png"
+                alt="Патриот Центр 48"
+                width={153}
+                height={140}
+                className="object-contain"
+              />
 
-                {/* Описание (263px width, 74px height) */}
-                <div className="w-[263px]">
-                  <p className="text-[12px] font-normal font-montserrat text-[#222222] leading-[1.219em] text-left">
-                    Региональный центр подготовки граждан Российской Федерации к
-                    военной службе и военно-патриотического воспитания населения
-                    Липецкой области
-                  </p>
+              {/* Описание */}
+              <div className="w-full mt-[20px]">
+                <p className="text-[12px] font-normal font-montserrat text-[#222222] leading-[1.219em] text-left">
+                  Региональный центр подготовки граждан Российской Федерации к
+                  военной службе и военно-патриотического воспитания населения
+                  Липецкой области
+                </p>
+              </div>
+
+              {/* Group 169 - Меню в сетке 3 колонки */}
+              <div className="w-full mt-[15px]">
+                <div className="grid grid-cols-3 gap-x-[30px] items-start">
+                  {/* Колонка 1 - левая */}
+                  <div className="flex flex-col">
+                    <p className="text-[12px] font-semibold font-montserrat text-[#000000] leading-[15px] h-[15px]">
+                      Меню:
+                    </p>
+                    <Link
+                      href="/news"
+                      className="text-[12px] font-normal font-montserrat text-[#000000] leading-[15px] h-[15px] hover:opacity-70 transition-opacity mt-[7px]"
+                    >
+                      Новости
+                    </Link>
+                    <Link
+                      href="/battle-glory"
+                      className="text-[12px] font-normal font-montserrat text-[#000000] leading-[15px] h-[15px] hover:opacity-70 transition-opacity mt-[7px]"
+                    >
+                      Карта
+                    </Link>
+                  </div>
+
+                  {/* Колонка 2 - средняя */}
+                  <div className="flex flex-col">
+                    <Link
+                      href="/about"
+                      className="text-[12px] font-normal font-montserrat text-[#000000] leading-[15px] h-[15px] hover:opacity-70 transition-opacity"
+                    >
+                      О центре
+                    </Link>
+                    <Link
+                      href="/projects"
+                      className="text-[12px] font-normal font-montserrat text-[#000000] leading-[15px] h-[15px] hover:opacity-70 transition-opacity mt-[7px] whitespace-nowrap"
+                    >
+                      Наши проекты
+                    </Link>
+                    <Link
+                      href="/media"
+                      className="text-[12px] font-normal font-montserrat text-[#000000] leading-[15px] h-[15px] hover:opacity-70 transition-opacity mt-[7px]"
+                    >
+                      Для СМИ
+                    </Link>
+                  </div>
+
+                  {/* Колонка 3 - правая */}
+                  <div className="flex flex-col">
+                    <Link
+                      href="/about/contacts"
+                      className="text-[12px] font-normal font-montserrat text-[#000000] leading-[15px] h-[15px] hover:opacity-70 transition-opacity"
+                    >
+                      Контакты
+                    </Link>
+                    <Link
+                      href="/documents"
+                      className="text-[12px] font-normal font-montserrat text-[#000000] leading-[15px] h-[15px] hover:opacity-70 transition-opacity mt-[7px]"
+                    >
+                      Документы
+                    </Link>
+                  </div>
                 </div>
+              </div>
 
-                {/* Frame 185 - меню и контакты (12px gap) */}
-                <div className="flex flex-col items-center gap-[12px]">
-                  <Link
-                    href="/news"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[2.667em] hover:opacity-70 transition-opacity"
-                  >
-                    Новости
-                  </Link>
-                  <Link
-                    href="/battle-glory"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[2.667em] hover:opacity-70 transition-opacity"
-                  >
-                    Карта
-                  </Link>
-                  <Link
-                    href="/about"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[2.667em] hover:opacity-70 transition-opacity"
-                  >
-                    О центре
-                  </Link>
-                  <Link
-                    href="/projects"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[2.667em] hover:opacity-70 transition-opacity"
-                  >
-                    Наши проекты
-                  </Link>
-                  <Link
-                    href="/media"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[2.667em] hover:opacity-70 transition-opacity"
-                  >
-                    Для СМИ
-                  </Link>
-                  <Link
-                    href="/contacts"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[2.667em] hover:opacity-70 transition-opacity"
-                  >
-                    Контакты
-                  </Link>
-                  <Link
-                    href="/documents"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[2.667em] hover:opacity-70 transition-opacity"
-                  >
-                    Документы
-                  </Link>
-                  <Link
-                    href="/documents/antimonopoly"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
-                  >
-                    Антимонопольный комплекс
-                  </Link>
-                  <Link
-                    href="/documents/counterterrorism"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
-                  >
-                    Противодействие терроризму
-                  </Link>
-                  <Link
-                    href="/documents/antidrug"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
-                  >
-                    Антинаркотическая кампания
-                  </Link>
-                  <Link
-                    href="/documents/anticorruption"
-                    className="text-[12px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
-                  >
-                    Антикоррупционная деятельность
-                  </Link>
-
-                  {/* Телефоны (263px width, 59px height) */}
-                  <div className="w-[263px]">
-                    <p className="text-[12px] font-normal font-montserrat text-[#222222] leading-[1.219em] whitespace-pre-line text-left">
-                      {`Контактные номера телефонов:
+              {/* Телефоны */}
+              <div className="w-full mt-[20px]">
+                <p className="text-[12px] font-normal font-montserrat text-[#222222] leading-[1.219em] whitespace-pre-line text-left">
+                  {`Контактные номера телефонов:
 8(4742) 74-69-23 - Директор
 8(4742) 74-68-54 - Заместитель директора
 8(4742) 74-68-54; 8(4742) 22-78-24`}
-                    </p>
-                  </div>
+                </p>
+              </div>
 
-                  {/* Контактная информация (263px width, 60px height) */}
-                  <div className="w-[263px]">
-                    <p className="text-[12px] font-normal font-montserrat text-[#222222] leading-[1.219em] whitespace-pre-line text-left">
-                      {`Контактная информация:
+              {/* Контактная информация */}
+              <div className="w-full mt-[11px]">
+                <p className="text-[12px] font-normal font-montserrat text-[#21425F] leading-[1.219em] whitespace-pre-line text-left">
+                  {`Контактная информация:
 г. Липецк, ул. Советская, д. 7
 Сайт: патриот48.рф
 Эл. почта: cpv48@mail.ru`}
-                    </p>
-                  </div>
-                </div>
+                </p>
+              </div>
 
-                {/* Frame 18 - Социальные сети (11px gap) */}
-                <div className="flex gap-[11px]">
-                  <Link
-                    href="https://vk.com/patriot48"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:opacity-70 transition-opacity"
-                  >
-                    <Image
-                      src="/images/social-vk-1718c2.png"
-                      alt="ВКонтакте"
-                      width={47}
-                      height={47}
-                      className="object-contain"
-                    />
-                  </Link>
-                  <Link
-                    href="https://t.me/patriot48"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:opacity-70 transition-opacity"
-                  >
-                    <Image
-                      src="/images/social-telegram.png"
-                      alt="Telegram"
-                      width={47}
-                      height={47}
-                      className="object-contain"
-                    />
-                  </Link>
-                </div>
+              {/* Frame 18 - Социальные сети (11px gap) */}
+              <div className="flex gap-[11px] mt-[20px]">
+                <Link
+                  href="https://vk.com/patriot48"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-70 transition-opacity"
+                >
+                  <Image
+                    src="/images/social-vk-1718c2.png"
+                    alt="ВКонтакте"
+                    width={47}
+                    height={47}
+                    className="object-contain"
+                  />
+                </Link>
+                <Link
+                  href="https://t.me/patriot48"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-70 transition-opacity"
+                >
+                  <Image
+                    src="/images/social-telegram.png"
+                    alt="Telegram"
+                    width={47}
+                    height={47}
+                    className="object-contain"
+                  />
+                </Link>
+              </div>
 
-                {/* Копирайт */}
-                <div className="w-[263px] self-start">
-                  <p className="text-[10px] font-normal font-montserrat text-[#222222] leading-[1.219em] text-left">
-                    (с) Все права организации защищены
-                  </p>
-                </div>
+              {/* Копирайт */}
+              <div className="w-full mt-[20px]">
+                <p className="text-[10px] font-normal font-montserrat text-[#222222] leading-[1.219em] text-left">
+                  (с) Все права организации защищены
+                </p>
               </div>
             </div>
           </div>
@@ -560,7 +549,7 @@ export default function Footer() {
                   Для СМИ
                 </Link>
                 <Link
-                  href="/contacts"
+                  href="/about/contacts"
                   className="text-base lg:text-lg font-normal font-montserrat text-[#000000] leading-[1.6em] hover:opacity-70 transition-opacity whitespace-nowrap"
                 >
                   Контакты

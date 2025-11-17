@@ -42,7 +42,6 @@ export default function Header() {
         { label: "Руководство", href: "/about/management" },
         { label: "Команда", href: "/about/team" },
         { label: "Партнеры", href: "/about/partners" },
-        { label: "Контакты", href: "/about/contacts" },
         { label: "Фирменный стиль", href: "/about/brand" },
         { label: "Антимонопольный комплекс", href: "/documents/antimonopoly" },
         {
@@ -76,7 +75,7 @@ export default function Header() {
         { label: "Фотоальбомы", href: "/photo-albums?source=press" },
       ],
     },
-    { label: "Контакты", href: "/contacts" },
+    { label: "Контакты", href: "/about/contacts" },
     { label: "Документы", href: "/documents" },
   ];
 

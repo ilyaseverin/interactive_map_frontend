@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -59,35 +61,61 @@ export default function Pagination({
     return null;
   }
 
+  const renderMobileArrowButton = (direction: "prev" | "next") => {
+    const isPrev = direction === "prev";
+    const isDisabled = isPrev ? currentPage === 1 : currentPage === totalPages;
+
+    const handleClick = () => {
+      if (isDisabled) return;
+      if (isPrev) {
+        onPageChange(Math.max(1, currentPage - 1));
+      } else {
+        onPageChange(Math.min(totalPages, currentPage + 1));
+      }
+    };
+
+    const baseClass =
+      "md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-all duration-150";
+    const stateClass = isDisabled
+      ? "bg-[#DBDBDB] cursor-not-allowed"
+      : "bg-[#C62828] hover:bg-[#B71C1C] active:scale-95";
+
+    const imgSrc = isDisabled
+      ? "/images/pagination-prev-mobile-disabled.svg"
+      : "/images/pagination-next-mobile.svg";
+
+    const transformStyle =
+      (!isDisabled && isPrev) || (isDisabled && !isPrev)
+        ? { transform: "scaleX(-1)" }
+        : undefined;
+
+    const baseAlt = isPrev ? "Предыдущая страница" : "Следующая страница";
+    const alt = isDisabled ? `${baseAlt} (недоступно)` : baseAlt;
+
+    return (
+      <button
+        onClick={handleClick}
+        disabled={isDisabled}
+        className={`${baseClass} ${stateClass}`}
+      >
+        <Image
+          src={imgSrc}
+          alt={alt}
+          width={35}
+          height={35}
+          className="object-contain"
+          style={transformStyle}
+        />
+      </button>
+    );
+  };
+
   return (
     <div
-      className={`flex items-center justify-center gap-[20px] md:gap-[36px] mb-[60px] md:mb-[150px] lg:mb-[150px] ${className}`}
+      className={`flex items-center justify-center gap-[16px] md:gap-[36px] mb-[60px] md:mb-[150px] lg:mb-[150px] ${className}`}
     >
       {/* Кнопка Назад - мобильная */}
-      <button
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-        disabled={currentPage === 1}
-        className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-all duration-150 ${
-          currentPage === 1
-            ? "bg-[#DBDBDB] cursor-not-allowed"
-            : "bg-[#C62828] hover:bg-[#B71C1C] active:scale-95"
-        }`}
-      >
-        <svg
-          width="14"
-          height="0"
-          viewBox="0 0 14 0"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M14 0L0 0"
-            stroke={currentPage === 1 ? "#B8B8B8" : "#FFFFFF"}
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
+      {renderMobileArrowButton("prev")}
 
       {/* Кнопка Назад - планшет и десктоп */}
       <button
@@ -121,10 +149,10 @@ export default function Pagination({
             <button
               key={pageNum}
               onClick={() => onPageChange(pageNum)}
-              className={`inline-flex items-center justify-center w-[35px] h-[35px] md:w-[51px] md:h-[48px] lg:w-auto lg:min-w-[56px] lg:px-[24px] lg:py-[16px] rounded-[8px] md:rounded-[10px] lg:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat transition-all duration-150 leading-[1.219] active:scale-95 ${
+              className={`inline-flex items-center justify-center w-[35px] h-[35px] md:w-[51px] md:h-[48px] lg:w-auto lg:min-w-[56px] lg:px-[24px] lg:py-[16px] rounded-[8px] md:rounded-[10px] lg:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-montserrat transition-all duration-150 leading-[1.219] active:scale-95 ${
                 currentPage === pageNum
-                  ? "bg-[#C62828] text-[#EDF3F7]"
-                  : "bg-white text-black border border-[#C62828] hover:bg-gray-50"
+                  ? "bg-[#C62828] text-[#EDF3F7] font-medium"
+                  : "bg-white text-black border border-[#C62828] hover:bg-gray-50 font-normal"
               }`}
             >
               {pageNum}
@@ -134,30 +162,7 @@ export default function Pagination({
       </div>
 
       {/* Кнопка Вперед - мобильная */}
-      <button
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-        disabled={currentPage === totalPages}
-        className={`md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-all duration-150 ${
-          currentPage === totalPages
-            ? "bg-[#DBDBDB] cursor-not-allowed"
-            : "bg-[#C62828] hover:bg-[#B71C1C] active:scale-95"
-        }`}
-      >
-        <svg
-          width="14"
-          height="0"
-          viewBox="0 0 14 0"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0L14 0"
-            stroke={currentPage === totalPages ? "#B8B8B8" : "#FFFFFF"}
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
+      {renderMobileArrowButton("next")}
 
       {/* Кнопка Вперед - планшет и десктоп */}
       <button
@@ -174,4 +179,3 @@ export default function Pagination({
     </div>
   );
 }
-
