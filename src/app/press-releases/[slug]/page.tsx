@@ -120,7 +120,7 @@ export async function generateMetadata({
       follow: false,
     },
     alternates: {
-      canonical: `/media/press-releases/${slug}`,
+      canonical: `/press-releases/${slug}`,
     },
   };
 }
@@ -174,7 +174,7 @@ function DateDisplay({ date }: { date: string }) {
 function BackButton() {
   return (
     <Link
-      href="/media/press-releases"
+      href="/press-releases"
       className="inline-flex items-center justify-center gap-[10px] w-[123px] h-[40px] md:w-auto md:h-[48px] lg:h-[56px] px-[24px] md:px-[24px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
     >
       <svg
@@ -208,7 +208,7 @@ function BackButton() {
 function BackIconButton() {
   return (
     <Link
-      href="/media/press-releases"
+      href="/press-releases"
       aria-label="Назад к пресс-релизам"
       className="inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group"
     >
@@ -308,8 +308,8 @@ export default async function PressReleaseDetailPage({
           className="mb-[30px] md:mb-[30px] lg:mb-[30px] lg:pl-0"
           items={[
             { label: "Главная", href: "/home" },
-            { label: "Для СМИ", href: "/media/press-releases" },
-            { label: "Пресс-релизы", href: "/media/press-releases" },
+            { label: "Для СМИ", href: "/media" },
+            { label: "Пресс-релизы", href: "/press-releases" },
             { label: pressRelease.title },
           ]}
         />
@@ -487,3 +487,4 @@ export default async function PressReleaseDetailPage({
     </div>
   );
 }
+

@@ -241,7 +241,7 @@ export default function PressReleasesPage() {
                       source={source}
                       title={pressRelease.title}
                       description={pressRelease.content_info?.excerpt || ""}
-                      href={`/media/press-releases/${pressRelease.slug}`}
+                      href={`/press-releases/${pressRelease.slug}`}
                     />
                   );
 
