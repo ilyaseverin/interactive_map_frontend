@@ -354,18 +354,20 @@ export default async function NewsDetailPage({
           )}
 
           {/* Текст новости */}
-          {contentParagraphs.length > 0 && (
-            <div className="mb-[25px] lg:mb-[64px] space-y-[36px] xl:px-[40px] 2xl:px-[96px]">
-              {contentParagraphs.map((paragraph, index) => (
-                <p
-                  key={index}
-                  className="text-[12px] md:text-[16px] lg:text-[24px] font-normal font-montserrat text-black leading-[1.458] whitespace-pre-line"
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          )}
+          <div className="xl:px-[40px] 2xl:px-[96px]">
+            {contentParagraphs.length > 0 && (
+              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px]">
+                {contentParagraphs.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Нижняя часть: кнопка назад и дата */}
           <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between gap-6 pt-[25px] md:pt-[40px] lg:pt-[64px]">

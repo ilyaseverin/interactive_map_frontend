@@ -9,15 +9,17 @@ import {
   useGetPhotoAlbumBySlugQuery,
   useGetProjectBySlugQuery,
   useGetPressReleaseBySlugQuery,
+  useGetEventBySlugQuery,
 } from "@/services/strapiApi";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type {
   NewsItem,
   PressReleaseItem,
   ProjectItem,
+  EventItem,
 } from "@/types/strapi";
 
-type SourceType = "news" | "projects" | "press";
+type SourceType = "news" | "projects" | "press" | "events";
 
 type AlbumEntity = {
   type: SourceType;
@@ -38,7 +40,9 @@ export default function PhotoAlbumDetailPage() {
 
   const sourceParam = (searchParams.get("source") || "news") as SourceType;
   const source: SourceType =
-    sourceParam === "projects" || sourceParam === "press"
+    sourceParam === "projects" ||
+    sourceParam === "press" ||
+    sourceParam === "events"
       ? sourceParam
       : "news";
 
@@ -76,10 +80,19 @@ export default function PhotoAlbumDetailPage() {
     skip: !slug || source !== "press",
   });
 
-  const isFetching = isNewsFetching || isProjectFetching || isPressFetching;
-  const isError = isNewsError || isProjectError || isPressError;
+  const {
+    data: eventAlbum,
+    isFetching: isEventFetching,
+    isError: isEventError,
+  } = useGetEventBySlugQuery(slug, {
+    skip: !slug || source !== "events",
+  });
 
-  const album: AlbumEntity | null = useMemo(() => {
+  const isFetching =
+    isNewsFetching || isProjectFetching || isPressFetching || isEventFetching;
+  const isError = isNewsError || isProjectError || isPressError || isEventError;
+
+  const album: (AlbumEntity & { slug?: string }) | null = useMemo(() => {
     if (source === "projects" && projectAlbum) {
       const project = projectAlbum as ProjectItem;
       return {
@@ -87,6 +100,7 @@ export default function PhotoAlbumDetailPage() {
         title: project.title,
         date: project.publishedAt,
         photos: project.media?.gallery || [],
+        slug: project.slug,
       };
     }
 
@@ -97,6 +111,18 @@ export default function PhotoAlbumDetailPage() {
         title: press.title,
         date: press.basic_info?.published_at_date,
         photos: press.media?.gallery || [],
+        slug: press.slug,
+      };
+    }
+
+    if (source === "events" && eventAlbum) {
+      const event = eventAlbum as EventItem;
+      return {
+        type: "events",
+        title: event.title,
+        date: event.basic_info?.datetime_start,
+        photos: event.content_info?.gallery || [],
+        slug: event.slug,
       };
     }
 
@@ -107,11 +133,12 @@ export default function PhotoAlbumDetailPage() {
         title: news.title,
         date: news.basic_info?.published_at_date,
         photos: news.media?.gallery || [],
+        slug: news.slug,
       };
     }
 
     return null;
-  }, [newsAlbum, pressAlbum, projectAlbum, source]);
+  }, [newsAlbum, pressAlbum, projectAlbum, eventAlbum, source]);
 
   if (isFetching) {
     return (
@@ -193,6 +220,13 @@ export default function PhotoAlbumDetailPage() {
           },
           { label: album.title },
         ]
+      : album.type === "events"
+      ? [
+          { label: "Главная", href: "/home" },
+          { label: "Календарь", href: "/home#calendar" },
+          { label: album.title, href: `/events/${album.slug}` },
+          { label: "Фотоальбом" },
+        ]
       : [
           { label: "Главная", href: "/home" },
           { label: "Новости", href: "/news" },
@@ -204,7 +238,9 @@ export default function PhotoAlbumDetailPage() {
         ];
 
   const backHref =
-    album.type === "projects"
+    album.type === "events" && album.slug
+      ? `/events/${album.slug}`
+      : album.type === "projects"
       ? "/photo-albums?source=projects"
       : album.type === "press"
       ? "/photo-albums?source=press"
@@ -303,8 +339,7 @@ export default function PhotoAlbumDetailPage() {
           </div>
         ) : (
           <div className="px-[19px] md:px-[36px] lg:px-[80px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-[30px] md:gap-x-[18px] md:gap-y-[28px] lg:gap-x-[30px] lg:gap-y-[39px] mb-[60px] md:mb-[88px] lg:mb-[150px]">
-            {Array.from({ length: Math.max(18, photos.length) }).map((_, i) => {
-              const photo = photos[i % photos.length];
+            {photos.map((photo, i) => {
               const photoUrl = photo.url.startsWith("http")
                 ? photo.url
                 : `${
@@ -314,7 +349,7 @@ export default function PhotoAlbumDetailPage() {
 
               return (
                 <div
-                  key={`${photo.id ?? i}-${i}`}
+                  key={photo.id ?? i}
                   onClick={() => {
                     if (!isModalOpen) {
                       handlePhotoClick(photo, i);
@@ -351,5 +386,3 @@ export default function PhotoAlbumDetailPage() {
     </div>
   );
 }
-
-

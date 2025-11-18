@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 // ============================================================================
@@ -14,6 +15,7 @@ interface CalendarCardProps {
   description?: string;
   backgroundImage?: string;
   gradient?: string;
+  href?: string; // Ссылка на страницу события
 }
 
 interface CardConfig {
@@ -142,6 +144,7 @@ export default function CalendarCard({
   description,
   backgroundImage,
   gradient,
+  href,
 }: CalendarCardProps) {
   const config = CARD_CONFIGS[type];
 
@@ -150,8 +153,8 @@ export default function CalendarCard({
     if (type === "event") {
       return (
         <>
-          {/* Mobile - только иконка + название */}
-          <div className="md:hidden relative z-10 h-full flex items-center">
+          {/* Mobile - иконка + название, и description если есть */}
+          <div className="md:hidden relative z-10 h-full flex flex-col items-center justify-center">
             {icon && (
               <div className="absolute left-[20px] w-[37px] h-[43px]">
                 <Image
@@ -164,14 +167,21 @@ export default function CalendarCard({
               </div>
             )}
             {title && (
-              <div className="w-full flex items-center justify-center">
+              <div className="w-full flex items-center justify-center mb-1">
                 <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667] text-center">
                   {title}
                 </p>
               </div>
             )}
+            {description && (
+              <div className="w-full px-4 flex items-center justify-center mt-1">
+                <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667] text-center">
+                  {description}
+                </p>
+              </div>
+            )}
           </div>
-          {/* Tablet & Desktop - только иконка на фиксированной позиции */}
+          {/* Tablet & Desktop - иконка на фиксированной позиции и description если есть */}
           <div className="hidden md:flex relative z-10 h-full flex-col">
             {icon && config.iconPosition && (
               <div
@@ -190,6 +200,18 @@ export default function CalendarCard({
                 />
               </div>
             )}
+            {/* Текст внизу карточки */}
+            {description && (
+              <div className="absolute left-[23px] md:left-[23px] lg:left-10 bottom-[30px] md:bottom-[50px] lg:bottom-[50px] max-w-[234px] md:max-w-[234px] lg:max-w-[377px]">
+                <CardText 
+                  text={description} 
+                  config={{
+                    ...config,
+                    textColor: backgroundImage ? config.textColor : "black"
+                  }} 
+                />
+              </div>
+            )}
           </div>
         </>
       );
@@ -198,8 +220,8 @@ export default function CalendarCard({
     // Все остальные карточки (Фильм дня, Человек дня, Тема дня)
     return (
       <>
-        {/* Mobile layout - только название блока без фона и без description */}
-        <div className="md:hidden relative z-10 h-full flex items-center">
+        {/* Mobile layout - название блока и description если есть */}
+        <div className="md:hidden relative z-10 h-full flex flex-col items-center justify-center">
           {icon && (
             <div className="absolute left-[20px] w-[37px] h-[43px]">
               <Image
@@ -212,9 +234,16 @@ export default function CalendarCard({
             </div>
           )}
           {title && (
-            <div className="w-full flex items-center justify-center">
+            <div className="w-full flex items-center justify-center mb-1">
               <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667] text-center">
                 {title}
+              </p>
+            </div>
+          )}
+          {description && (
+            <div className="w-full px-4 flex items-center justify-center mt-1">
+              <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667] text-center">
+                {description}
               </p>
             </div>
           )}
@@ -244,7 +273,13 @@ export default function CalendarCard({
           {/* Текст внизу карточки */}
           {description && (
             <div className="absolute left-[23px] md:left-[23px] lg:left-10 bottom-[30px] md:bottom-[50px] lg:bottom-[50px] max-w-[234px] md:max-w-[234px] lg:max-w-[377px]">
-              <CardText text={description} config={config} />
+              <CardText 
+                text={description} 
+                config={{
+                  ...config,
+                  textColor: backgroundImage ? config.textColor : "black"
+                }} 
+              />
             </div>
           )}
         </div>
@@ -254,9 +289,38 @@ export default function CalendarCard({
 
   const cardDimensions = getCardDimensions(type);
 
+  const wrapperClassName = `relative group block ${href ? "cursor-pointer" : ""} ${cardDimensions.width} ${cardDimensions.height} ${href ? "pointer-events-auto" : ""}`;
+
+  // Если нет href, используем div, если есть - Link
+  if (!href) {
+    return (
+      <div className={wrapperClassName}>
+        {/* Контейнер карточки */}
+        <div
+          className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform`}
+        >
+          {/* Фоновое изображение для планшета и десктопа */}
+          {backgroundImage && (
+            <div className="hidden md:block absolute inset-0">
+              <BackgroundImage
+                src={backgroundImage}
+                alt={title}
+                gradient={gradient}
+              />
+            </div>
+          )}
+
+          {/* Содержимое */}
+          {renderContent()}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div
-      className={`relative group cursor-pointer ${cardDimensions.width} ${cardDimensions.height}`}
+    <Link
+      href={href}
+      className={wrapperClassName}
     >
       {/* Контейнер карточки */}
       <div
@@ -276,6 +340,6 @@ export default function CalendarCard({
         {/* Содержимое */}
         {renderContent()}
       </div>
-    </div>
+    </Link>
   );
 }

@@ -9,8 +9,201 @@ import PartnerCard from "@/components/cards/PartnerCard";
 import NewsCard from "@/components/cards/NewsCard";
 import HeroSlider from "@/components/media/HeroSlider";
 import ContactForm from "@/components/forms/ContactForm";
+import { useGetEventsQuery } from "@/services/strapiApi";
+import { useMemo, useState } from "react";
+import { format, parseISO } from "date-fns";
+import { EventItem } from "@/types/strapi";
+import { ReactElement } from "react";
+
+// Конфигурация типов событий
+type EventTypeKey = "Человек дня" | "Событие дня" | "Фильм дня" | "Тема дня";
+
+interface EventTypeConfig {
+  key: EventTypeKey;
+  type: "person" | "event" | "movie" | "theme";
+  icon: string;
+  title: string;
+  gradient?: string;
+}
+
+const EVENT_TYPES: EventTypeConfig[] = [
+  {
+    key: "Человек дня",
+    type: "person",
+    icon: "/images/calendar/person-icon.svg",
+    title: "Человек дня",
+  },
+  {
+    key: "Событие дня",
+    type: "event",
+    icon: "/images/calendar/event-icon-full.svg",
+    title: "Событие дня",
+  },
+  {
+    key: "Фильм дня",
+    type: "movie",
+    icon: "/images/calendar/movie-icon.svg",
+    title: "Фильм дня",
+    gradient:
+      "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)",
+  },
+  {
+    key: "Тема дня",
+    type: "theme",
+    icon: "/images/calendar/theme-icon.svg",
+    title: "Тема дня",
+  },
+];
 
 export default function HomePage() {
+  // Получаем сегодняшнюю дату
+  const todayDate = useMemo(() => new Date(), []);
+
+  // Состояние выбранной даты (по умолчанию сегодня)
+  const [selectedDate, setSelectedDate] = useState<Date>(todayDate);
+
+  // Получаем формат выбранной даты для запроса
+  const selectedDateString = useMemo(() => {
+    return format(selectedDate, "yyyy-MM-dd");
+  }, [selectedDate]);
+
+  // Получаем все события для определения дат с событиями (большой pageSize)
+  // Загружаем события на ближайшие 3 месяца
+  const { data: allEventsData } = useGetEventsQuery({
+    pageSize: 100, // Большой размер для получения всех событий
+  });
+
+  // Получаем события на выбранную дату
+  const { data: eventsData } = useGetEventsQuery({
+    date: selectedDateString,
+    pageSize: 10,
+  });
+
+  // Извлекаем уникальные даты с событиями для подсветки в календаре
+  const highlightedDates = useMemo(() => {
+    if (!allEventsData?.data) return [];
+
+    const dates = new Set<string>();
+    allEventsData.data.forEach((event) => {
+      if (event.basic_info?.datetime_start) {
+        const eventDate = parseISO(event.basic_info.datetime_start);
+        dates.add(format(eventDate, "yyyy-MM-dd"));
+      }
+    });
+
+    return Array.from(dates).map((dateStr) => parseISO(dateStr));
+  }, [allEventsData]);
+
+  // Разделяем события по типам
+  const eventsByType = useMemo(() => {
+    if (!eventsData?.data) return {};
+
+    const events = eventsData.data;
+    const byType: Record<string, (typeof events)[0] | undefined> = {};
+
+    events.forEach((event) => {
+      const eventType = event.basic_info.event_type;
+      if (eventType && !byType[eventType]) {
+        byType[eventType] = event;
+      }
+    });
+
+    return byType;
+  }, [eventsData]);
+
+  // Получаем URL изображения обложки
+  const getImageUrl = (url: string | undefined) => {
+    if (!url) return undefined;
+    if (url.startsWith("http")) return url;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+    return `${baseUrl}${url}`;
+  };
+
+  // Получаем описание из HTML
+  const getPlainDescription = (html: string | undefined) => {
+    if (!html) return undefined;
+    // Удаляем HTML теги и ограничиваем длину
+    const plain = html.replace(/<[^>]*>/g, "").trim();
+    return plain.length > 100 ? plain.substring(0, 100) + "..." : plain;
+  };
+
+  // Проверяем, выбрана ли сегодняшняя дата
+  const isTodaySelected = useMemo(() => {
+    return (
+      format(selectedDate, "yyyy-MM-dd") === format(todayDate, "yyyy-MM-dd")
+    );
+  }, [selectedDate, todayDate]);
+
+  // Текст для отсутствующего события
+  const noEventText = isTodaySelected
+    ? "Нет события на сегодня"
+    : "Нет события на этот день";
+
+  // Функция для рендеринга карточки события
+  const renderEventCard = (
+    config: EventTypeConfig,
+    event: EventItem | undefined
+  ): ReactElement => {
+    const hasEvent = !!event;
+
+    if (hasEvent) {
+      // Если есть событие
+      const props: {
+        type: "person" | "event" | "movie" | "theme";
+        icon: string;
+        title: string;
+        href: string;
+        description?: string;
+        backgroundImage?: string;
+        gradient?: string;
+      } = {
+        type: config.type,
+        icon: config.icon,
+        title: config.title,
+        href: `/events/${event.slug}`,
+      };
+
+      // Добавляем description для типов, которым он нужен
+      if (config.type !== "event") {
+        props.description =
+          getPlainDescription(event.content_info?.description) || event.title;
+      }
+
+      // Добавляем backgroundImage только если есть обложка у события
+      if (event.content_info?.cover?.url) {
+        props.backgroundImage = getImageUrl(event.content_info.cover.url);
+      }
+
+      // Добавляем gradient если указан
+      if (config.gradient) {
+        props.gradient = config.gradient;
+      }
+
+      return <CalendarCard {...props} />;
+    } else {
+      // Если нет события
+      const props: {
+        type: "person" | "event" | "movie" | "theme";
+        icon: string;
+        title: string;
+        description: string;
+      } = {
+        type: config.type,
+        icon: config.icon,
+        title: config.title,
+        description: noEventText,
+      };
+
+      return <CalendarCard {...props} />;
+    }
+  };
+
+  // Рендерим все карточки событий
+  const eventCards = EVENT_TYPES.map((config) =>
+    renderEventCard(config, eventsByType[config.key])
+  );
+
   return (
     <>
       {/* Hero Section */}
@@ -89,119 +282,35 @@ export default function HomePage() {
           {/* Calendar Component */}
           <div className="w-full md:w-auto lg:flex-1 lg:min-w-[650px] flex-shrink-0 flex justify-center">
             <Calendar
-              highlightedDates={[
-                new Date(2025, 0, 14), // 14 января
-                new Date(2025, 1, 23), // 23 февраля
-              ]}
+              highlightedDates={highlightedDates}
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
             />
           </div>
 
           {/* Events Grid - адаптивный layout */}
           <div className="w-full lg:w-[938px] lg:flex-shrink-0">
             {/* Mobile: Column layout */}
-            <div className="flex flex-col md:hidden gap-3">
-              <CalendarCard
-                type="person"
-                icon="/images/calendar/person-icon.svg"
-                title="Человек дня"
-                description={`21 сентября 1895 года
-День рождения великого русского поэта Сергея Есенина`}
-              />
-              <CalendarCard
-                type="event"
-                icon="/images/calendar/event-icon-full.svg"
-                title="Событие дня"
-                backgroundImage="/images/calendar/event-bg.png"
-              />
-              <CalendarCard
-                type="movie"
-                icon="/images/calendar/movie-icon.svg"
-                title="Фильм дня"
-                description={`Фильм дня
-Южный гром (1980)`}
-                backgroundImage="/images/calendar/movie-bg-7331c1.png"
-                gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)"
-              />
-              <CalendarCard
-                type="theme"
-                icon="/images/calendar/theme-icon.svg"
-                title="Тема дня"
-                description={`Тема дня
-Победоносная Россия`}
-              />
-            </div>
+            <div className="flex flex-col md:hidden gap-3">{eventCards}</div>
 
             {/* Tablet: Custom layout - точное позиционирование из Figma */}
             <div className="hidden md:block lg:hidden relative w-[650px] h-[529px] mx-auto">
               {/* Row 1: Человек дня + Событие дня */}
               <div className="flex gap-[18px] mb-[24px]">
-                <CalendarCard
-                  type="person"
-                  icon="/images/calendar/person-icon.svg"
-                  title="Человек дня"
-                  description={`21 сентября 1895 года
-День рождения великого русского поэта Сергея Есенина`}
-                />
-                <CalendarCard
-                  type="event"
-                  icon="/images/calendar/event-icon-full.svg"
-                  title="Событие дня"
-                  backgroundImage="/images/calendar/event-bg.png"
-                />
+                {eventCards[0]}
+                {eventCards[1]}
               </div>
 
               {/* Row 2: Фильм дня + Тема дня */}
               <div className="flex gap-[18px]">
-                <CalendarCard
-                  type="movie"
-                  icon="/images/calendar/movie-icon.svg"
-                  title="Фильм дня"
-                  description={`Фильм дня
-Южный гром (1980)`}
-                  backgroundImage="/images/calendar/movie-bg-7331c1.png"
-                  gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)"
-                />
-                <CalendarCard
-                  type="theme"
-                  icon="/images/calendar/theme-icon.svg"
-                  title="Тема дня"
-                  description={`Тема дня
-Победоносная Россия`}
-                />
+                {eventCards[2]}
+                {eventCards[3]}
               </div>
             </div>
 
             {/* Desktop: Grid layout */}
             <div className="hidden lg:grid grid-cols-2 gap-x-[28px] gap-y-[31px]">
-              <CalendarCard
-                type="person"
-                icon="/images/calendar/person-icon.svg"
-                title="Человек дня"
-                description={`21 сентября 1895 года
-День рождения великого русского поэта Сергея Есенина`}
-              />
-              <CalendarCard
-                type="event"
-                icon="/images/calendar/event-icon-full.svg"
-                title="Событие дня"
-                backgroundImage="/images/calendar/event-bg.png"
-              />
-              <CalendarCard
-                type="movie"
-                icon="/images/calendar/movie-icon.svg"
-                title="Фильм дня"
-                description={`Фильм дня
-Южный гром (1980)`}
-                backgroundImage="/images/calendar/movie-bg-7331c1.png"
-                gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)"
-              />
-              <CalendarCard
-                type="theme"
-                icon="/images/calendar/theme-icon.svg"
-                title="Тема дня"
-                description={`Тема дня
-Победоносная Россия`}
-              />
+              {eventCards}
             </div>
           </div>
         </div>

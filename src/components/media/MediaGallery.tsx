@@ -21,7 +21,7 @@ interface MediaGalleryProps {
   videoUrl?: string;
   videoFileUrl?: string;
   slug?: string;
-  sourceType?: "news" | "projects" | "press";
+  sourceType?: "news" | "projects" | "press" | "events";
 }
 
 // Swiper Configuration - скопировано из HeroSlider

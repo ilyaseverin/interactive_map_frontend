@@ -6,6 +6,8 @@ import type {
   PressReleaseListResponse,
   ProjectItem,
   ProjectListResponse,
+  EventItem,
+  EventListResponse,
 } from "@/types/strapi";
 
 export interface TeamMember {
@@ -95,6 +97,8 @@ export const strapiApi = createApi({
     "Team",
     "Management",
     "Contacts",
+    "Events",
+    "Event",
   ],
   endpoints: (builder) => ({
     getPressReleases: builder.query<
@@ -375,6 +379,70 @@ export const strapiApi = createApi({
       }),
       providesTags: [{ type: "Contacts", id: "SINGLE" }],
     }),
+
+    getEvents: builder.query<
+      EventListResponse,
+      (PaginationArgs & { eventType?: string; date?: string }) | void
+    >({
+      query: ({ page = 1, pageSize = 10, eventType, date } = {}) => ({
+        url: "events",
+        params: {
+          "pagination[page]": page,
+          "pagination[pageSize]": pageSize,
+          ...(eventType
+            ? { "filters[basic_info][event_type][$eq]": eventType }
+            : {}),
+          ...(date
+            ? {
+                "filters[basic_info][datetime_start][$gte]": `${date}T00:00:00.000Z`,
+                "filters[basic_info][datetime_start][$lt]": `${date}T23:59:59.999Z`,
+              }
+            : {}),
+          "populate[basic_info]": "*",
+          "populate[content_info][populate][cover]": "true",
+          "populate[content_info][populate][gallery]": "true",
+          "populate[location_info]": "*",
+          "populate[additional_materials][populate][videos][populate][video_file]":
+            "true",
+          "populate[additional_materials][populate][attachments][populate][file]":
+            "true",
+          sort: "basic_info.datetime_start:asc",
+          publicationState: "live",
+        },
+      }),
+      providesTags: (result) =>
+        result?.data
+          ? [
+              { type: "Events" as const, id: "LIST" },
+              ...result.data.map((item) => ({
+                type: "Event" as const,
+                id: item.slug,
+              })),
+            ]
+          : [{ type: "Events" as const, id: "LIST" }],
+    }),
+
+    getEventBySlug: builder.query<EventItem | null, string>({
+      query: (slug) => ({
+        url: "events",
+        params: {
+          "filters[slug][$eq]": slug,
+          "pagination[pageSize]": 1,
+          "populate[basic_info]": "*",
+          "populate[content_info][populate][cover]": "true",
+          "populate[content_info][populate][gallery]": "true",
+          "populate[location_info]": "*",
+          "populate[additional_materials][populate][videos][populate][video_file]":
+            "true",
+          "populate[additional_materials][populate][attachments][populate][file]":
+            "true",
+          publicationState: "live",
+        },
+      }),
+      transformResponse: (response: EventListResponse) =>
+        response?.data?.[0] ?? null,
+      providesTags: (result, error, slug) => [{ type: "Event", id: slug }],
+    }),
   }),
 });
 
@@ -391,6 +459,8 @@ export const {
   useGetTeamQuery,
   useGetManagementQuery,
   useGetContactsQuery,
+  useGetEventsQuery,
+  useGetEventBySlugQuery,
 } = strapiApi;
 
 export type StrapiApi = typeof strapiApi;

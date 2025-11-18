@@ -230,3 +230,60 @@ export interface ProjectItem {
 
 export type ProjectListResponse = StrapiResponse<ProjectItem[]>;
 export type ProjectItemResponse = StrapiResponse<ProjectItem>;
+// Типы для событий календаря
+export interface EventBasicInfo {
+  id: number;
+  datetime_start: string;
+  category?: string;
+  event_type?: "Человек дня" | "Событие дня" | "Тема дня" | "Фильм дня";
+}
+
+export interface EventContentInfo {
+  id: number;
+  description?: string;
+  cover?: StrapiImage | null;
+  gallery?: StrapiImage[];
+}
+
+export interface EventLocationInfo {
+  id: number;
+  location?: string;
+  location_map_link?: {
+    latitude?: number;
+    longitude?: number;
+    address?: string;
+  } | null;
+}
+
+export interface EventAdditionalMaterials {
+  id: number;
+  videos?: {
+    id: number;
+    provider?: string;
+    url?: string;
+    video_file?: StrapiImage | null;
+  }[];
+  attachments?: {
+    id: number;
+    title?: string;
+    file?: StrapiImage | null;
+  }[];
+}
+
+export interface EventItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  basic_info: EventBasicInfo;
+  content_info?: EventContentInfo;
+  location_info?: EventLocationInfo;
+  additional_materials?: EventAdditionalMaterials;
+}
+
+export type EventListResponse = StrapiResponse<EventItem[]>;
+export type EventItemResponse = StrapiResponse<EventItem>;
+
