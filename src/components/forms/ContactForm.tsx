@@ -6,12 +6,22 @@ export default function ContactForm() {
     <section className="relative w-full min-h-[492px] md:min-h-[1026px] lg:min-h-[1026px] mt-[100px] md:mt-[0px] lg:mt-[159px]">
       {/* Background */}
       <div className="absolute inset-0">
-        <Image
-          src="/images/contact-form-bg.png"
-          alt="Форма обратной связи"
-          fill
-          className="object-cover"
-        />
+        <div
+          className="absolute inset-0"
+          style={{
+            maskImage:
+              "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+          }}
+        >
+          <Image
+            src="/images/contact-form-bg.png"
+            alt="Форма обратной связи"
+            fill
+            className="object-cover"
+          />
+        </div>
       </div>
 
       {/* Content - Constrained to max-width */}

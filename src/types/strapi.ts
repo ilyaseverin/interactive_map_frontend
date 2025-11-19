@@ -287,3 +287,21 @@ export interface EventItem {
 export type EventListResponse = StrapiResponse<EventItem[]>;
 export type EventItemResponse = StrapiResponse<EventItem>;
 
+// Типы для партнеров
+export interface PartnerItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  name: string;
+  slug: string;
+  url?: string;
+  logo?: StrapiImage | null;
+  vk_url?: string;
+  website_url?: string;
+}
+
+export type PartnerListResponse = StrapiResponse<PartnerItem[]>;
+export type PartnerItemResponse = StrapiResponse<PartnerItem>;
+

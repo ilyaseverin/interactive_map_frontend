@@ -41,8 +41,6 @@ export default function ProjectCard({
     }
   };
 
-  const isLargeCard = size === "large" || size === "xlarge";
-
   return (
     <Link
       href={href}
@@ -69,8 +67,8 @@ export default function ProjectCard({
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col justify-end pb-4 md:pb-6 lg:pb-8 xl:pb-[32px] px-[13.4px] md:px-[20px] lg:px-[28px] xl:px-[37px]">
-        {/* Date - только для large и xlarge */}
-        {isLargeCard && date && (
+        {/* Date - для всех карточек */}
+        {date && (
           <p className="text-[9px] md:text-[14px] lg:text-[16px] xl:text-[20px] font-semibold font-montserrat text-white leading-[1.3] mb-1 md:mb-1.5 lg:mb-2">
             {date}
           </p>
@@ -78,13 +76,15 @@ export default function ProjectCard({
 
         {/* Title */}
         <h3
-          className={`text-[12px] md:text-[16px] lg:text-[18px] xl:text-[24px] font-semibold font-montserrat text-white leading-[1.3] mb-1 md:mb-2 lg:mb-3 xl:mb-4 ${
+          className={`text-[12px] md:text-[16px] lg:text-[18px] xl:text-[24px] font-semibold font-montserrat text-white leading-[1.3] mb-1 md:mb-2 lg:mb-3 xl:mb-4 w-full ${
             size === "large" ? "uppercase" : ""
+          } ${
+            size === "xlarge"
+              ? "lg:max-w-[90%]"
+              : size === "large"
+              ? "lg:max-w-[85%]"
+              : ""
           }`}
-          style={{
-            maxWidth:
-              size === "xlarge" ? "90%" : size === "large" ? "85%" : "90%",
-          }}
         >
           {title}
         </h3>

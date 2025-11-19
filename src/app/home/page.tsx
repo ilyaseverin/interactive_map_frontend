@@ -8,10 +8,15 @@ import PartnerCard from "@/components/cards/PartnerCard";
 import NewsCard from "@/components/cards/NewsCard";
 import HeroSlider from "@/components/media/HeroSlider";
 import ContactForm from "@/components/forms/ContactForm";
-import { useGetEventsQuery } from "@/services/strapiApi";
+import {
+  useGetEventsQuery,
+  useGetNewsQuery,
+  useGetProjectsQuery,
+  useGetPartnersQuery,
+} from "@/services/strapiApi";
 import { useMemo, useState } from "react";
 import { format, parseISO } from "date-fns";
-import { EventItem } from "@/types/strapi";
+import { EventItem, NewsItem, PartnerItem } from "@/types/strapi";
 import { ReactElement } from "react";
 import { CategoryButton, PrimaryButton } from "@/components/buttons";
 
@@ -79,6 +84,30 @@ export default function HomePage() {
     pageSize: 10,
   });
 
+  // Состояние выбранной категории новостей
+  const [selectedNewsCategory, setSelectedNewsCategory] = useState<
+    "Главные" | "Региональные" | undefined
+  >("Главные");
+
+  // Получаем новости (первые 3, выбранная категория)
+  const { data: newsData } = useGetNewsQuery({
+    page: 1,
+    pageSize: 3,
+    category: selectedNewsCategory,
+  });
+
+  // Получаем проекты (первые 6)
+  const { data: projectsData } = useGetProjectsQuery({
+    page: 1,
+    pageSize: 6,
+  });
+
+  // Получаем партнеров
+  const { data: partnersData } = useGetPartnersQuery({
+    page: 1,
+    pageSize: 100,
+  });
+
   // Извлекаем уникальные даты с событиями для подсветки в календаре
   const highlightedDates = useMemo(() => {
     if (!allEventsData?.data) return [];
@@ -113,7 +142,7 @@ export default function HomePage() {
 
   // Получаем URL изображения обложки
   const getImageUrl = (url: string | undefined) => {
-    if (!url) return undefined;
+    if (!url) return "/images/news/news-1.png"; // fallback image
     if (url.startsWith("http")) return url;
     const baseUrl =
       process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -122,10 +151,20 @@ export default function HomePage() {
 
   // Получаем описание из HTML
   const getPlainDescription = (html: string | undefined) => {
-    if (!html) return undefined;
+    if (!html) return "";
     // Удаляем HTML теги и ограничиваем длину
     const plain = html.replace(/<[^>]*>/g, "").trim();
-    return plain.length > 100 ? plain.substring(0, 100) + "..." : plain;
+    return plain.length > 150 ? plain.substring(0, 150) + "..." : plain;
+  };
+
+  // Форматируем дату для отображения
+  const formatDisplayDate = (dateString: string | undefined) => {
+    if (!dateString) return "";
+    try {
+      return format(parseISO(dateString), "dd.MM.yyyy");
+    } catch {
+      return "";
+    }
   };
 
   // Проверяем, выбрана ли сегодняшняя дата
@@ -204,21 +243,50 @@ export default function HomePage() {
     renderEventCard(config, eventsByType[config.key])
   );
 
+  // Подготавливаем проекты для отображения
+  const preparedProjects = useMemo(() => {
+    if (!projectsData?.data || projectsData.data.length === 0) return [];
+
+    const projects = projectsData.data.slice(0, 6);
+
+    // Распределяем проекты по размерам: 1 - large, 2-5 - medium, 6 - xlarge
+    return projects.map((project, index) => {
+      let size: "large" | "medium" | "xlarge" = "medium";
+      if (index === 0) size = "large";
+      if (index === 5) size = "xlarge";
+
+      return {
+        ...project,
+        displaySize: size,
+      };
+    });
+  }, [projectsData]);
+
   return (
     <>
       {/* Hero Section */}
       <HeroSlider />
 
       {/* News Section - Full Width Background */}
-      <section className="relative min-h-[1368px] sm:min-h-[1001px] mt-0">
+      <section className="relative mt-0">
         {/* Background */}
         <div className="absolute inset-0">
-          <Image
-            src="/images/news/news-bg.png"
-            alt="Новости"
-            fill
-            className="object-cover"
-          />
+          <div
+            className="absolute inset-0"
+            style={{
+              maskImage:
+                "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+            }}
+          >
+            <Image
+              src="/images/news/news-bg.png"
+              alt="Новости"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
 
         {/* Content - Constrained to max-width */}
@@ -227,43 +295,54 @@ export default function HomePage() {
           <div className="flex flex-row justify-center lg:justify-end gap-[6px] sm:gap-4 mb-8 sm:mb-12">
             <CategoryButton
               label="Главные"
-              isActive={true}
-              onClick={() => {}}
+              isActive={selectedNewsCategory === "Главные"}
+              onClick={() => setSelectedNewsCategory("Главные")}
               variant="desktop"
               className="w-[117px] md:w-[178px] lg:w-auto"
             />
             <CategoryButton
               label="Региональные"
-              isActive={false}
-              onClick={() => {}}
+              isActive={selectedNewsCategory === "Региональные"}
+              onClick={() => setSelectedNewsCategory("Региональные")}
               variant="desktop"
-              className="w-[117px] md:w-auto lg:w-[269px]"
+              className="w-[160px] md:w-auto lg:w-[269px] text-[13px] md:text-[18px] px-[14px] md:px-[40px]"
             />
           </div>
 
           {/* News Cards Grid */}
           <div className="flex flex-col md:grid md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-3 gap-6 md:gap-[50px] lg:gap-8 xl:gap-8 mb-8 sm:mb-12">
-            <NewsCard
-              image="/images/news/news-1.png"
-              date="19.09.2025"
-              title='ОБЛАСТНОЙ ФЕСТИВАЛЬ "В АРМИИ СЛУЖИТЬ ПОЧЁТНО!"'
-              description="В СОЛ «Прометей» 19 сентября состоялся масштабный областной патриотический фестиваль «В армии служить почётно!», собравший участников и зрителей, объединенных любовью к Родине и уважением к защитникам Отечества."
-              href="/news/1"
-            />
-            <NewsCard
-              image="/images/news/news-2.png"
-              date="19.09.2025"
-              title='ОБЛАСТНОЙ ФЕСТИВАЛЬ "В АРМИИ СЛУЖИТЬ ПОЧЁТНО!"'
-              description="В СОЛ «Прометей» 19 сентября состоялся масштабный областной патриотический фестиваль «В армии служить почётно!», собравший участников и зрителей, объединенных любовью к Родине и уважением к защитникам Отечества."
-              href="/news/2"
-            />
-            <NewsCard
-              image="/images/news/news-3.png"
-              date="19.09.2025"
-              title='ОБЛАСТНОЙ ФЕСТИВАЛЬ "В АРМИИ СЛУЖИТЬ ПОЧЁТНО!"'
-              description="В СОЛ «Прометей» 19 сентября состоялся масштабный областной патриотический фестиваль «В армии служить почётно!», собравший участников и зрителей, объединенных любовью к Родине и уважением к защитникам Отечества."
-              href="/news/3"
-            />
+            {newsData?.data && newsData.data.length > 0 ? (
+              newsData.data
+                .slice(0, 3)
+                .map((news: NewsItem) => (
+                  <NewsCard
+                    key={news.id}
+                    image={
+                      getImageUrl(news.media?.cover?.url) ||
+                      "/images/news/news-1.png"
+                    }
+                    date={formatDisplayDate(news.basic_info?.published_at_date)}
+                    title={news.title}
+                    description={
+                      getPlainDescription(news.content_info?.excerpt) ||
+                      getPlainDescription(news.content_info?.content) ||
+                      news.title
+                    }
+                    href={`/news/${news.slug}`}
+                  />
+                ))
+            ) : (
+              // Fallback если нет новостей
+              <>
+                <NewsCard
+                  image="/images/news/news-1.png"
+                  date=""
+                  title="Нет новостей"
+                  description="Пока нет новостей для отображения"
+                  href="/news"
+                />
+              </>
+            )}
           </div>
 
           {/* All News Button */}
@@ -322,15 +401,25 @@ export default function HomePage() {
       </section>
 
       {/* Projects Section - Full Width Background */}
-      <section className="relative w-full min-h-[1426px] sm:min-h-[1405px] mt-[100px] sm:mt-[167px]">
+      <section className="relative w-full mt-[100px] sm:mt-[167px]">
         {/* Background */}
         <div className="absolute inset-0">
-          <Image
-            src="/images/projects/projects-bg.png"
-            alt="Наши проекты"
-            fill
-            className="object-cover"
-          />
+          <div
+            className="absolute inset-0"
+            style={{
+              maskImage:
+                "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+            }}
+          >
+            <Image
+              src="/images/projects/projects-bg.png"
+              alt="Наши проекты"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
 
         {/* Content Container with Backdrop Blur */}
@@ -349,145 +438,83 @@ export default function HomePage() {
 
             {/* Projects Grid - точное позиционирование из Figma */}
             <div className="w-full max-w-[1639px] mx-auto mb-8 sm:mb-[66px]">
-              {/* Mobile: Flex layout */}
-              <div className="flex flex-col gap-4 md:hidden">
-                <ProjectCard
-                  title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
-                  date="27.09.2025"
-                  image="/images/projects/project-1-2351d1.png"
-                  href="/projects/1"
-                  size="large"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/2"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/3"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/4"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/5"
-                />
-                <ProjectCard
-                  title="Областной конкурс патриотической песни"
-                  date="30.08.2025"
-                  description="На территории Липецкой области с 30 августа по 12 октября 2025 года стартовал приём заявок на областной конкурс патриотической песни."
-                  image="/images/projects/project-6-58ced6.png"
-                  href="/projects/6"
-                  size="xlarge"
-                />
-              </div>
+              {preparedProjects.length > 0 ? (
+                <>
+                  {/* Mobile: Flex layout */}
+                  <div className="flex flex-col gap-4 md:hidden">
+                    {preparedProjects.map((project) => (
+                      <ProjectCard
+                        key={project.id}
+                        title={project.title}
+                        date={formatDisplayDate(project.publishedAt)}
+                        description={
+                          project.displaySize === "xlarge"
+                            ? getPlainDescription(project.summary?.excerpt)
+                            : undefined
+                        }
+                        image={
+                          getImageUrl(project.media?.cover?.url) ||
+                          "/images/projects/project-2.png"
+                        }
+                        href={`/projects/${project.slug}`}
+                        size={project.displaySize}
+                      />
+                    ))}
+                  </div>
 
-              {/* Tablet: Grid layout */}
-              <div className="hidden md:grid lg:hidden grid-cols-2 gap-x-6 gap-y-6">
-                <ProjectCard
-                  title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
-                  date="27.09.2025"
-                  image="/images/projects/project-1-2351d1.png"
-                  href="/projects/1"
-                  size="large"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/2"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/3"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/4"
-                />
-                <ProjectCard
-                  title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                  image="/images/projects/project-2.png"
-                  href="/projects/5"
-                />
-                <ProjectCard
-                  title="Областной конкурс патриотической песни"
-                  date="30.08.2025"
-                  description="На территории Липецкой области с 30 августа по 12 октября 2025 года стартовал приём заявок на областной конкурс патриотической песни."
-                  image="/images/projects/project-6-58ced6.png"
-                  href="/projects/6"
-                  size="xlarge"
-                />
-              </div>
+                  {/* Tablet: Grid layout */}
+                  <div className="hidden md:grid lg:hidden grid-cols-2 gap-x-6 gap-y-6">
+                    {preparedProjects.map((project) => (
+                      <ProjectCard
+                        key={project.id}
+                        title={project.title}
+                        date={formatDisplayDate(project.publishedAt)}
+                        description={
+                          project.displaySize === "xlarge"
+                            ? getPlainDescription(project.summary?.excerpt)
+                            : undefined
+                        }
+                        image={
+                          getImageUrl(project.media?.cover?.url) ||
+                          "/images/projects/project-2.png"
+                        }
+                        href={`/projects/${project.slug}`}
+                        size={project.displaySize}
+                      />
+                    ))}
+                  </div>
 
-              {/* Desktop: Adaptive flex layout - адаптивное позиционирование */}
-              <div className="hidden lg:flex flex-row flex-wrap gap-[20px] justify-center">
-                {/* Project 1 - Large */}
-                <div className="flex-shrink-0">
-                  <ProjectCard
-                    title="ОБЛАСТНОЙ КАДЕТСКИЙ БАЛ «ВИВАТ, КАДЕТ!» – 2025"
-                    date="27.09.2025"
-                    image="/images/projects/project-1-2351d1.png"
-                    href="/projects/1"
-                    size="large"
-                  />
+                  {/* Desktop: Adaptive flex layout - адаптивное позиционирование */}
+                  <div className="hidden lg:flex flex-row flex-wrap gap-[20px] justify-center">
+                    {preparedProjects.map((project) => (
+                      <div key={project.id} className="flex-shrink-0">
+                        <ProjectCard
+                          title={project.title}
+                          date={formatDisplayDate(project.publishedAt)}
+                          description={
+                            project.displaySize === "xlarge"
+                              ? getPlainDescription(project.summary?.excerpt)
+                              : undefined
+                          }
+                          image={
+                            getImageUrl(project.media?.cover?.url) ||
+                            "/images/projects/project-2.png"
+                          }
+                          href={`/projects/${project.slug}`}
+                          size={project.displaySize}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                // Fallback если нет проектов
+                <div className="text-center py-12">
+                  <p className="text-lg text-gray-600">
+                    Пока нет проектов для отображения
+                  </p>
                 </div>
-
-                {/* Project 2 - Medium */}
-                <div className="flex-shrink-0">
-                  <ProjectCard
-                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                    image="/images/projects/project-2.png"
-                    href="/projects/2"
-                  />
-                </div>
-
-                {/* Project 3 - Medium */}
-                <div className="flex-shrink-0">
-                  <ProjectCard
-                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                    image="/images/projects/project-2.png"
-                    href="/projects/3"
-                  />
-                </div>
-
-                {/* Project 4 - Medium */}
-                <div className="flex-shrink-0">
-                  <ProjectCard
-                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                    image="/images/projects/project-2.png"
-                    href="/projects/4"
-                  />
-                </div>
-
-                {/* Project 5 - Medium */}
-                <div className="flex-shrink-0">
-                  <ProjectCard
-                    title="Смотр-конкурс на лучшее военно-патриотическое объединение на территории Липецкой области"
-                    image="/images/projects/project-2.png"
-                    href="/projects/5"
-                  />
-                </div>
-
-                {/* Project 6 - XLarge */}
-                <div className="flex-shrink-0">
-                  <ProjectCard
-                    title="Областной конкурс патриотической песни"
-                    date="30.08.2025"
-                    description="На территории Липецкой области с 30 августа по 12 октября 2025 года стартовал приём заявок на областной конкурс патриотической песни."
-                    image="/images/projects/project-6-58ced6.png"
-                    href="/projects/6"
-                    size="xlarge"
-                  />
-                </div>
-              </div>
+              )}
             </div>
 
             {/* All Projects Button */}
@@ -509,40 +536,53 @@ export default function HomePage() {
 
         {/* Partners Grid */}
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-[40px] lg:gap-x-[57px] lg:gap-y-[0px] max-w-[668px] md:max-w-none lg:max-w-[1836px] mx-auto justify-items-stretch">
-          <PartnerCard
-            title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
-            image="/images/partners/partner-bg.png"
-            websiteUrl="https://yunarmy.ru"
-            websiteText="https://yunarmy.ru"
-            vkUrl="https://vk.com/yunarmy_lipetsk"
-            vkText="https://vk.com/yunarmy_lipetsk"
-          />
-          <PartnerCard
-            title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
-            image="/images/partners/partner-bg.png"
-            websiteUrl="https://yunarmy.ru"
-            websiteText="https://yunarmy.ru"
-            vkUrl="https://vk.com/yunarmy_lipetsk"
-            vkText="https://vk.com/yunarmy_lipetsk"
-          />
-          <PartnerCard
-            title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
-            image="/images/partners/partner-bg.png"
-            websiteUrl="https://yunarmy.ru"
-            websiteText="https://yunarmy.ru"
-            vkUrl="https://vk.com/yunarmy_lipetsk"
-            vkText="https://vk.com/yunarmy_lipetsk"
-          />
-          {/* 4-я карточка только для планшетов */}
-          <PartnerCard
-            title="Региональный штаб Всероссийского военно-патриотического общественного движения «Юнармия»"
-            image="/images/partners/partner-bg.png"
-            websiteUrl="https://yunarmy.ru"
-            websiteText="https://yunarmy.ru"
-            vkUrl="https://vk.com/yunarmy_lipetsk"
-            vkText="https://vk.com/yunarmy_lipetsk"
-            className="hidden md:block lg:hidden"
-          />
+          {partnersData?.data && partnersData.data.length > 0 ? (
+            partnersData.data
+              .slice(0, 4)
+              .map((partner: PartnerItem, index: number) => (
+                <PartnerCard
+                  key={partner.id}
+                  title={partner.name}
+                  image={
+                    getImageUrl(partner.logo?.url) ||
+                    "/images/partners/partner-bg.png"
+                  }
+                  websiteUrl={partner.website_url || partner.url || "#"}
+                  websiteText={partner.website_url || partner.url || ""}
+                  vkUrl={partner.vk_url || "#"}
+                  vkText={partner.vk_url || ""}
+                  className={index === 3 ? "hidden md:block lg:hidden" : ""}
+                />
+              ))
+          ) : (
+            // Fallback если нет партнеров
+            <>
+              <PartnerCard
+                title="Партнер 1"
+                image="/images/partners/partner-bg.png"
+                websiteUrl="#"
+                websiteText=""
+                vkUrl="#"
+                vkText=""
+              />
+              <PartnerCard
+                title="Партнер 2"
+                image="/images/partners/partner-bg.png"
+                websiteUrl="#"
+                websiteText=""
+                vkUrl="#"
+                vkText=""
+              />
+              <PartnerCard
+                title="Партнер 3"
+                image="/images/partners/partner-bg.png"
+                websiteUrl="#"
+                websiteText=""
+                vkUrl="#"
+                vkText=""
+              />
+            </>
+          )}
         </div>
       </section>
 

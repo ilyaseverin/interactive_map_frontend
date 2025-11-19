@@ -26,7 +26,7 @@ export default function CategoryButton({
   };
 
   const baseStyles =
-    "font-normal font-montserrat transition-colors flex items-center justify-center whitespace-nowrap cursor-pointer";
+    "font-normal font-montserrat transition-colors flex items-center justify-center md:whitespace-nowrap cursor-pointer";
   const activeStyles = "bg-[#1D4E89] text-[#FFFEFE]";
   const inactiveStyles =
     "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50";

@@ -8,6 +8,8 @@ import type {
   ProjectListResponse,
   EventItem,
   EventListResponse,
+  PartnerItem,
+  PartnerListResponse,
 } from "@/types/strapi";
 
 export interface TeamMember {
@@ -99,6 +101,8 @@ export const strapiApi = createApi({
     "Contacts",
     "Events",
     "Event",
+    "Partners",
+    "Partner",
   ],
   endpoints: (builder) => ({
     getPressReleases: builder.query<
@@ -443,6 +447,29 @@ export const strapiApi = createApi({
         response?.data?.[0] ?? null,
       providesTags: (result, error, slug) => [{ type: "Event", id: slug }],
     }),
+
+    getPartners: builder.query<PartnerListResponse, PaginationArgs | void>({
+      query: ({ page = 1, pageSize = 100 } = {}) => ({
+        url: "partners",
+        params: {
+          "pagination[page]": page,
+          "pagination[pageSize]": pageSize,
+          "populate[logo]": "true",
+          sort: "publishedAt:desc",
+          publicationState: "live",
+        },
+      }),
+      providesTags: (result) =>
+        result?.data
+          ? [
+              { type: "Partners" as const, id: "LIST" },
+              ...result.data.map((item) => ({
+                type: "Partner" as const,
+                id: item.slug,
+              })),
+            ]
+          : [{ type: "Partners" as const, id: "LIST" }],
+    }),
   }),
 });
 
@@ -461,6 +488,7 @@ export const {
   useGetContactsQuery,
   useGetEventsQuery,
   useGetEventBySlugQuery,
+  useGetPartnersQuery,
 } = strapiApi;
 
 export type StrapiApi = typeof strapiApi;
