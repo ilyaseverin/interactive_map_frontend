@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import PartnerCard from "@/components/cards/PartnerCard";
+import { BackButton } from "@/components/buttons";
 
 // Данные партнеров (пока статические, как в примере)
 const partnersData = [
@@ -91,34 +92,11 @@ export default function PartnersPage() {
 
       {/* Back button внизу - только для mobile и tablet */}
       <div className="flex lg:hidden md:block md:ml-0">
-        <button
+        <BackButton
           onClick={() => router.back()}
-          className="inline-flex items-center justify-center gap-[10px] px-[24px] w-[124px] h-[40px] md:w-auto md:h-[48px] mx-auto md:mx-0 md:ml-[36px] border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
-        >
-          <svg
-            width="33"
-            height="25"
-            viewBox="0 0 33 25"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-[18px] h-[13px] md:w-[33px] md:h-[25px]"
-          >
-            <path
-              d="M6 13L22 13"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
+          variant="default"
+          className="mx-auto md:mx-0 md:ml-[36px] w-[124px] md:w-auto"
             />
-            <path
-              d="M12 6L6 12.5L12 19"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Назад
-        </button>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SubmitButton } from "@/components/buttons";
 
 export default function ContactForm() {
   return (
@@ -65,9 +66,12 @@ export default function ContactForm() {
               </div>
 
               {/* Submit Button */}
-              <button className="w-full md:w-[58%] lg:w-[500px] h-[47px] md:h-[48px] lg:h-[63px] bg-[#C62828] hover:bg-[#B71C1C] rounded-[12px] text-[12px] md:text-[16px] lg:text-[20px] font-medium font-montserrat text-[#EDF3F7] transition-colors leading-[1.219] mt-2 md:mt-0 lg:mt-0 md:absolute md:left-[21%] md:top-[654px] lg:absolute lg:left-[203px] lg:top-[676px]">
+              <SubmitButton
+                variant="form"
+                className="mt-2 md:mt-0 lg:mt-0 md:absolute md:left-[21%] md:top-[654px] lg:absolute lg:left-[203px] lg:top-[676px]"
+              >
                 Отправить
-              </button>
+              </SubmitButton>
             </div>
           </div>
         </div>

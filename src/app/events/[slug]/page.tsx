@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { EventItem } from "@/types/strapi";
 import Image from "next/image";
-import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { notFound } from "next/navigation";
 import MediaGallery from "@/components/media/MediaGallery";
 import DownloadLink from "@/components/DownloadLink";
+import { BackButton } from "@/components/buttons";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -186,76 +186,6 @@ function EventDateDisplay({ date, time }: { date: string; time?: string }) {
   );
 }
 
-// Кнопка "Назад"
-function BackButton() {
-  return (
-    <Link
-      href="/home"
-      className="inline-flex items-center justify-center gap-[10px] w-[123px] h-[40px] md:w-auto md:h-[48px] lg:h-[56px] px-[24px] md:px-[24px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
-    >
-      <svg
-        width="33"
-        height="25"
-        viewBox="0 0 33 25"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="flex-shrink-0 w-[18px] h-[13px] md:w-[33px] md:h-[25px]"
-      >
-        <path
-          d="M6 13L28 13"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M13 6L6 13L13 20"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      Назад
-    </Link>
-  );
-}
-
-// Мобильная кнопка "Назад" (иконка без текста)
-function BackIconButton() {
-  return (
-    <Link
-      href="/home"
-      aria-label="Назад на главную"
-      className="inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group"
-    >
-      <svg
-        width="18"
-        height="13"
-        viewBox="0 0 18 13"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="rotate-180"
-      >
-        <path
-          d="M2 6.5L16 6.5"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeLinecap="round"
-          className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
-        />
-        <path
-          d="M10 1.5L16 6.5L10 11.5"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="stroke-[#C62828] group-hover:stroke-white group-active:stroke-white"
-        />
-      </svg>
-    </Link>
-  );
-}
-
 // Форматирование размера файла
 function formatFileSize(bytes: number | undefined): string {
   if (!bytes) return "";
@@ -382,7 +312,11 @@ export default async function EventDetailPage({
           <div className="md:hidden flex items-center justify-between gap-4 mb-[20px]">
             <PublishDateDisplay date={publishDate} />
             <div className="flex-shrink-0">
-              <BackIconButton />
+              <BackButton
+                href="/home"
+                variant="icon"
+                ariaLabel="Назад на главную"
+              />
             </div>
           </div>
 
@@ -399,7 +333,7 @@ export default async function EventDetailPage({
               )}
             </div>
             <div className="flex-shrink-0">
-              <BackButton />
+              <BackButton href="/home" />
             </div>
           </div>
 
@@ -518,7 +452,7 @@ export default async function EventDetailPage({
 
           {/* Нижняя часть: кнопка назад и дата публикации */}
           <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between gap-6 pt-[25px] md:pt-[40px] lg:pt-[64px]">
-            <BackButton />
+            <BackButton href="/home" />
             <PublishDateDisplay date={publishDate} />
           </div>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import CalendarCard from "@/components/calendar/CalendarCard";
 import Calendar from "@/components/calendar/Calendar";
 import ProjectCard from "@/components/cards/ProjectCard";
@@ -14,6 +13,7 @@ import { useMemo, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { EventItem } from "@/types/strapi";
 import { ReactElement } from "react";
+import { CategoryButton, PrimaryButton } from "@/components/buttons";
 
 // Конфигурация типов событий
 type EventTypeKey = "Человек дня" | "Событие дня" | "Фильм дня" | "Тема дня";
@@ -225,12 +225,20 @@ export default function HomePage() {
         <div className="relative z-10 w-full max-w-[1920px] mx-auto pt-8 sm:pt-[49px] pb-12 px-4 md:px-[138px] lg:px-[137px] xl:px-[69px]">
           {/* Category Buttons */}
           <div className="flex flex-row justify-center lg:justify-end gap-[6px] sm:gap-4 mb-8 sm:mb-12">
-            <button className="w-[117px] h-[40px] px-[25px] py-[10px] md:w-[178px] md:h-[48px] md:px-5 md:py-3 lg:w-auto lg:px-[65px] lg:py-4 md:rounded-[10px] lg:rounded-[9px] bg-[#1D4E89] text-[#FFFEFE] text-[12px] md:text-lg lg:text-[22px] font-normal font-montserrat rounded-[8px] hover:bg-[#164070] transition-colors leading-[2.5] md:leading-[1.667] lg:leading-[1.364] flex items-center justify-center">
-              Главные
-            </button>
-            <button className="w-[117px] h-[40px] px-[25px] py-[10px] md:w-auto md:h-[48px] md:px-5 md:py-3 lg:w-[269px] lg:px-[65px] lg:py-4 md:rounded-[10px] lg:rounded-[9px] bg-white text-[#1D4E89] text-[12px] md:text-lg lg:text-[22px] font-normal font-montserrat rounded-[8px] border border-[#1D4E89] hover:bg-gray-50 transition-colors leading-[2.5] md:leading-[1.667] lg:leading-[1.364] flex items-center justify-center">
-              Региональные
-            </button>
+            <CategoryButton
+              label="Главные"
+              isActive={true}
+              onClick={() => {}}
+              variant="desktop"
+              className="w-[117px] md:w-[178px] lg:w-auto"
+            />
+            <CategoryButton
+              label="Региональные"
+              isActive={false}
+              onClick={() => {}}
+              variant="desktop"
+              className="w-[117px] md:w-auto lg:w-[269px]"
+            />
           </div>
 
           {/* News Cards Grid */}
@@ -260,12 +268,9 @@ export default function HomePage() {
 
           {/* All News Button */}
           <div className="flex justify-center lg:justify-end">
-            <Link
-              href="/news"
-              className="inline-flex items-center justify-center w-[232px] h-[40px] md:w-[232px] md:h-[48px] px-[25px] py-[10px] md:px-5 md:py-[12px] bg-[#C62828] hover:bg-[#B71C1C] text-white text-[12px] md:text-[16px] font-medium font-montserrat rounded-lg md:rounded-[10px] transition-colors shadow-lg leading-[1.219]"
-            >
+            <PrimaryButton href="/news" variant="home">
               Ко всем новостям
-            </Link>
+            </PrimaryButton>
           </div>
         </div>
       </section>
@@ -487,12 +492,9 @@ export default function HomePage() {
 
             {/* All Projects Button */}
             <div className="flex justify-center mt-[66px]">
-              <Link
-                href="/projects"
-                className="inline-flex items-center justify-center gap-4 w-[240px] sm:w-[394px] h-[40px] sm:h-[55px] px-[25px] py-[10px] sm:px-6 sm:py-4 bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[12px] sm:text-[24px] font-medium font-montserrat rounded-lg sm:rounded-xl transition-colors leading-[1.219]"
-              >
+              <PrimaryButton href="/projects" variant="default">
                 Ко всем проектам
-              </Link>
+              </PrimaryButton>
             </div>
           </div>
         </div>

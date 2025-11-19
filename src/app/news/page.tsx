@@ -1,13 +1,13 @@
 "use client";
 
 import type { NewsListResponse } from "@/types/strapi";
-import Link from "next/link";
 import NewsCard from "@/components/cards/NewsCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Pagination from "@/components/Pagination";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useGetNewsQuery } from "@/services/strapiApi";
+import { BackButton, CategoryButton, SecondaryButton } from "@/components/buttons";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -82,128 +82,57 @@ export default function NewsPage() {
             Новости
           </h1>
 
-          {/* Кнопка Назад - мобильная (только иконка) */}
-          <Link
-            href="/home"
-            className="absolute top-0 right-[19px] md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors"
-          >
-            <svg
-              width="18"
-              height="13"
-              viewBox="0 0 18 13"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="rotate-180"
-            >
-              <path
-                d="M2 7L16 7"
-                stroke="white"
-                strokeWidth="1"
-                strokeLinecap="round"
-              />
-              <path
-                d="M10 2L16 7L10 12"
-                stroke="white"
-                strokeWidth="1"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Link>
-
-          {/* Кнопка Назад - планшет и десктоп (с текстом) */}
-          <Link
-            href="/home"
-            className="hidden md:inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[16px] md:text-[16px] lg:text-[20px] font-medium font-montserrat rounded-[12px] transition-colors leading-[1.219]"
-          >
-            <svg
-              width="33"
-              height="25"
-              viewBox="0 0 29 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="rotate-180 md:w-[22px] md:h-[13px]"
-            >
-              <path
-                d="M2 9L27 9"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M20 2L27 9L20 16"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Назад
-          </Link>
+          {/* Кнопка Назад */}
+          <div className="absolute top-1/2 -translate-y-1/2 right-[19px] md:static md:translate-y-0">
+            <BackButton href="/home" variant="red" />
+          </div>
         </div>
 
         {/* Категории и Фото/Видео - мобильная версия (в два ряда) */}
         <div className="px-[19px] md:hidden flex flex-col gap-[5px] pt-[10px] mb-[30px] max-w-full overflow-hidden">
           {/* Первый ряд: "Все", "Главные" и "Региональные" */}
           <div className="flex gap-[5px]">
-            <button
+            <CategoryButton
+              label="Все"
+              isActive={category === undefined}
               onClick={() => {
                 setCategory(undefined);
                 setCurrentPage(1);
                 router.push("/news");
               }}
-              className={`px-[18px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === undefined
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Все
-            </button>
-            <button
+              variant="mobile"
+            />
+            <CategoryButton
+              label="Главные"
+              isActive={category === "Главные"}
               onClick={() => {
                 setCategory("Главные");
                 setCurrentPage(1);
                 router.push("/news?category=main");
               }}
-              className={`px-[18px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === "Главные"
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Главные
-            </button>
-            <button
+              variant="mobile"
+            />
+            <CategoryButton
+              label="Региональные"
+              isActive={category === "Региональные"}
               onClick={() => {
                 setCategory("Региональные");
                 setCurrentPage(1);
                 router.push("/news?category=regional");
               }}
-              className={`px-[16px] py-[8px] h-[36px] rounded-[8px] text-[12px] font-normal font-montserrat leading-[1.2] transition-colors flex items-center justify-center whitespace-nowrap flex-shrink ${
-                category === "Региональные"
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Региональные
-            </button>
+              variant="mobile"
+              className="flex-shrink"
+            />
           </div>
 
           {/* Второй ряд: Фотоальбомы и Видео */}
           <div className="flex gap-[5px] min-w-0">
-            <Link
-              href="/photo-albums?source=news"
-              className="inline-flex items-center justify-center px-[18px] py-[8px] h-[36px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.2] whitespace-nowrap min-w-0 flex-shrink"
-            >
+            <SecondaryButton href="/photo-albums?source=news" variant="mobile" className="min-w-0 flex-shrink">
               К фотоальбомам
-            </Link>
-            <Link
-              href="/videos?source=news"
-              className="inline-flex items-center justify-center px-[18px] py-[8px] h-[36px] rounded-[8px] bg-white text-[#C62828] text-[12px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.2] whitespace-nowrap min-w-0 flex-shrink"
-            >
+            </SecondaryButton>
+            <SecondaryButton href="/videos?source=news" variant="mobile" className="min-w-0 flex-shrink">
               К видео
-            </Link>
+            </SecondaryButton>
           </div>
         </div>
 
@@ -211,64 +140,46 @@ export default function NewsPage() {
         <div className="hidden md:flex lg:hidden px-[36px] flex-col gap-[12px] mb-[64px]">
           {/* Категории */}
           <div className="flex flex-row gap-[14px] flex-wrap">
-            <button
+            <CategoryButton
+              label="Все"
+              isActive={category === undefined}
               onClick={() => {
                 setCategory(undefined);
                 setCurrentPage(1);
                 router.push("/news");
               }}
-              className={`px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] font-normal font-montserrat leading-[1.875] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === undefined
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Все
-            </button>
-            <button
+              variant="tablet"
+            />
+            <CategoryButton
+              label="Главные"
+              isActive={category === "Главные"}
               onClick={() => {
                 setCategory("Главные");
                 setCurrentPage(1);
                 router.push("/news?category=main");
               }}
-              className={`px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] font-normal font-montserrat leading-[1.875] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === "Главные"
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Главные
-            </button>
-            <button
+              variant="tablet"
+            />
+            <CategoryButton
+              label="Региональные"
+              isActive={category === "Региональные"}
               onClick={() => {
                 setCategory("Региональные");
                 setCurrentPage(1);
                 router.push("/news?category=regional");
               }}
-              className={`px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] font-normal font-montserrat leading-[1.875] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === "Региональные"
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Региональные
-            </button>
+              variant="tablet"
+            />
           </div>
 
           {/* Кнопки Фотоальбомы / Видео */}
           <div className="flex gap-[14px] flex-wrap">
-            <Link
-              href="/photo-albums?source=news"
-              className="inline-flex items-center justify-center px-[20px] py-[12px] min-h-[48px] rounded-[10px] bg-white text-[#C62828] text-[16px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.875] whitespace-nowrap"
-            >
+            <SecondaryButton href="/photo-albums?source=news" variant="tablet">
               К фотоальбомам
-            </Link>
-            <Link
-              href="/videos?source=news"
-              className="inline-flex items-center justify-center px-[20px] py-[12px] min-h-[48px] rounded-[10px] bg-white text-[#C62828] text-[16px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.875] whitespace-nowrap"
-            >
+            </SecondaryButton>
+            <SecondaryButton href="/videos?source=news" variant="tablet">
               К видео
-            </Link>
+            </SecondaryButton>
           </div>
         </div>
 
@@ -276,64 +187,46 @@ export default function NewsPage() {
         <div className="hidden lg:flex px-[69px] flex-row items-start justify-between gap-0 mb-[64px]">
           {/* Категории */}
           <div className="flex flex-row gap-[23px] flex-wrap">
-            <button
+            <CategoryButton
+              label="Все"
+              isActive={category === undefined}
               onClick={() => {
                 setCategory(undefined);
                 setCurrentPage(1);
                 router.push("/news");
               }}
-              className={`px-[40px] xl:px-[65px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[9px] text-[18px] xl:text-[20px] font-normal font-montserrat leading-[1.219] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === undefined
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Все
-            </button>
-            <button
+              variant="desktop"
+            />
+            <CategoryButton
+              label="Главные"
+              isActive={category === "Главные"}
               onClick={() => {
                 setCategory("Главные");
                 setCurrentPage(1);
                 router.push("/news?category=main");
               }}
-              className={`px-[40px] xl:px-[65px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[9px] text-[18px] xl:text-[20px] font-normal font-montserrat leading-[1.219] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === "Главные"
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Главные
-            </button>
-            <button
+              variant="desktop"
+            />
+            <CategoryButton
+              label="Региональные"
+              isActive={category === "Региональные"}
               onClick={() => {
                 setCategory("Региональные");
                 setCurrentPage(1);
                 router.push("/news?category=regional");
               }}
-              className={`px-[40px] xl:px-[65px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[9px] text-[18px] xl:text-[20px] font-normal font-montserrat leading-[1.219] transition-colors flex items-center justify-center whitespace-nowrap ${
-                category === "Региональные"
-                  ? "bg-[#1D4E89] text-[#FFFEFE]"
-                  : "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50"
-              }`}
-            >
-              Региональные
-            </button>
+              variant="desktop"
+            />
           </div>
 
           {/* Кнопки Фотоальбомы / Видео */}
           <div className="flex gap-[15px] flex-wrap">
-            <Link
-              href="/photo-albums?source=news"
-              className="inline-flex items-center justify-center px-[20px] xl:px-[24px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[12px] bg-white text-[#C62828] text-[18px] xl:text-[20px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.219] whitespace-nowrap"
-            >
+            <SecondaryButton href="/photo-albums?source=news" variant="desktop">
               К фотоальбомам
-            </Link>
-            <Link
-              href="/videos?source=news"
-              className="inline-flex items-center justify-center px-[20px] xl:px-[24px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[12px] bg-white text-[#C62828] text-[18px] xl:text-[20px] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors leading-[1.219] whitespace-nowrap"
-            >
+            </SecondaryButton>
+            <SecondaryButton href="/videos?source=news" variant="desktop">
               К видео
-            </Link>
+            </SecondaryButton>
           </div>
         </div>
 
