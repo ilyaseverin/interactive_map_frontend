@@ -15,8 +15,10 @@ import type {
   ProjectListResponse,
 } from "@/types/strapi";
 import { getRelativeTime } from "@/utils/dateUtils";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { withSearchParams } from "@/utils/withSearchParams";
 
-export default function VideosPage() {
+function VideosPage() {
   const searchParams = useSearchParams();
   const sourceParam = (searchParams.get("source") || "news") as
     | "news"
@@ -245,7 +247,8 @@ export default function VideosPage() {
                   project.media?.cover?.url ||
                   project.media?.gallery?.[0]?.url ||
                   "/images/news/news-1.png";
-                const fullThumbnailUrl = getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
+                const fullThumbnailUrl =
+                  getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
 
                 const videoUrl = video.url || video.video_file?.url || "";
 
@@ -308,7 +311,8 @@ export default function VideosPage() {
               // Получаем обложку или cover
               const thumbnailUrl =
                 news.media?.cover?.url || "/images/news/news-1.png";
-              const fullThumbnailUrl = getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
+              const fullThumbnailUrl =
+                getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
 
               // Получаем URL видео
               // Если есть внешняя ссылка (url), используем её, иначе используем локальный файл
@@ -396,3 +400,5 @@ export default function VideosPage() {
     </div>
   );
 }
+
+export default withSearchParams(VideosPage);

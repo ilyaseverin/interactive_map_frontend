@@ -9,6 +9,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useGetNewsQuery } from "@/services/strapiApi";
 import { BackButton, CategoryButton, SecondaryButton } from "@/components/buttons";
 import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { withSearchParams } from "@/utils/withSearchParams";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -29,8 +30,7 @@ function mapUrlCategoryToApiCategory(
   return undefined;
 }
 
-// Клиентский компонент
-export default function NewsPage() {
+function NewsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -279,3 +279,5 @@ export default function NewsPage() {
     </div>
   );
 }
+
+export default withSearchParams(NewsPage);

@@ -14,7 +14,6 @@ interface ProjectListCardProps {
 export default function ProjectListCard({
   image,
   date,
-  category,
   title,
   description,
   href,

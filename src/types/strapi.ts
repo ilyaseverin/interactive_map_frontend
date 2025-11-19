@@ -36,7 +36,7 @@ export interface Seo {
   metaRobots?: string;
   canonicalURL?: string;
   metaViewport?: string;
-  structuredData?: any;
+  structuredData?: Record<string, unknown>;
 }
 
 // Компоненты новостей (Strapi 5 - без обертки data)

@@ -8,7 +8,6 @@ import type {
   ProjectListResponse,
   EventItem,
   EventListResponse,
-  PartnerItem,
   PartnerListResponse,
 } from "@/types/strapi";
 

@@ -4,6 +4,7 @@ import PhotoCard from "@/components/cards/PhotoCard";
 import MediaModal from "@/components/modals/MediaModal";
 import { useMemo, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import { withSearchParams } from "@/utils/withSearchParams";
 import {
   useGetPhotoAlbumBySlugQuery,
   useGetProjectBySlugQuery,
@@ -34,7 +35,7 @@ type AlbumEntity = {
   }[];
 };
 
-export default function PhotoAlbumDetailPage() {
+function PhotoAlbumDetailPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const slug = params?.slug as string;
@@ -327,3 +328,5 @@ export default function PhotoAlbumDetailPage() {
     </div>
   );
 }
+
+export default withSearchParams(PhotoAlbumDetailPage);

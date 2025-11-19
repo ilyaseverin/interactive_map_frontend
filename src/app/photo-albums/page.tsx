@@ -20,6 +20,7 @@ import {
   useGetProjectsQuery,
 } from "@/services/strapiApi";
 import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { withSearchParams } from "@/utils/withSearchParams";
 
 type SourceType = "news" | "projects" | "press";
 
@@ -30,8 +31,7 @@ type AlbumListItem = {
   coverUrl: string;
 };
 
-// Клиентский компонент
-export default function PhotoAlbumsPage() {
+function PhotoAlbumsPage() {
   const searchParams = useSearchParams();
   const sourceParam = (searchParams.get("source") || "news") as SourceType;
   const source: SourceType =
@@ -334,3 +334,5 @@ export default function PhotoAlbumsPage() {
     </div>
   );
 }
+
+export default withSearchParams(PhotoAlbumsPage);
