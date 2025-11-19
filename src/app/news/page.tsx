@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useGetNewsQuery } from "@/services/strapiApi";
 import { BackButton, CategoryButton, SecondaryButton } from "@/components/buttons";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -250,12 +251,7 @@ export default function NewsPage() {
             {newsList.map((news) => {
               const coverUrl = news.media?.cover?.url;
               const fullCoverUrl = coverUrl
-                ? coverUrl.startsWith("http")
-                  ? coverUrl
-                  : `${
-                      process.env.NEXT_PUBLIC_STRAPI_URL ||
-                      "http://localhost:1337"
-                    }${coverUrl}`
+                ? getStrapiMediaUrl(coverUrl) || coverUrl
                 : "/images/news/news-1.png";
 
               return (

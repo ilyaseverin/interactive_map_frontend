@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import MediaGallery from "@/components/media/MediaGallery";
 import DownloadLink from "@/components/DownloadLink";
 import { BackButton } from "@/components/buttons";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -14,11 +15,9 @@ export const fetchCache = "force-no-store";
 
 // Получить проект по slug
 async function getProjectBySlug(slug: string): Promise<ProjectItem | null> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
   try {
     const res = await fetch(
-      `${apiUrl}/api/projects?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos][populate][video_file]=true&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&populate[seo][populate][ogImage]=true&publicationState=live`,
+      `${getStrapiApiUrl("projects")}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos][populate][video_file]=true&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&populate[seo][populate][ogImage]=true&publicationState=live`,
       {
         cache: "no-store",
       }
@@ -59,13 +58,7 @@ export async function generateMetadata({
   }
 
   const coverUrl = project.media?.cover?.url;
-  const fullCoverUrl = coverUrl
-    ? coverUrl.startsWith("http")
-      ? coverUrl
-      : `${
-          process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
-        }${coverUrl}`
-    : undefined;
+  const fullCoverUrl = getStrapiMediaUrl(coverUrl);
 
   let metaDescription = "";
 
@@ -94,11 +87,7 @@ export async function generateMetadata({
   const ogTitle = seo?.metaTitle || project.title;
   const ogDescription = seo?.ogDescription || seoDescription;
   const ogImageUrl = seo?.ogImage?.url
-    ? seo.ogImage.url.startsWith("http")
-      ? seo.ogImage.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-          seo.ogImage.url
-        }`
+    ? getStrapiMediaUrl(seo.ogImage.url)
     : fullCoverUrl;
 
   const robots = seo?.metaRobots || "index, follow";
@@ -182,22 +171,12 @@ export default async function ProjectDetailPage({
   }
 
   const coverUrl = project.media?.cover?.url;
-  const fullCoverUrl = coverUrl
-    ? coverUrl.startsWith("http")
-      ? coverUrl
-      : `${
-          process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
-        }${coverUrl}`
-    : null;
+  const fullCoverUrl = coverUrl ? getStrapiMediaUrl(coverUrl) || null : null;
 
   // Галерея изображений
   const galleryImages =
     project.media?.gallery?.map((image: StrapiImage) => {
-      const imageUrl = image.url.startsWith("http")
-        ? image.url
-        : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-            image.url
-          }`;
+      const imageUrl = getStrapiMediaUrl(image.url) || image.url;
       return {
         url: imageUrl,
         alt: image.alternativeText || project.title,
@@ -218,11 +197,7 @@ export default async function ProjectDetailPage({
   const firstVideoUrl = firstVideoLink?.url;
   const firstVideoFile = firstVideoLink?.video_file;
   const firstVideoFileUrl = firstVideoFile?.url
-    ? firstVideoFile.url.startsWith("http")
-      ? firstVideoFile.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-          firstVideoFile.url
-        }`
+    ? getStrapiMediaUrl(firstVideoFile.url)
     : undefined;
 
   // Аттачменты
@@ -377,19 +352,14 @@ export default async function ProjectDetailPage({
                   if (!file) return null;
 
                   // Собираем URL с оригинальным именем файла
-                  let fileUrl = file.url.startsWith("http")
-                    ? file.url
-                    : `${
-                        process.env.NEXT_PUBLIC_STRAPI_URL ||
-                        "http://localhost:1337"
-                      }${file.url}`;
+                  let fileUrl = getStrapiMediaUrl(file.url) || file.url;
 
                   // Пытаемся добавить оригинальное имя файла к URL для Strapi
                   if (file.name && !file.url.startsWith("http")) {
-                    fileUrl = `${
-                      process.env.NEXT_PUBLIC_STRAPI_URL ||
-                      "http://localhost:1337"
-                    }${file.url}?filename=${encodeURIComponent(file.name)}`;
+                    const baseUrl = getStrapiMediaUrl(file.url);
+                    if (baseUrl) {
+                      fileUrl = `${baseUrl}?filename=${encodeURIComponent(file.name)}`;
+                    }
                   }
 
                   // Название файла

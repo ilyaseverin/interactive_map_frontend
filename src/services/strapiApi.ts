@@ -76,9 +76,9 @@ export type PaginationArgs = {
   pageSize?: number;
 };
 
-const STRAPI_BASE_URL = `${(
-  process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
-).replace(/\/$/, "")}/api`;
+import { getStrapiUrl } from "@/utils/strapiUrl";
+
+const STRAPI_BASE_URL = `${getStrapiUrl().replace(/\/$/, "")}/api`;
 
 export const strapiApi = createApi({
   reducerPath: "strapiApi",

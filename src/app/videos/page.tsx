@@ -245,12 +245,7 @@ export default function VideosPage() {
                   project.media?.cover?.url ||
                   project.media?.gallery?.[0]?.url ||
                   "/images/news/news-1.png";
-                const fullThumbnailUrl = thumbnailUrl.startsWith("http")
-                  ? thumbnailUrl
-                  : `${
-                      process.env.NEXT_PUBLIC_STRAPI_URL ||
-                      "http://localhost:1337"
-                    }${thumbnailUrl}`;
+                const fullThumbnailUrl = getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
 
                 const videoUrl = video.url || video.video_file?.url || "";
 
@@ -262,12 +257,7 @@ export default function VideosPage() {
 
                 const fullVideoUrl = isExternalVideo
                   ? videoUrl
-                  : videoUrl.startsWith("http")
-                  ? videoUrl
-                  : `${
-                      process.env.NEXT_PUBLIC_STRAPI_URL ||
-                      "http://localhost:1337"
-                    }${videoUrl}`;
+                  : getStrapiMediaUrl(videoUrl) || videoUrl;
 
                 const relativeDate = project.publishedAt
                   ? getRelativeTime(project.publishedAt)
@@ -318,12 +308,7 @@ export default function VideosPage() {
               // Получаем обложку или cover
               const thumbnailUrl =
                 news.media?.cover?.url || "/images/news/news-1.png";
-              const fullThumbnailUrl = thumbnailUrl.startsWith("http")
-                ? thumbnailUrl
-                : `${
-                    process.env.NEXT_PUBLIC_STRAPI_URL ||
-                    "http://localhost:1337"
-                  }${thumbnailUrl}`;
+              const fullThumbnailUrl = getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
 
               // Получаем URL видео
               // Если есть внешняя ссылка (url), используем её, иначе используем локальный файл
@@ -339,12 +324,7 @@ export default function VideosPage() {
 
               const fullVideoUrl = isExternalVideo
                 ? videoUrl
-                : videoUrl.startsWith("http")
-                ? videoUrl
-                : `${
-                    process.env.NEXT_PUBLIC_STRAPI_URL ||
-                    "http://localhost:1337"
-                  }${videoUrl}`;
+                : getStrapiMediaUrl(videoUrl) || videoUrl;
 
               const relativeDate = news.basic_info?.published_at_date
                 ? getRelativeTime(news.basic_info.published_at_date)

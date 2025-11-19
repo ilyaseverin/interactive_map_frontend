@@ -7,6 +7,7 @@ import Pagination from "@/components/Pagination";
 import { useState } from "react";
 import { useGetProjectsQuery } from "@/services/strapiApi";
 import { BackButton, SecondaryButton } from "@/components/buttons";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -119,12 +120,7 @@ export default function ProjectsPage() {
             {projectsList.map((project) => {
               const coverUrl = project.media?.cover?.url;
               const fullCoverUrl = coverUrl
-                ? coverUrl.startsWith("http")
-                  ? coverUrl
-                  : `${
-                      process.env.NEXT_PUBLIC_STRAPI_URL ||
-                      "http://localhost:1337"
-                    }${coverUrl}`
+                ? getStrapiMediaUrl(coverUrl) || coverUrl
                 : "/images/news/news-1.png";
 
               const source = project.basic_info?.category

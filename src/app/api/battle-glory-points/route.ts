@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { BattleGloryResponse, BattleGloryPoint } from "@/types/strapi";
+import { getStrapiUrl } from "@/utils/strapiUrl";
 
-const STRAPI_URL =
-  process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+const STRAPI_URL = getStrapiUrl();
 
 // Функция для получения всех данных с пагинацией
 async function fetchAllData(filters: string[]): Promise<BattleGloryResponse> {

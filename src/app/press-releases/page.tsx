@@ -7,6 +7,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Pagination from "@/components/Pagination";
 import { useState } from "react";
 import { useGetPressReleasesQuery } from "@/services/strapiApi";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -165,12 +166,7 @@ export default function PressReleasesPage() {
             {pressReleasesList.map((pressRelease) => {
               const coverUrl = pressRelease.media?.cover?.url;
               const fullCoverUrl = coverUrl
-                ? coverUrl.startsWith("http")
-                  ? coverUrl
-                  : `${
-                      process.env.NEXT_PUBLIC_STRAPI_URL ||
-                      "http://localhost:1337"
-                    }${coverUrl}`
+                ? getStrapiMediaUrl(coverUrl) || coverUrl
                 : "/images/news/news-1.png";
 
               const source = pressRelease.basic_info.author

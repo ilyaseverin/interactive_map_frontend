@@ -19,6 +19,8 @@ import {
   useGetPressReleasesQuery,
   useGetProjectsQuery,
 } from "@/services/strapiApi";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+} from "@/services/strapiApi";
 
 type SourceType = "news" | "projects" | "press";
 
@@ -97,12 +99,7 @@ export default function PhotoAlbumsPage() {
                 project.media?.cover?.url ||
                 project.media?.gallery?.[0]?.url ||
                 "/images/news/news-1.png";
-              const fullCoverUrl = coverUrl.startsWith("http")
-                ? coverUrl
-                : `${
-                    process.env.NEXT_PUBLIC_STRAPI_URL ||
-                    "http://localhost:1337"
-                  }${coverUrl}`;
+              const fullCoverUrl = getStrapiMediaUrl(coverUrl) || coverUrl;
 
               return {
                 id: project.id,
@@ -134,12 +131,7 @@ export default function PhotoAlbumsPage() {
                 press.media?.cover?.url ||
                 press.media?.gallery?.[0]?.url ||
                 "/images/news/news-1.png";
-              const fullCoverUrl = coverUrl.startsWith("http")
-                ? coverUrl
-                : `${
-                    process.env.NEXT_PUBLIC_STRAPI_URL ||
-                    "http://localhost:1337"
-                  }${coverUrl}`;
+              const fullCoverUrl = getStrapiMediaUrl(coverUrl) || coverUrl;
 
               return {
                 id: press.id,
@@ -171,11 +163,7 @@ export default function PhotoAlbumsPage() {
               news.media?.cover?.url ||
               news.media?.gallery?.[0]?.url ||
               "/images/news/news-1.png";
-            const fullCoverUrl = coverUrl.startsWith("http")
-              ? coverUrl
-              : `${
-                  process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
-                }${coverUrl}`;
+            const fullCoverUrl = getStrapiMediaUrl(coverUrl) || coverUrl;
 
             return {
               id: news.id,

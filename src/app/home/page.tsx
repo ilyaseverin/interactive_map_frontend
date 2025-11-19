@@ -18,6 +18,7 @@ import { useMemo, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { EventItem, NewsItem, PartnerItem } from "@/types/strapi";
 import { ReactElement } from "react";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 import { CategoryButton, PrimaryButton } from "@/components/buttons";
 
 // Конфигурация типов событий
@@ -143,10 +144,7 @@ export default function HomePage() {
   // Получаем URL изображения обложки
   const getImageUrl = (url: string | undefined) => {
     if (!url) return "/images/news/news-1.png"; // fallback image
-    if (url.startsWith("http")) return url;
-    const baseUrl =
-      process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    return `${baseUrl}${url}`;
+    return getStrapiMediaUrl(url) || url;
   };
 
   // Получаем описание из HTML

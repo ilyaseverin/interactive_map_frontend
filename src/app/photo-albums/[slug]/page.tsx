@@ -18,6 +18,7 @@ import type {
   ProjectItem,
   EventItem,
 } from "@/types/strapi";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 type SourceType = "news" | "projects" | "press" | "events";
 
@@ -174,11 +175,7 @@ export default function PhotoAlbumDetailPage() {
     photo: { url: string; alternativeText?: string | null; name?: string },
     index: number
   ) => {
-    const photoUrl = photo.url.startsWith("http")
-      ? photo.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-          photo.url
-        }`;
+    const photoUrl = getStrapiMediaUrl(photo.url) || photo.url;
 
     setSelectedPhoto({
       url: photoUrl,
@@ -289,12 +286,7 @@ export default function PhotoAlbumDetailPage() {
         ) : (
           <div className="px-[19px] md:px-[36px] lg:px-[80px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-[30px] md:gap-x-[18px] md:gap-y-[28px] lg:gap-x-[30px] lg:gap-y-[39px] mb-[60px] md:mb-[88px] lg:mb-[150px]">
             {photos.map((photo, i) => {
-              const photoUrl = photo.url.startsWith("http")
-                ? photo.url
-                : `${
-                    process.env.NEXT_PUBLIC_STRAPI_URL ||
-                    "http://localhost:1337"
-                  }${photo.url}`;
+              const photoUrl = getStrapiMediaUrl(photo.url) || photo.url;
 
               return (
                 <div

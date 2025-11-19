@@ -5,6 +5,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { notFound } from "next/navigation";
 import MediaGallery from "@/components/media/MediaGallery";
 import { BackButton } from "@/components/buttons";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -13,11 +14,11 @@ export const fetchCache = "force-no-store";
 
 // Получить новость по slug
 async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
   try {
     const res = await fetch(
-      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links][populate][video_file]=true&populate[seo][populate][ogImage]=true`,
+      `${getStrapiApiUrl(
+        "news"
+      )}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links][populate][video_file]=true&populate[seo][populate][ogImage]=true`,
       {
         cache: "no-store",
       }
@@ -59,13 +60,7 @@ export async function generateMetadata({
   }
 
   const coverUrl = news.media?.cover?.url;
-  const fullCoverUrl = coverUrl
-    ? coverUrl.startsWith("http")
-      ? coverUrl
-      : `${
-          process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
-        }${coverUrl}`
-    : undefined;
+  const fullCoverUrl = getStrapiMediaUrl(coverUrl);
 
   let metaDescription = "";
 
@@ -94,11 +89,7 @@ export async function generateMetadata({
   const ogTitle = seo?.metaTitle || news.title;
   const ogDescription = seo?.ogDescription || seoDescription;
   const ogImageUrl = seo?.ogImage?.url
-    ? seo.ogImage.url.startsWith("http")
-      ? seo.ogImage.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-          seo.ogImage.url
-        }`
+    ? getStrapiMediaUrl(seo.ogImage.url)
     : fullCoverUrl;
 
   const robots = seo?.metaRobots || "index, follow";
@@ -166,22 +157,12 @@ export default async function NewsDetailPage({
   }
 
   const coverUrl = news.media?.cover?.url;
-  const fullCoverUrl = coverUrl
-    ? coverUrl.startsWith("http")
-      ? coverUrl
-      : `${
-          process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
-        }${coverUrl}`
-    : null;
+  const fullCoverUrl = coverUrl ? getStrapiMediaUrl(coverUrl) || null : null;
 
   // Галерея изображений
   const galleryImages =
     news.media?.gallery?.map((image) => {
-      const imageUrl = image.url.startsWith("http")
-        ? image.url
-        : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-            image.url
-          }`;
+      const imageUrl = getStrapiMediaUrl(image.url) || image.url;
       return {
         url: imageUrl,
         alt: image.alternativeText || news.title,
@@ -202,11 +183,7 @@ export default async function NewsDetailPage({
   const firstVideoUrl = firstVideoLink?.url;
   const firstVideoFile = firstVideoLink?.video_file;
   const firstVideoFileUrl = firstVideoFile?.url
-    ? firstVideoFile.url.startsWith("http")
-      ? firstVideoFile.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-          firstVideoFile.url
-        }`
+    ? getStrapiMediaUrl(firstVideoFile.url)
     : undefined;
 
   // Разбиваем контент на параграфы
