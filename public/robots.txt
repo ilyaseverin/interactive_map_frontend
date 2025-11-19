@@ -1,3 +1,7 @@
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /_next/static/media/
 
+Sitemap: https://map.patriot48.ru/sitemap.xml

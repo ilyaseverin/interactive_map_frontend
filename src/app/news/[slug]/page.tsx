@@ -17,14 +17,15 @@ async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
 
   try {
     const res = await fetch(
-      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links][populate][video_file]=true&populate[meta_info][populate][tags]=*`,
+      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][video_links][populate][video_file]=true&populate[seo][populate][ogImage]=true`,
       {
         cache: "no-store",
       }
     );
 
     if (!res.ok) {
-      console.error("Failed to fetch news:", res.status);
+      const errorData = await res.json().catch(() => ({}));
+      console.error("Failed to fetch news:", res.status, errorData);
       return null;
     }
 
@@ -66,11 +67,6 @@ export async function generateMetadata({
         }${coverUrl}`
     : undefined;
 
-  const tags =
-    news.meta_info?.tags
-      ?.filter((tag) => tag.value)
-      .map((tag) => tag.value || "") || [];
-
   let metaDescription = "";
 
   if (news.content_info?.excerpt) {
@@ -92,32 +88,36 @@ export async function generateMetadata({
       ? metaDescription.substring(0, 157) + "..."
       : metaDescription;
 
+  const seo = news.seo;
+  const seoTitle = seo?.metaTitle || `${news.title} | Новости`;
+  const seoDescription = seo?.metaDescription || truncatedDescription;
+  const ogTitle = seo?.metaTitle || news.title;
+  const ogDescription = seo?.ogDescription || seoDescription;
+  const ogImageUrl = seo?.ogImage?.url
+    ? seo.ogImage.url.startsWith("http")
+      ? seo.ogImage.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+          seo.ogImage.url
+        }`
+    : fullCoverUrl;
+
+  const robots = seo?.metaRobots || "index, follow";
+  const canonical = seo?.canonicalURL || `/news/${slug}`;
+
   return {
-    title: `${news.title} | Новости`,
-    description: truncatedDescription,
-    keywords: tags,
+    title: seoTitle,
+    description: seoDescription,
+    ...(seo?.keywords && { keywords: seo.keywords }),
     openGraph: {
-      title: news.title,
-      description: truncatedDescription,
+      title: ogTitle,
+      description: ogDescription,
       type: "article",
       locale: "ru_RU",
-      publishedTime: news.basic_info.published_at_date,
-      modifiedTime: news.updatedAt,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
-      tags: tags,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
     },
-    twitter: {
-      card: "summary_large_image",
-      title: news.title,
-      description: truncatedDescription,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
-    },
-    robots: {
-      index: false,
-      follow: false,
-    },
+    robots: robots,
     alternates: {
-      canonical: `/news/${slug}`,
+      canonical: canonical,
     },
   };
 }

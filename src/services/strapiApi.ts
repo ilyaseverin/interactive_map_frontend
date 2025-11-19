@@ -149,7 +149,6 @@ export const strapiApi = createApi({
             "description",
           "populate[attachments_block][populate][attachments][populate][file]":
             "true",
-          "populate[meta_info][populate][keywords]": "*",
           publicationState: "live",
         },
       }),
@@ -176,7 +175,6 @@ export const strapiApi = createApi({
           "populate[content_info]": "*",
           "populate[media][populate][cover]": "true",
           "populate[media][populate][gallery]": "true",
-          "populate[meta_info][populate][tags]": "*",
           sort: "basic_info.published_at_date:desc",
         },
       }),
@@ -204,7 +202,6 @@ export const strapiApi = createApi({
           "populate[media][populate][gallery]": "true",
           "populate[media][populate][video_links][populate][video_file]":
             "true",
-          "populate[meta_info][populate][tags]": "*",
           publicationState: "live",
         },
       }),

@@ -26,6 +26,19 @@ export interface StrapiImage {
   publishedAt: string;
 }
 
+export interface Seo {
+  id: number;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogDescription?: string;
+  ogImage?: StrapiImage | null;
+  keywords?: string;
+  metaRobots?: string;
+  canonicalURL?: string;
+  metaViewport?: string;
+  structuredData?: any;
+}
+
 // Компоненты новостей (Strapi 5 - без обертки data)
 export interface NewsBasicInfo {
   id: number;
@@ -76,7 +89,7 @@ export interface NewsItem {
   basic_info: NewsBasicInfo;
   content_info?: NewsContentInfo;
   media?: NewsMedia;
-  meta_info?: NewsMeta;
+  seo?: Seo;
 }
 
 // Ответ API Strapi
@@ -179,7 +192,7 @@ export interface PressReleaseItem {
   content_info?: PressReleaseContentInfo;
   media?: PressReleaseMedia;
   attachments_block?: { id: number; attachments?: unknown[] };
-  meta_info?: PressReleaseMeta;
+  seo?: Seo;
 }
 
 export type PressReleaseListResponse = StrapiResponse<PressReleaseItem[]>;
@@ -226,6 +239,8 @@ export interface ProjectItem {
     id: number;
     external_links?: { id: number; url?: string; label?: string }[];
   };
+  // meta_info удален, так как заменен на seo
+  seo?: Seo;
 }
 
 export type ProjectListResponse = StrapiResponse<ProjectItem[]>;
@@ -282,6 +297,7 @@ export interface EventItem {
   content_info?: EventContentInfo;
   location_info?: EventLocationInfo;
   additional_materials?: EventAdditionalMaterials;
+  seo?: Seo;
 }
 
 export type EventListResponse = StrapiResponse<EventItem[]>;

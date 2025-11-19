@@ -18,7 +18,7 @@ async function getProjectBySlug(slug: string): Promise<ProjectItem | null> {
 
   try {
     const res = await fetch(
-      `${apiUrl}/api/projects?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos][populate][video_file]=true&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&publicationState=live`,
+      `${apiUrl}/api/projects?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos][populate][video_file]=true&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&populate[seo][populate][ogImage]=true&publicationState=live`,
       {
         cache: "no-store",
       }
@@ -88,30 +88,36 @@ export async function generateMetadata({
       ? metaDescription.substring(0, 157) + "..."
       : metaDescription;
 
+  const seo = project.seo;
+  const seoTitle = seo?.metaTitle || `${project.title} | Наши проекты`;
+  const seoDescription = seo?.metaDescription || truncatedDescription;
+  const ogTitle = seo?.metaTitle || project.title;
+  const ogDescription = seo?.ogDescription || seoDescription;
+  const ogImageUrl = seo?.ogImage?.url
+    ? seo.ogImage.url.startsWith("http")
+      ? seo.ogImage.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+          seo.ogImage.url
+        }`
+    : fullCoverUrl;
+
+  const robots = seo?.metaRobots || "index, follow";
+  const canonical = seo?.canonicalURL || `/projects/${slug}`;
+
   return {
-    title: `${project.title} | Наши проекты`,
-    description: truncatedDescription,
+    title: seoTitle,
+    description: seoDescription,
+    ...(seo?.keywords && { keywords: seo.keywords }),
     openGraph: {
-      title: project.title,
-      description: truncatedDescription,
+      title: ogTitle,
+      description: ogDescription,
       type: "article",
       locale: "ru_RU",
-      publishedTime: project.publishedAt,
-      modifiedTime: project.updatedAt,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
     },
-    twitter: {
-      card: "summary_large_image",
-      title: project.title,
-      description: truncatedDescription,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
-    },
-    robots: {
-      index: false,
-      follow: false,
-    },
+    robots: robots,
     alternates: {
-      canonical: `/projects/${slug}`,
+      canonical: canonical,
     },
   };
 }

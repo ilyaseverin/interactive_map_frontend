@@ -20,7 +20,7 @@ async function getPressReleaseBySlug(
 
   try {
     const res = await fetch(
-      `${apiUrl}/api/press-releases?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[attachments_block][populate][attachments][fields][0]=title&populate[attachments_block][populate][attachments][fields][1]=description&populate[attachments_block][populate][attachments][populate][file]=true&populate[meta_info][populate][keywords]=*&publicationState=live`,
+      `${apiUrl}/api/press-releases?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[attachments_block][populate][attachments][fields][0]=title&populate[attachments_block][populate][attachments][fields][1]=description&populate[attachments_block][populate][attachments][populate][file]=true&populate[seo][populate][ogImage]=true&publicationState=live`,
       {
         cache: "no-store",
       }
@@ -69,11 +69,6 @@ export async function generateMetadata({
         }${coverUrl}`
     : undefined;
 
-  const keywords =
-    pressRelease.meta_info?.keywords
-      ?.filter((keyword) => keyword.value)
-      .map((keyword) => keyword.value || "") || [];
-
   let metaDescription = "";
 
   if (pressRelease.content_info?.excerpt) {
@@ -95,32 +90,36 @@ export async function generateMetadata({
       ? metaDescription.substring(0, 157) + "..."
       : metaDescription;
 
+  const seo = pressRelease.seo;
+  const seoTitle = seo?.metaTitle || `${pressRelease.title} | Пресс-релизы`;
+  const seoDescription = seo?.metaDescription || truncatedDescription;
+  const ogTitle = seo?.metaTitle || pressRelease.title;
+  const ogDescription = seo?.ogDescription || seoDescription;
+  const ogImageUrl = seo?.ogImage?.url
+    ? seo.ogImage.url.startsWith("http")
+      ? seo.ogImage.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+          seo.ogImage.url
+        }`
+    : fullCoverUrl;
+
+  const robots = seo?.metaRobots || "index, follow";
+  const canonical = seo?.canonicalURL || `/press-releases/${slug}`;
+
   return {
-    title: `${pressRelease.title} | Пресс-релизы`,
-    description: truncatedDescription,
-    keywords: keywords,
+    title: seoTitle,
+    description: seoDescription,
+    ...(seo?.keywords && { keywords: seo.keywords }),
     openGraph: {
-      title: pressRelease.title,
-      description: truncatedDescription,
+      title: ogTitle,
+      description: ogDescription,
       type: "article",
       locale: "ru_RU",
-      publishedTime: pressRelease.basic_info.published_at_date,
-      modifiedTime: pressRelease.updatedAt,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
-      tags: keywords,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
     },
-    twitter: {
-      card: "summary_large_image",
-      title: pressRelease.title,
-      description: truncatedDescription,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
-    },
-    robots: {
-      index: false,
-      follow: false,
-    },
+    robots: robots,
     alternates: {
-      canonical: `/press-releases/${slug}`,
+      canonical: canonical,
     },
   };
 }
@@ -169,7 +168,6 @@ function DateDisplay({ date }: { date: string }) {
     </div>
   );
 }
-
 
 // Серверный компонент страницы пресс-релиза
 export default async function PressReleaseDetailPage({
@@ -265,7 +263,11 @@ export default async function PressReleaseDetailPage({
               </div>
               <div className="flex-shrink-0">
                 <div className="md:hidden">
-                  <BackButton href="/press-releases" variant="icon" ariaLabel="Назад к пресс-релизам" />
+                  <BackButton
+                    href="/press-releases"
+                    variant="icon"
+                    ariaLabel="Назад к пресс-релизам"
+                  />
                 </div>
                 <div className="hidden md:block">
                   <BackButton href="/press-releases" />
@@ -419,4 +421,3 @@ export default async function PressReleaseDetailPage({
     </div>
   );
 }
-

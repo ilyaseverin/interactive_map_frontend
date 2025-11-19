@@ -18,7 +18,7 @@ async function getEventBySlug(slug: string): Promise<EventItem | null> {
 
   try {
     const res = await fetch(
-      `${apiUrl}/api/events?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info][populate][cover]=true&populate[content_info][populate][gallery]=true&populate[location_info]=*&populate[additional_materials][populate][videos][populate][video_file]=true&populate[additional_materials][populate][attachments][populate][file]=true&publicationState=live`,
+      `${apiUrl}/api/events?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info][populate][cover]=true&populate[content_info][populate][gallery]=true&populate[location_info]=*&populate[additional_materials][populate][videos][populate][video_file]=true&populate[additional_materials][populate][attachments][populate][file]=true&populate[seo][populate][ogImage]=true&publicationState=live`,
       {
         cache: "no-store",
       }
@@ -85,30 +85,36 @@ export async function generateMetadata({
       ? metaDescription.substring(0, 157) + "..."
       : metaDescription;
 
+  const seo = event.seo;
+  const seoTitle = seo?.metaTitle || `${event.title} | Календарь событий`;
+  const seoDescription = seo?.metaDescription || truncatedDescription;
+  const ogTitle = seo?.metaTitle || event.title;
+  const ogDescription = seo?.ogDescription || seoDescription;
+  const ogImageUrl = seo?.ogImage?.url
+    ? seo.ogImage.url.startsWith("http")
+      ? seo.ogImage.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
+          seo.ogImage.url
+        }`
+    : fullCoverUrl;
+
+  const robots = seo?.metaRobots || "index, follow";
+  const canonical = seo?.canonicalURL || `/events/${slug}`;
+
   return {
-    title: `${event.title} | Календарь событий`,
-    description: truncatedDescription,
+    title: seoTitle,
+    description: seoDescription,
+    ...(seo?.keywords && { keywords: seo.keywords }),
     openGraph: {
-      title: event.title,
-      description: truncatedDescription,
+      title: ogTitle,
+      description: ogDescription,
       type: "article",
       locale: "ru_RU",
-      publishedTime: event.publishedAt,
-      modifiedTime: event.updatedAt,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
     },
-    twitter: {
-      card: "summary_large_image",
-      title: event.title,
-      description: truncatedDescription,
-      images: fullCoverUrl ? [fullCoverUrl] : undefined,
-    },
-    robots: {
-      index: false,
-      follow: false,
-    },
+    robots: robots,
     alternates: {
-      canonical: `/events/${slug}`,
+      canonical: canonical,
     },
   };
 }
