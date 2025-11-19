@@ -10,9 +10,9 @@ export default function ContactForm() {
           className="absolute inset-0"
           style={{
             maskImage:
-              "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+              "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 25%, rgba(0, 0, 0, 0.9) 75%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.8) 75%, transparent 100%)",
+              "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 25%, rgba(0, 0, 0, 0.9) 75%, transparent 100%)",
           }}
         >
           <Image
