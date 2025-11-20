@@ -26,6 +26,19 @@ export interface StrapiImage {
   publishedAt: string;
 }
 
+export interface Seo {
+  id: number;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogDescription?: string;
+  ogImage?: StrapiImage | null;
+  keywords?: string;
+  metaRobots?: string;
+  canonicalURL?: string;
+  metaViewport?: string;
+  structuredData?: Record<string, unknown>;
+}
+
 // Компоненты новостей (Strapi 5 - без обертки data)
 export interface NewsBasicInfo {
   id: number;
@@ -42,8 +55,9 @@ export interface NewsContentInfo {
 export interface NewsVideoLink {
   id: number;
   provider: string;
-  url: string;
+  url?: string;
   open_in_vk?: boolean;
+  video_file?: StrapiImage | null;
 }
 
 export interface NewsMedia {
@@ -75,7 +89,7 @@ export interface NewsItem {
   basic_info: NewsBasicInfo;
   content_info?: NewsContentInfo;
   media?: NewsMedia;
-  meta_info?: NewsMeta;
+  seo?: Seo;
 }
 
 // Ответ API Strapi
@@ -178,7 +192,7 @@ export interface PressReleaseItem {
   content_info?: PressReleaseContentInfo;
   media?: PressReleaseMedia;
   attachments_block?: { id: number; attachments?: unknown[] };
-  meta_info?: PressReleaseMeta;
+  seo?: Seo;
 }
 
 export type PressReleaseListResponse = StrapiResponse<PressReleaseItem[]>;
@@ -205,7 +219,7 @@ export interface ProjectMedia {
   id: number;
   cover?: StrapiImage | null;
   gallery?: StrapiImage[];
-  videos?: { id: number; provider?: string; url?: string }[];
+  videos?: { id: number; provider?: string; url?: string; video_file?: StrapiImage | null }[];
 }
 
 export interface ProjectItem {
@@ -225,7 +239,85 @@ export interface ProjectItem {
     id: number;
     external_links?: { id: number; url?: string; label?: string }[];
   };
+  // meta_info удален, так как заменен на seo
+  seo?: Seo;
 }
 
 export type ProjectListResponse = StrapiResponse<ProjectItem[]>;
 export type ProjectItemResponse = StrapiResponse<ProjectItem>;
+// Типы для событий календаря
+export interface EventBasicInfo {
+  id: number;
+  datetime_start: string;
+  category?: string;
+  event_type?: "Человек дня" | "Событие дня" | "Тема дня" | "Фильм дня";
+}
+
+export interface EventContentInfo {
+  id: number;
+  description?: string;
+  cover?: StrapiImage | null;
+  gallery?: StrapiImage[];
+}
+
+export interface EventLocationInfo {
+  id: number;
+  location?: string;
+  location_map_link?: {
+    latitude?: number;
+    longitude?: number;
+    address?: string;
+  } | null;
+}
+
+export interface EventAdditionalMaterials {
+  id: number;
+  videos?: {
+    id: number;
+    provider?: string;
+    url?: string;
+    video_file?: StrapiImage | null;
+  }[];
+  attachments?: {
+    id: number;
+    title?: string;
+    file?: StrapiImage | null;
+  }[];
+}
+
+export interface EventItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  basic_info: EventBasicInfo;
+  content_info?: EventContentInfo;
+  location_info?: EventLocationInfo;
+  additional_materials?: EventAdditionalMaterials;
+  seo?: Seo;
+}
+
+export type EventListResponse = StrapiResponse<EventItem[]>;
+export type EventItemResponse = StrapiResponse<EventItem>;
+
+// Типы для партнеров
+export interface PartnerItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  name: string;
+  slug: string;
+  url?: string;
+  logo?: StrapiImage | null;
+  vk_url?: string;
+  website_url?: string;
+}
+
+export type PartnerListResponse = StrapiResponse<PartnerItem[]>;
+export type PartnerItemResponse = StrapiResponse<PartnerItem>;
+

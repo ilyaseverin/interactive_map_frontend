@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Добавляем кастомный xs брейкпоинт для маленьких мобильных устройств */
+@theme {
+  --breakpoint-xs: 480px;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

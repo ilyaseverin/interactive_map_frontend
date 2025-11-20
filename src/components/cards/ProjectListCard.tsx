@@ -14,101 +14,166 @@ interface ProjectListCardProps {
 export default function ProjectListCard({
   image,
   date,
-  category,
   title,
   description,
   href,
 }: ProjectListCardProps) {
   return (
-    <Link href={href} className="block">
-      <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full lg:w-[574px] mx-auto relative hover:shadow-[0_3px_20px_0_rgba(0,0,0,0.12)] transition-shadow cursor-pointer">
-        {/* Desktop Layout - Based on Figma */}
-        <div className="hidden lg:flex relative flex-col">
-          {/* Изображение - top, fixed height 570px (проекты используют больший размер) */}
-          <div className="relative w-full h-[570px] rounded-t-[15px] overflow-hidden flex-shrink-0">
-            <Image src={image} alt={title} fill className="object-cover" />
-          </div>
-
-          {/* Текстовая часть - flex для правильного позиционирования */}
-          <div className="flex flex-col px-[46px] pb-[46px] pt-[44px]">
-            {/* Заголовок - без обрезания */}
-            <h3 className="text-[18px] font-bold font-montserrat text-black leading-[1.556] uppercase mb-[18px] pr-[47px]">
-              {title}
-            </h3>
-
-            {/* Описание - под заголовком, фиксированная высота для 4 строк */}
-            <p
-              className="text-[18px] font-medium font-montserrat text-black leading-[1.556] pr-[93px] mb-[44px]"
-              style={{
-                display: "-webkit-box",
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {description}
-            </p>
-
-            {/* Источник и дата - внизу */}
-            <div className="flex flex-col gap-[4px]">
-              {category && (
-                <div className="text-[18px] font-medium font-montserrat text-black leading-[1.556]">
-                  {category}
-                </div>
-              )}
-              {date && (
-                <time className="text-[18px] font-medium font-montserrat text-black leading-[1.556]">
-                  {date}
-                </time>
-              )}
-            </div>
-          </div>
+    <article className="bg-white rounded-[15px] shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] w-full mx-auto relative md:min-h-[500px] lg:min-h-[698px] hover:shadow-[0_3px_20px_0_rgba(0,0,0,0.12)] transition-shadow">
+      {/* Mobile Layout - Column with gap */}
+      <div className="flex flex-col pt-[23px] pb-[22px] px-[23px] gap-[10px] md:hidden">
+        {/* 1. Изображение - адаптивная ширина с фиксированным aspect ratio */}
+        <div className="relative w-full aspect-[241/143] rounded-[10px] overflow-hidden">
+          <Image src={image} alt={title} fill className="object-cover" />
         </div>
 
-        {/* Mobile/Tablet Layout */}
-        <div className="lg:hidden flex flex-col h-full">
-          {/* Изображение */}
-          <div className="relative w-full h-[300px] sm:h-[384px] rounded-t-[15px] overflow-hidden flex-shrink-0">
-            <Image src={image} alt={title} fill className="object-cover" />
-          </div>
+        {/* 2. Дата - text aligned right */}
+        {date && (
+          <time className="text-[10px] font-normal font-montserrat text-black leading-[2] text-right">
+            {date}
+          </time>
+        )}
 
-          <div className="flex flex-col p-[22px] gap-[5px] flex-1">
-            {/* Заголовок */}
-            <h3 className="text-[16px] font-bold font-montserrat text-black uppercase leading-[1.556] mb-[8px]">
-              {title}
-            </h3>
+        {/* 3. Заголовок - fill width, max 2 lines */}
+        <h3
+          className="text-[12px] font-bold font-montserrat text-black leading-[1.219] uppercase"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {title}
+        </h3>
 
-            {/* Описание */}
-            <p
-              className="text-[14px] font-medium font-montserrat text-black leading-[1.556] mb-[12px] flex-1"
-              style={{
-                display: "-webkit-box",
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {description}
-            </p>
+        {/* 4. Описание - max 5 lines */}
+        <p
+          className="text-[12px] font-normal font-montserrat text-black leading-[1.219] overflow-hidden"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: "vertical",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {description}
+        </p>
 
-            {/* Источник и дата */}
-            <div className="flex flex-col gap-[4px] mt-auto">
-              {category && (
-                <div className="text-[14px] font-medium font-montserrat text-black">
-                  {category}
-                </div>
-              )}
-              {date && (
-                <time className="text-[14px] font-medium font-montserrat text-black">
-                  {date}
-                </time>
-              )}
-            </div>
-          </div>
+        {/* 6. Кнопка - fill width */}
+        <Link
+          href={href}
+          className="inline-flex items-center justify-center w-full h-[40px] px-[25px] py-[10px] border border-[#1D4E89] text-[#1D4E89] text-[12px] font-normal font-montserrat rounded-[8px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap"
+        >
+          Читать подробнее..
+        </Link>
+      </div>
+
+      {/* Tablet Layout - Flexible layout */}
+      <div className="hidden md:flex flex-col lg:hidden relative px-[22px] py-[22px]">
+        {/* Изображение */}
+        <div className="relative w-full aspect-[455/272] mb-[14px] rounded-[15px] overflow-hidden">
+          <Image src={image} alt={title} fill className="object-cover" />
         </div>
-      </article>
-    </Link>
+
+        {/* Дата */}
+        {date && (
+          <time className="text-[14px] font-normal font-montserrat text-black leading-[1.429] text-right mb-[16px]">
+            {date}
+          </time>
+        )}
+
+        {/* Заголовок */}
+        <h3
+          className="text-[16px] font-bold font-montserrat text-black leading-[1.219] uppercase mb-[15px] max-w-[347px]"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {title}
+        </h3>
+
+        {/* Описание */}
+        <p
+          className="text-[16px] font-normal font-montserrat text-black leading-[1.219] mb-[21px] max-w-[447px]"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {description}
+        </p>
+
+        {/* Кнопка */}
+        <Link
+          href={href}
+          className="inline-flex items-center justify-center w-fit h-[52px] px-[20px] py-[12px] border border-[#1D4E89] text-[#1D4E89] text-[16px] font-normal font-montserrat rounded-[10px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap self-center"
+        >
+          Читать подробнее..
+        </Link>
+      </div>
+
+      {/* Desktop Layout - Absolute positioning с адаптивностью */}
+      <div className="hidden lg:block">
+        {/* Изображение - адаптивная ширина */}
+        <div className="absolute left-[23px] top-[23px] right-[23px] h-[min(331px,47.4%)] max-h-[331px] rounded-[15px] overflow-hidden">
+          <Image src={image} alt={title} fill className="object-cover" />
+        </div>
+
+        {/* Дата - адаптивное позиционирование */}
+        {date && (
+          <time className="absolute right-[55px] top-[364px] text-[clamp(14px,1.125vw,18px)] font-normal font-montserrat text-black leading-[1.429]">
+            {date}
+          </time>
+        )}
+
+        {/* Контейнер с текстовым контентом */}
+        <div className="absolute left-[60px] right-[50px] top-[394px] flex flex-col gap-[10px]">
+          {/* Заголовок */}
+          <h3
+            className="pr-[34px] text-[clamp(16px,1.125vw,18px)] font-bold font-montserrat text-black leading-[1.556] uppercase"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {title}
+          </h3>
+
+          {/* Описание */}
+          <p
+            className="text-[clamp(16px,1.125vw,18px)] font-normal font-montserrat text-black leading-[1.556]"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 4,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {description}
+          </p>
+        </div>
+
+        {/* Кнопка - центрированная */}
+        <Link
+          href={href}
+          className="absolute left-1/2 -translate-x-1/2 top-[599px] inline-flex items-center justify-center min-w-[200px] max-w-[249px] w-[43%] h-[63px] px-[clamp(16px,1.5vw,24px)] py-[16px] border border-[#1D4E89] text-[#1D4E89] text-[clamp(16px,1.25vw,20px)] font-normal font-montserrat rounded-[12px] hover:bg-[#1D4E89] hover:text-white transition-colors leading-[1.219] whitespace-nowrap gap-[16px]"
+        >
+          Читать подробнее..
+        </Link>
+      </div>
+    </article>
   );
 }

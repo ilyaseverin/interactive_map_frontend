@@ -1,102 +1,42 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import PersonCard from "@/components/cards/PersonCard";
-import { useEffect, useState } from "react";
-
-// Типы для данных команды из Strapi
-interface TeamMember {
-  id: number;
-  documentId: string;
-  full_name: string;
-  slug: string;
-  photo?: {
-    id: number;
-    url: string;
-    alternativeText?: string;
-  };
-  basic_info: {
-    position: string;
-    phone?: string;
-    email?: string;
-    order: number;
-  };
-  bio?: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-interface TeamResponse {
-  data: TeamMember[];
-  meta: {
-    pagination?: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
-}
-
-// Функция для получения данных команды из Strapi
-async function getTeamData(): Promise<TeamResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/team-members?populate[photo]=true&populate[basic_info]=true&sort=basic_info.order:asc`,
-      {
-        cache: "no-store", // Всегда без кэша
-      }
-    );
-
-    if (!res.ok) {
-      console.error("Failed to fetch team data:", res.status, res.statusText);
-      return { data: [], meta: {} };
-    }
-
-    const data = await res.json();
-    console.log("Team data from API:", data); // Для отладки
-    return data;
-  } catch (error) {
-    console.error("Error fetching team data:", error);
-    return { data: [], meta: {} };
-  }
-}
+import { useGetTeamQuery } from "@/services/strapiApi";
+import { BackButton } from "@/components/buttons";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 export default function TeamPage() {
-  const [teamData, setTeamData] = useState<TeamMember[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const { data, isFetching, isError } = useGetTeamQuery();
+  const teamData = data?.data ?? [];
 
-  useEffect(() => {
-    setIsLoading(true);
-    getTeamData()
-      .then((response) => {
-        console.log("Received team data:", response);
-        setTeamData(response.data || []);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error loading team data:", error);
-        setTeamData([]);
-        setIsLoading(false);
-      });
-  }, []);
-
-  if (isLoading) {
+  if (isFetching) {
     return (
-      <div className="w-full max-w-[1920px] mx-auto px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
-        <div className="mt-[60px] sm:mt-[80px] md:mt-[100px] lg:mt-[112px] mb-[100px] sm:mb-[120px] md:mb-[150px] lg:mb-[194px] flex justify-center items-center py-20">
+      <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
+        <div className="flex justify-center items-center py-20">
           <div className="text-xl text-gray-600">Загрузка...</div>
         </div>
       </div>
     );
   }
 
+  if (isError) {
+    return (
+      <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
+        <div className="flex justify-center items-center py-20">
+          <div className="text-xl text-gray-600">
+            Не удалось загрузить данные команды. Попробуйте обновить страницу.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full max-w-[1920px] mx-auto px-[16px] sm:px-[32px] md:px-[48px] lg:px-[64px] xl:px-[76px] pb-[30px] sm:pb-[40px] lg:pb-[50px]">
-      {/* Team Cards - точно как в макете */}
-      <div className="mt-[60px] sm:mt-[80px] md:mt-[100px] lg:mt-[112px] mb-[100px] sm:mb-[120px] md:mb-[150px] lg:mb-[194px] space-y-[40px] sm:space-y-[50px] md:space-y-[60px] lg:space-y-[65px]">
+    <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
+      {/* Team Cards - точно как в макете: Mobile 20px, Tablet 25px, Desktop 65px */}
+      <div className="mb-[30px] space-y-[20px] xs:space-y-[22px] sm:space-y-[25px] md:space-y-[25px] lg:space-y-[65px]">
         {teamData.length === 0 ? (
           <div className="flex justify-center items-center py-20">
             <div className="text-xl text-gray-600">
@@ -107,12 +47,7 @@ export default function TeamPage() {
           teamData.map((member) => {
             // Формируем URL изображения
             const imageUrl = member.photo?.url
-              ? member.photo.url.startsWith("http")
-                ? member.photo.url
-                : `${
-                    process.env.NEXT_PUBLIC_STRAPI_URL ||
-                    "http://localhost:1337"
-                  }${member.photo.url}`
+              ? getStrapiMediaUrl(member.photo.url) || member.photo.url
               : "/images/management/placeholder.jpg";
 
             return (
@@ -131,6 +66,15 @@ export default function TeamPage() {
             );
           })
         )}
+      </div>
+
+      {/* Back button внизу - только для mobile и tablet */}
+      <div className="flex lg:hidden md:block md:ml-0">
+        <BackButton
+          onClick={() => router.back()}
+          variant="default"
+          className="mx-auto md:mx-0 md:ml-[36px] w-[124px] md:w-auto"
+        />
       </div>
     </div>
   );

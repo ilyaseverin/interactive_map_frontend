@@ -1,43 +1,53 @@
 "use client";
 
-import { NewsItem } from "@/types/strapi";
-import Link from "next/link";
 import PhotoCard from "@/components/cards/PhotoCard";
-import PhotoModal from "@/components/modals/PhotoModal";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import MediaModal from "@/components/modals/MediaModal";
+import { useMemo, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { withSearchParams } from "@/utils/withSearchParams";
+import {
+  useGetPhotoAlbumBySlugQuery,
+  useGetProjectBySlugQuery,
+  useGetPressReleaseBySlugQuery,
+  useGetEventBySlugQuery,
+} from "@/services/strapiApi";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { BackButton } from "@/components/buttons";
+import type {
+  NewsItem,
+  PressReleaseItem,
+  ProjectItem,
+  EventItem,
+} from "@/types/strapi";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 
-// Функция для получения новости с галереей из Strapi
-async function getPhotoAlbum(slug: string): Promise<NewsItem | null> {
-  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+type SourceType = "news" | "projects" | "press" | "events";
 
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/news?filters[slug][$eq]=${slug}&populate[basic_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true`,
-      {
-        cache: "no-store",
-      }
-    );
+type AlbumEntity = {
+  type: SourceType;
+  title: string;
+  date?: string;
+  photos: {
+    url: string;
+    alternativeText?: string | null;
+    name?: string;
+    id?: number;
+  }[];
+};
 
-    if (!res.ok) {
-      console.error("Failed to fetch photo album:", res.status, res.statusText);
-      return null;
-    }
-
-    const response = await res.json();
-    return response.data[0] || null;
-  } catch (error) {
-    console.error("Error fetching photo album:", error);
-    return null;
-  }
-}
-
-export default function PhotoAlbumDetailPage() {
+function PhotoAlbumDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const slug = params?.slug as string;
 
-  const [album, setAlbum] = useState<NewsItem | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const sourceParam = (searchParams.get("source") || "news") as SourceType;
+  const source: SourceType =
+    sourceParam === "projects" ||
+    sourceParam === "press" ||
+    sourceParam === "events"
+      ? sourceParam
+      : "news";
+
   const [selectedPhoto, setSelectedPhoto] = useState<{
     url: string;
     alt: string;
@@ -47,20 +57,105 @@ export default function PhotoAlbumDetailPage() {
   } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (slug) {
-      setIsLoading(true);
-      getPhotoAlbum(slug).then((data) => {
-        setAlbum(data);
-        setIsLoading(false);
-      });
-    }
-  }, [slug]);
+  // Загружаем данные в зависимости от типа источника
+  const {
+    data: newsAlbum,
+    isFetching: isNewsFetching,
+    isError: isNewsError,
+  } = useGetPhotoAlbumBySlugQuery(slug, {
+    skip: !slug || source !== "news",
+  });
 
-  if (isLoading) {
+  const {
+    data: projectAlbum,
+    isFetching: isProjectFetching,
+    isError: isProjectError,
+  } = useGetProjectBySlugQuery(slug, {
+    skip: !slug || source !== "projects",
+  });
+
+  const {
+    data: pressAlbum,
+    isFetching: isPressFetching,
+    isError: isPressError,
+  } = useGetPressReleaseBySlugQuery(slug, {
+    skip: !slug || source !== "press",
+  });
+
+  const {
+    data: eventAlbum,
+    isFetching: isEventFetching,
+    isError: isEventError,
+  } = useGetEventBySlugQuery(slug, {
+    skip: !slug || source !== "events",
+  });
+
+  const isFetching =
+    isNewsFetching || isProjectFetching || isPressFetching || isEventFetching;
+  const isError = isNewsError || isProjectError || isPressError || isEventError;
+
+  const album: (AlbumEntity & { slug?: string }) | null = useMemo(() => {
+    if (source === "projects" && projectAlbum) {
+      const project = projectAlbum as ProjectItem;
+      return {
+        type: "projects",
+        title: project.title,
+        date: project.publishedAt,
+        photos: project.media?.gallery || [],
+        slug: project.slug,
+      };
+    }
+
+    if (source === "press" && pressAlbum) {
+      const press = pressAlbum as PressReleaseItem;
+      return {
+        type: "press",
+        title: press.title,
+        date: press.basic_info?.published_at_date,
+        photos: press.media?.gallery || [],
+        slug: press.slug,
+      };
+    }
+
+    if (source === "events" && eventAlbum) {
+      const event = eventAlbum as EventItem;
+      return {
+        type: "events",
+        title: event.title,
+        date: event.basic_info?.datetime_start,
+        photos: event.content_info?.gallery || [],
+        slug: event.slug,
+      };
+    }
+
+    if (newsAlbum) {
+      const news = newsAlbum as NewsItem;
+      return {
+        type: "news",
+        title: news.title,
+        date: news.basic_info?.published_at_date,
+        photos: news.media?.gallery || [],
+        slug: news.slug,
+      };
+    }
+
+    return null;
+  }, [newsAlbum, pressAlbum, projectAlbum, eventAlbum, source]);
+
+  if (isFetching) {
     return (
       <div className="min-h-screen bg-[#F1F2F3] flex justify-center items-center">
         <div className="text-xl text-gray-600">Загрузка...</div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[#F1F2F3] flex justify-center items-center">
+        <div className="text-xl text-gray-600">
+          Не удалось загрузить фотоальбом. Попробуйте обновить страницу.
+        </div>
       </div>
     );
   }
@@ -74,27 +169,21 @@ export default function PhotoAlbumDetailPage() {
   }
 
   // Получаем все фотографии из галереи
-  const photos = album.media?.gallery || [];
+  const photos = album.photos || [];
 
   // Функция для открытия попапа с фото
   const handlePhotoClick = (
     photo: { url: string; alternativeText?: string | null; name?: string },
     index: number
   ) => {
-    const photoUrl = photo.url.startsWith("http")
-      ? photo.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${
-          photo.url
-        }`;
+    const photoUrl = getStrapiMediaUrl(photo.url) || photo.url;
 
     setSelectedPhoto({
       url: photoUrl,
       alt: photo.alternativeText || `Фото ${index + 1}`,
       title: album.title,
-      date: album.basic_info?.published_at_date
-        ? new Date(album.basic_info.published_at_date).toLocaleDateString(
-            "ru-RU"
-          )
+      date: album.date
+        ? new Date(album.date).toLocaleDateString("ru-RU")
         : undefined,
       imageName: photo.name || `${album.title}_${index + 1}.jpg`,
     });
@@ -107,91 +196,110 @@ export default function PhotoAlbumDetailPage() {
     setSelectedPhoto(null);
   };
 
+  const breadcrumbsItems =
+    album.type === "projects"
+      ? [
+          { label: "Главная", href: "/home" },
+          { label: "Наши проекты", href: "/projects" },
+          {
+            label: "Фотоальбомы",
+            href: "/photo-albums?source=projects",
+          },
+          { label: album.title },
+        ]
+      : album.type === "press"
+      ? [
+          { label: "Главная", href: "/home" },
+          { label: "Для СМИ", href: "/media" },
+          { label: "Пресс-релизы", href: "/press-releases" },
+          {
+            label: "Фотоальбомы",
+            href: "/photo-albums?source=press",
+          },
+          { label: album.title },
+        ]
+      : album.type === "events"
+      ? [
+          { label: "Главная", href: "/home" },
+          { label: "Календарь", href: "/home#calendar" },
+          { label: album.title, href: `/events/${album.slug}` },
+          { label: "Фотоальбом" },
+        ]
+      : [
+          { label: "Главная", href: "/home" },
+          { label: "Новости", href: "/news" },
+          {
+            label: "Фотоальбомы",
+            href: "/photo-albums?source=news",
+          },
+          { label: album.title },
+        ];
+
+  const backHref =
+    album.type === "events" && album.slug
+      ? `/events/${album.slug}`
+      : album.type === "projects"
+      ? "/photo-albums?source=projects"
+      : album.type === "press"
+      ? "/photo-albums?source=press"
+      : "/photo-albums?source=news";
+
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
-      <main className="w-full max-w-[1920px] mx-auto pt-[37px] lg:pt-[39px]">
+      <main className="w-full max-w-[1920px] mx-auto pt-[15px] md:pt-[20px] lg:pt-[40px]">
         {/* Хлебные крошки */}
-        <nav className="px-4 sm:px-6 lg:px-[76px] flex items-center gap-[14px] mb-[37px] lg:mb-[37px] text-[20px] font-normal font-montserrat leading-[1.219]">
-          <Link href="/home" className="text-black hover:text-[#1D4E89]">
-            Главная
-          </Link>
-          <span className="text-black">&gt;</span>
-          <Link href="/news" className="text-black hover:text-[#1D4E89]">
-            Новости
-          </Link>
-          <span className="text-black">&gt;</span>
-          <Link
-            href="/photo-albums"
-            className="text-black hover:text-[#1D4E89]"
-          >
-            Фотоальбомы
-          </Link>
-          <span className="text-black">&gt;</span>
-          <span className="text-black">{album.title}</span>
-        </nav>
+        <Breadcrumbs
+          className="px-[19px] md:px-[36px] lg:px-[80px] mb-[15px] md:mb-[20px] lg:mb-[30px]"
+          items={breadcrumbsItems}
+        />
 
         {/* Заголовок и Кнопка Назад */}
-        <div className="px-4 sm:px-6 lg:px-[80px] flex flex-col lg:flex-row lg:items-start lg:justify-between mb-[68px] lg:mb-[68px]">
-          {/* Заголовок */}
-          <h1 className="text-[40px] font-bold font-montserrat text-black leading-[1.219] mb-4 lg:mb-0 max-w-[1103px]">
+        <div className="px-[19px] md:px-[36px] lg:px-[80px] flex flex-row items-center justify-between mb-[25px] md:mb-[33px] lg:mb-[60px]">
+          {/* Заголовок - мобильный */}
+          <h1 className="md:hidden text-[20px] font-bold font-montserrat text-black leading-[1.219]">
+            Фотографии
+          </h1>
+
+          {/* Заголовок - планшет и десктоп */}
+          <h1 className="hidden md:block text-[30px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219] md:max-w-[468px] lg:max-w-[1103px]">
             {album.title}
           </h1>
 
-          {/* Кнопка Назад */}
-          <Link
-            href="/photo-albums"
-            className="inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] border border-[#C62828] text-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] self-start lg:self-auto"
-          >
-            <svg
-              width="29"
-              height="17"
-              viewBox="0 0 29 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="rotate-180"
-            >
-              <path
-                d="M2 9L27 9"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M20 2L27 9L20 16"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Назад
-          </Link>
+          {/* Кнопка Назад - мобильная */}
+          <div className="md:hidden shrink-0">
+            <BackButton href={backHref} variant="icon" ariaLabel="Назад" />
+          </div>
+
+          {/* Кнопка Назад - планшет и десктоп */}
+          <div className="hidden md:block shrink-0">
+            <BackButton href={backHref} />
+          </div>
         </div>
 
         {/* Блок фотографий */}
         {photos.length === 0 ? (
-          <div className="px-4 sm:px-6 lg:px-[102px] flex justify-center items-center py-20">
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] flex justify-center items-center py-20">
             <div className="text-xl text-gray-600">
               В этом альбоме пока нет фотографий
             </div>
           </div>
         ) : (
-          <div className="px-4 sm:px-6 lg:px-[102px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] gap-y-[39px] mb-[150px] lg:mb-[150px]">
-            {Array.from({ length: Math.max(18, photos.length) }).map((_, i) => {
-              const photo = photos[i % photos.length];
-              const photoUrl = photo.url.startsWith("http")
-                ? photo.url
-                : `${
-                    process.env.NEXT_PUBLIC_STRAPI_URL ||
-                    "http://localhost:1337"
-                  }${photo.url}`;
+          <div className="px-[19px] md:px-[36px] lg:px-[80px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-[30px] md:gap-x-[18px] md:gap-y-[28px] lg:gap-x-[30px] lg:gap-y-[39px] mb-[60px] md:mb-[88px] lg:mb-[150px]">
+            {photos.map((photo, i) => {
+              const photoUrl = getStrapiMediaUrl(photo.url) || photo.url;
 
               return (
                 <div
-                  key={`${photo.id}-${i}`}
-                  onClick={() => handlePhotoClick(photo, i)}
-                  className="cursor-pointer hover:opacity-90 transition-opacity"
+                  key={photo.id ?? i}
+                  onClick={() => {
+                    if (!isModalOpen) {
+                      handlePhotoClick(photo, i);
+                    }
+                  }}
+                  className={`cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150 ${
+                    isModalOpen ? "pointer-events-none" : ""
+                  }`}
                 >
                   <PhotoCard
                     image={photoUrl}
@@ -206,16 +314,19 @@ export default function PhotoAlbumDetailPage() {
 
       {/* Попап для просмотра фото */}
       {selectedPhoto && (
-        <PhotoModal
+        <MediaModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          imageUrl={selectedPhoto.url}
+          mediaUrl={selectedPhoto.url}
           title={selectedPhoto.title}
           date={selectedPhoto.date}
           alt={selectedPhoto.alt}
-          imageName={selectedPhoto.imageName}
+          mediaName={selectedPhoto.imageName}
+          mediaType="image"
         />
       )}
     </div>
   );
 }
+
+export default withSearchParams(PhotoAlbumDetailPage);

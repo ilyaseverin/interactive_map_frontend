@@ -6,6 +6,7 @@ type LogoProps = {
   fontSize: string;
   gap: string;
   lineHeight?: string;
+  hideText?: boolean;
 };
 
 export default function Logo({
@@ -13,10 +14,11 @@ export default function Logo({
   fontSize,
   gap,
   lineHeight,
+  hideText = false,
 }: LogoProps) {
   return (
     <div className="flex items-center" style={{ gap }}>
-      <Link href="/" className="flex-shrink-0">
+      <Link href="/home" className="flex-shrink-0">
         <Image
           src="/images/logo-392dd2.png"
           alt="Патриот Центр 48"
@@ -26,9 +28,15 @@ export default function Logo({
         />
       </Link>
       <Link
-        href="/"
-        className="font-normal font-montserrat text-black whitespace-nowrap"
-        style={{ fontSize, lineHeight: lineHeight || "1.2" }}
+        href="/home"
+        className={`font-normal font-montserrat text-black whitespace-nowrap transition-opacity duration-300 ${
+          hideText ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+        }`}
+        style={{
+          fontSize,
+          lineHeight: lineHeight || "1.2",
+          marginLeft: hideText ? 0 : undefined, // Убираем отступ если текст скрыт, если gap задается стилем родителя, но тут gap в style
+        }}
       >
         Патриот Центр 48
       </Link>

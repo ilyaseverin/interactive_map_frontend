@@ -19,11 +19,15 @@ import { ru } from "date-fns/locale";
 
 interface CalendarProps {
   highlightedDates?: Date[]; // Даты с событиями (серые кружки)
+  selectedDate?: Date; // Выбранная дата
+  onDateSelect?: (date: Date) => void; // Callback при выборе даты
   className?: string;
 }
 
 export default function Calendar({
   highlightedDates = [],
+  selectedDate,
+  onDateSelect,
   className = "",
 }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -63,12 +67,22 @@ export default function Calendar({
     );
   };
 
+  const isSelected = (date: Date) => {
+    return selectedDate ? isSameDay(selectedDate, date) : false;
+  };
+
+  const handleDateClick = (date: Date) => {
+    if (onDateSelect && isSameMonth(date, currentMonth)) {
+      onDateSelect(date);
+    }
+  };
+
   return (
     <div
       className={`relative w-full md:w-[650px] lg:w-[938px] 2xl:w-full lg:min-w-[650px] lg:max-w-[938px] flex-shrink-0 ${className}`}
     >
       {/* Calendar Container */}
-      <div className="relative bg-white rounded-[15px] w-full min-h-[328px] md:h-[647px] lg:h-[647px] px-[10px] md:px-[45px] lg:px-[45px] py-[18px] md:py-[35px] lg:py-[35px] overflow-hidden shadow-[0_3px_14px_0_rgba(0,0,0,0.08)]">
+      <div className="relative bg-white rounded-[15px] w-full min-h-[328px] md:h-[647px] lg:h-[647px] px-[10px] md:px-[45px] lg:px-[45px] py-[18px] md:py-[35px] lg:py-[35px] overflow-hidden shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] select-none">
         {/* Month Header */}
         <div className="flex items-center justify-between mb-[15px] md:mb-[49px] lg:mb-[49px]">
           <button
@@ -143,34 +157,51 @@ export default function Calendar({
                     const isCurrentMonth = isSameMonth(date, currentMonth);
                     const isCurrentDay = isToday(date);
                     const hasEvent = isHighlighted(date);
+                    const isDateSelected = isSelected(date);
 
                     // Планшетные ширины: ПН=78px, остальные=80px
                     const tabletWidth =
                       dayIndex === 0 ? "md:w-[78px]" : "md:w-[80px]";
 
+                    const isClickable = isCurrentMonth && onDateSelect;
+
                     return (
                       <div
                         key={dayIndex}
-                        className={`relative flex items-center justify-center h-[30px] ${tabletWidth}`}
+                        className={`relative flex items-center justify-center h-[30px] ${tabletWidth} ${
+                          isClickable ? "cursor-pointer" : "cursor-default"
+                        }`}
+                        onClick={() => isClickable && handleDateClick(date)}
                       >
                         {/* Event indicator (gray circle) */}
-                        {hasEvent && !isCurrentDay && (
+                        {hasEvent && !isCurrentDay && !isDateSelected && (
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C7D1DB]" />
                           </div>
                         )}
 
-                        {/* Today indicator (red circle) */}
+                        {/* Today indicator (dark red circle) */}
                         {isCurrentDay && (
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C62828]" />
                           </div>
                         )}
 
+                        {/* Selected date indicator (light red circle for user-selected date) */}
+                        {isDateSelected && !isCurrentDay && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#FF8A80]" />
+                          </div>
+                        )}
+
                         {/* Date number */}
                         <span
-                          className={`relative z-10 text-[15px] md:text-[22px] lg:text-[22px] font-normal font-montserrat leading-[30px] ${
-                            isCurrentMonth ? "text-[#121212]" : "text-[#C5C5C5]"
+                          className={`relative z-10 text-[15px] md:text-[22px] lg:text-[22px] font-montserrat leading-[30px] ${
+                            isCurrentDay || isDateSelected
+                              ? "text-white font-bold"
+                              : isCurrentMonth
+                              ? "text-[#121212] font-normal"
+                              : "text-[#C5C5C5] font-normal"
                           }`}
                         >
                           {format(date, "d")}

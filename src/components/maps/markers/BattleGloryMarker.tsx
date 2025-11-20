@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { BattleGloryPoint } from "@/types/strapi";
+import { getStrapiUrl } from "@/utils/strapiUrl";
 
 interface BattleGloryMarkerProps {
   point: BattleGloryPoint;
@@ -76,8 +77,7 @@ const BattleGloryMarker: React.FC<BattleGloryMarkerProps> = ({
     }
   };
 
-  const STRAPI_URL =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+  const STRAPI_URL = getStrapiUrl();
 
   return (
     <div

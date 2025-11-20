@@ -1,13 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import Image from "next/image";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import Logo from "./header/Logo";
 import SearchButton from "./header/SearchButton";
 import BurgerButton from "./header/BurgerButton";
 import PartnersLink from "./header/PartnersLink";
 import DropdownMenu, { type SubMenuItem } from "./header/DropdownMenu";
+import SearchForm from "@/components/forms/SearchForm";
+import ExpandingSearch from "./header/ExpandingSearch";
 
 type MenuItem = {
   label: string;
@@ -17,9 +21,12 @@ type MenuItem = {
 };
 
 export default function Header() {
+  const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const mobileSearchButtonRef = useRef<HTMLButtonElement>(null);
 
   const menuItems: MenuItem[] = [
     {
@@ -28,6 +35,8 @@ export default function Header() {
       subMenu: [
         { label: "Главные", href: "/news?category=main" },
         { label: "Региональные", href: "/news?category=regional" },
+        { label: "Фотоальбомы", href: "/photo-albums?source=news" },
+        { label: "Видео", href: "/videos?source=news" },
       ],
     },
     { label: "Карта", href: "/battle-glory" },
@@ -40,7 +49,6 @@ export default function Header() {
         { label: "Руководство", href: "/about/management" },
         { label: "Команда", href: "/about/team" },
         { label: "Партнеры", href: "/about/partners" },
-        { label: "Контакты", href: "/about/contacts" },
         { label: "Фирменный стиль", href: "/about/brand" },
         { label: "Антимонопольный комплекс", href: "/documents/antimonopoly" },
         {
@@ -57,16 +65,24 @@ export default function Header() {
         },
       ],
     },
-    { label: "Наши проекты", href: "/projects" },
+    {
+      label: "Наши проекты",
+      href: "/projects",
+      subMenu: [
+        { label: "Проекты", href: "/projects" },
+        { label: "Фотоальбомы", href: "/photo-albums?source=projects" },
+        { label: "Видео", href: "/videos?source=projects" },
+      ],
+    },
     {
       label: "Для СМИ",
       href: "/media",
       subMenu: [
-        { label: "Пресс-релизы", href: "/media/press-releases" },
-        { label: "Фотоальбомы", href: "/media/photo-albums" },
+        { label: "Пресс-релизы", href: "/press-releases" },
+        { label: "Фотоальбомы", href: "/photo-albums?source=press" },
       ],
     },
-    { label: "Контакты", href: "/contacts" },
+    { label: "Контакты", href: "/about/contacts" },
     { label: "Документы", href: "/documents" },
   ];
 
@@ -104,30 +120,53 @@ export default function Header() {
       <div className="hidden xl:block">
         <div
           className="w-full px-[70px] mx-auto"
-          style={{ minHeight: "clamp(140px, 15vh, 174px)" }}
+          style={{ minHeight: "clamp(80px, 7.292vw, 140px)" }}
         >
           <div
             className="flex items-center justify-between h-full"
             style={{
-              gap: "clamp(8px, 1vw, 16px)",
-              paddingTop: "clamp(16px, 2vh, 34px)",
-              paddingBottom: "clamp(16px, 2vh, 34px)",
+              gap: "clamp(6px, 0.833vw, 16px)",
+              paddingTop: "clamp(8px, 1.042vw, 20px)",
+              paddingBottom: "clamp(8px, 1.042vw, 20px)",
             }}
           >
             {/* Левая часть: Логотип и название */}
             <div className="flex-shrink-0">
-              <Logo
-                logoSize={{ width: 122, height: 112 }}
-                fontSize="clamp(20px, 2.5vw, 40px)"
-                gap="clamp(12px, 1.2vw, 20px)"
-              />
+              <div
+                className="flex items-center"
+                style={{ gap: "clamp(4px, 0.833vw, 16px)" }}
+              >
+                <Link href="/home" className="flex-shrink-0">
+                  <Image
+                    src="/images/logo-392dd2.png"
+                    alt="Патриот Центр 48"
+                    width={122}
+                    height={112}
+                    className="object-contain"
+                    style={{
+                      width: "clamp(35px, 6.35vw, 122px)",
+                      height: "clamp(32px, 5.83vw, 112px)",
+                    }}
+                  />
+                </Link>
+                <Link
+                  href="/home"
+                  className="font-normal font-montserrat text-black whitespace-nowrap"
+                  style={{
+                    fontSize: "clamp(8px, calc(3.125vw - 20px), 40px)",
+                    lineHeight: "1.2",
+                  }}
+                >
+                  Патриот Центр 48
+                </Link>
+              </div>
             </div>
 
-            {/* Центральная часть: Навигация с переносом */}
+            {/* Центральная часть: Навигация без переноса */}
             <nav className="flex-1 flex justify-center min-w-0">
               <ul
-                className="flex flex-wrap items-center justify-center gap-y-2"
-                style={{ columnGap: "clamp(10px, 1.5vw, 24px)" }}
+                className="flex items-center justify-center"
+                style={{ columnGap: "clamp(4px, 0.833vw, 16px)" }}
               >
                 {menuItems.map((item) => (
                   <li
@@ -138,23 +177,37 @@ export default function Header() {
                     }
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link
-                      href={item.href}
-                      className={`text-[18px] font-normal font-montserrat leading-[32px] whitespace-nowrap block ${
-                        item.subMenu ? "px-[15px] py-[2px]" : ""
-                      } ${
-                        item.subMenu && activeDropdown === item.label
-                          ? "text-white rounded-t-[5px]"
-                          : "text-black hover:text-gray-600"
-                      }`}
-                      style={
-                        item.subMenu && activeDropdown === item.label
-                          ? { backgroundColor: "#1D4E89" }
-                          : {}
-                      }
-                    >
-                      {item.label}
-                    </Link>
+                    {item.subMenu ? (
+                      <span
+                        className={`font-normal font-montserrat whitespace-nowrap block cursor-default ${
+                          activeDropdown === item.label
+                            ? "text-white rounded-t-[5px]"
+                            : "text-black hover:text-gray-600"
+                        }`}
+                        style={{
+                          fontSize: "clamp(11px, 1.042vw, 20px)",
+                          lineHeight: "clamp(16px, 1.667vw, 32px)",
+                          padding:
+                            "clamp(1px, 0.208vw, 4px) clamp(6px, 0.781vw, 15px)",
+                          ...(activeDropdown === item.label
+                            ? { backgroundColor: "#1D4E89" }
+                            : {}),
+                        }}
+                      >
+                        {item.label}
+                      </span>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="font-normal font-montserrat whitespace-nowrap block text-black hover:text-gray-600"
+                        style={{
+                          fontSize: "clamp(11px, 1.042vw, 20px)",
+                          lineHeight: "clamp(16px, 1.667vw, 32px)",
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                    )}
 
                     {/* Всплывающее подменю */}
                     {item.subMenu && activeDropdown === item.label && (
@@ -171,13 +224,38 @@ export default function Header() {
             {/* Правая часть: Партнеры и поиск */}
             <div
               className="flex items-center flex-shrink-0"
-              style={{ gap: "clamp(16px, 2vw, 40px)" }}
+              style={{ gap: "clamp(6px, 1.25vw, 24px)" }}
             >
-              <PartnersLink size={{ width: 240, height: 105 }} />
-              <SearchButton
+              <Link href="/partners" className="flex-shrink-0">
+                <Image
+                  src="/images/partners.svg"
+                  alt="Партнеры"
+                  width={240}
+                  height={105}
+                  className="object-contain"
+                  style={{
+                    width: "clamp(60px, 12.5vw, 240px)",
+                    height: "clamp(26px, 5.469vw, 105px)",
+                  }}
+                />
+              </Link>
+              <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                size={{ width: 46, height: 45 }}
-              />
+                className="flex-shrink-0 hover:opacity-70 transition-opacity"
+                aria-label="Поиск"
+              >
+                <Image
+                  src="/images/search-icon.svg"
+                  alt="Поиск"
+                  width={46}
+                  height={45}
+                  className="object-contain"
+                  style={{
+                    width: "clamp(18px, 2.396vw, 46px)",
+                    height: "clamp(18px, 2.344vw, 45px)",
+                  }}
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -202,8 +280,8 @@ export default function Header() {
               />
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={37}
-                lineHeight={4}
+                lineWidth={47}
+                lineHeight={5}
                 gap={11}
               />
             </div>
@@ -231,7 +309,7 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 lineWidth={37}
                 lineHeight={4}
-                gap={11}
+                gap={8}
               />
             </div>
           </div>
@@ -241,18 +319,39 @@ export default function Header() {
       {/* Мобильная версия для экранов <768px */}
       <div className="block md:hidden">
         <div className="w-full px-[19px] mx-auto" style={{ height: "80px" }}>
-          <div className="flex items-center justify-between h-full">
+          <div className="flex items-center justify-between h-full relative">
             <Logo
               logoSize={{ width: 49, height: 45 }}
-              fontSize="14px"
+              fontSize="12px"
               gap="14px"
               lineHeight="17px"
+              hideText={mobileSearchOpen}
             />
-            <BurgerButton
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              lineWidth={27}
-              lineHeight={3}
-              gap={8}
+            <div className="flex items-center gap-[14px] relative flex-1 justify-end">
+              <div
+                className={`transition-opacity duration-300 flex items-center ${
+                  mobileSearchOpen
+                    ? "opacity-0 pointer-events-none"
+                    : "opacity-100"
+                }`}
+              >
+                <SearchButton
+                  ref={mobileSearchButtonRef}
+                  onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                  size={{ width: 24, height: 24 }}
+                />
+              </div>
+              <BurgerButton
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                lineWidth={27}
+                lineHeight={3}
+                gap={5}
+              />
+            </div>
+            <ExpandingSearch
+              isOpen={mobileSearchOpen}
+              onClose={() => setMobileSearchOpen(false)}
+              searchButtonRef={mobileSearchButtonRef}
             />
           </div>
         </div>
@@ -267,18 +366,25 @@ export default function Header() {
       />
 
       {/* Search Bar */}
-      {searchOpen && (
-        <div className="border-t border-gray-200">
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          searchOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="border-t border-gray-200 bg-white">
           <div className="w-full mx-auto px-[19px] md:px-[35px] lg:px-[60px] xl:px-[70px] py-4">
-            <input
-              type="text"
-              placeholder="Поиск..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-montserrat"
+            <SearchForm
+              onSubmit={(query) => {
+                router.push(`/search?q=${encodeURIComponent(query)}&page=1`);
+                setSearchOpen(false);
+              }}
+              placeholder="Поиск"
               autoFocus
+              variant="header"
             />
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
