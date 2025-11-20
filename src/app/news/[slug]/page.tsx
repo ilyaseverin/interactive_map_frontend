@@ -5,7 +5,11 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { notFound } from "next/navigation";
 import MediaGallery from "@/components/media/MediaGallery";
 import { BackButton } from "@/components/buttons";
-import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
+import {
+  getResponsiveImageUrl,
+  getStrapiApiUrl,
+  getStrapiMediaUrl,
+} from "@/utils/strapiUrl";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -156,13 +160,13 @@ export default async function NewsDetailPage({
     notFound();
   }
 
-  const coverUrl = news.media?.cover?.url;
-  const fullCoverUrl = coverUrl ? getStrapiMediaUrl(coverUrl) || null : null;
+  const coverUrl = news.media?.cover;
+  const fullCoverUrl = getResponsiveImageUrl(coverUrl, "large");
 
   // Галерея изображений
   const galleryImages =
     news.media?.gallery?.map((image) => {
-      const imageUrl = getStrapiMediaUrl(image.url) || image.url;
+      const imageUrl = getResponsiveImageUrl(image, "large") || image.url;
       return {
         url: imageUrl,
         alt: image.alternativeText || news.title,

@@ -219,7 +219,12 @@ export interface ProjectMedia {
   id: number;
   cover?: StrapiImage | null;
   gallery?: StrapiImage[];
-  videos?: { id: number; provider?: string; url?: string; video_file?: StrapiImage | null }[];
+  videos?: {
+    id: number;
+    provider?: string;
+    url?: string;
+    video_file?: StrapiImage | null;
+  }[];
 }
 
 export interface ProjectItem {
@@ -321,3 +326,54 @@ export interface PartnerItem {
 export type PartnerListResponse = StrapiResponse<PartnerItem[]>;
 export type PartnerItemResponse = StrapiResponse<PartnerItem>;
 
+// Команда и Руководство
+export interface TeamMember {
+  id: number;
+  documentId: string;
+  full_name: string;
+  slug: string;
+  photo?: StrapiImage;
+  basic_info: {
+    position: string;
+    phone?: string;
+    email?: string;
+    order: number;
+  };
+  bio?: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export type TeamResponse = StrapiResponse<TeamMember[]>;
+export type ManagementMember = TeamMember;
+export type ManagementResponse = StrapiResponse<TeamMember[]>;
+
+// Контакты
+export interface ContactData {
+  id: number;
+  attributes: {
+    main: {
+      address: string;
+      website: string;
+      email: string;
+      map_embed?: string | null;
+      phones: Array<{
+        id: number;
+        label: string;
+        number: string;
+      }>;
+    };
+  };
+}
+
+export interface ContactsResponse {
+  data: ContactData | null;
+  meta: Record<string, unknown>;
+}
+
+// Общие типы
+export type PaginationArgs = {
+  page?: number;
+  pageSize?: number;
+};

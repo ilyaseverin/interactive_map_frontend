@@ -15,7 +15,7 @@ import type {
   ProjectListResponse,
 } from "@/types/strapi";
 import { getRelativeTime } from "@/utils/dateUtils";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
 import { withSearchParams } from "@/utils/withSearchParams";
 
 function VideosPage() {
@@ -45,6 +45,7 @@ function VideosPage() {
     {
       page: currentPage,
       pageSize,
+      minimal: true,
     },
     { skip: source !== "news" }
   );
@@ -57,6 +58,7 @@ function VideosPage() {
     {
       page: currentPage,
       pageSize,
+      minimal: true,
     },
     { skip: source !== "projects" }
   );
@@ -243,12 +245,12 @@ function VideosPage() {
 
                 if (!video) return null;
 
-                const thumbnailUrl =
-                  project.media?.cover?.url ||
-                  project.media?.gallery?.[0]?.url ||
-                  "/images/news/news-1.png";
+                const thumbnail =
+                  project.media?.cover || project.media?.gallery?.[0];
+
                 const fullThumbnailUrl =
-                  getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
+                  getResponsiveImageUrl(thumbnail, "medium") ||
+                  "/images/news/news-1.png";
 
                 const videoUrl = video.url || video.video_file?.url || "";
 
@@ -309,10 +311,10 @@ function VideosPage() {
               if (!video) return null;
 
               // Получаем обложку или cover
-              const thumbnailUrl =
-                news.media?.cover?.url || "/images/news/news-1.png";
+              const thumbnail = news.media?.cover;
               const fullThumbnailUrl =
-                getStrapiMediaUrl(thumbnailUrl) || thumbnailUrl;
+                getResponsiveImageUrl(thumbnail, "medium") ||
+                "/images/news/news-1.png";
 
               // Получаем URL видео
               // Если есть внешняя ссылка (url), используем её, иначе используем локальный файл

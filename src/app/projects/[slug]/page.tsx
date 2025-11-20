@@ -6,7 +6,11 @@ import { notFound } from "next/navigation";
 import MediaGallery from "@/components/media/MediaGallery";
 import DownloadLink from "@/components/DownloadLink";
 import { BackButton } from "@/components/buttons";
-import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
+import {
+  getResponsiveImageUrl,
+  getStrapiApiUrl,
+  getStrapiMediaUrl,
+} from "@/utils/strapiUrl";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -170,13 +174,13 @@ export default async function ProjectDetailPage({
     notFound();
   }
 
-  const coverUrl = project.media?.cover?.url;
-  const fullCoverUrl = coverUrl ? getStrapiMediaUrl(coverUrl) || null : null;
+  const coverUrl = project.media?.cover;
+  const fullCoverUrl = getResponsiveImageUrl(coverUrl, "large");
 
   // Галерея изображений
   const galleryImages =
     project.media?.gallery?.map((image: StrapiImage) => {
-      const imageUrl = getStrapiMediaUrl(image.url) || image.url;
+      const imageUrl = getResponsiveImageUrl(image, "large") || image.url;
       return {
         url: imageUrl,
         alt: image.alternativeText || project.title,

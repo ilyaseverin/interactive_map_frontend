@@ -7,7 +7,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Pagination from "@/components/Pagination";
 import { useState } from "react";
 import { useGetPressReleasesQuery } from "@/services/strapiApi";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -29,7 +29,7 @@ export default function PressReleasesPage() {
     data: pressReleasesData,
     isFetching,
     isError,
-  } = useGetPressReleasesQuery({ page: currentPage, pageSize });
+  } = useGetPressReleasesQuery({ page: currentPage, pageSize, minimal: true });
 
   const fallbackData: PressReleaseListResponse = { data: [], meta: {} };
   const mergedData = pressReleasesData ?? fallbackData;
@@ -164,10 +164,10 @@ export default function PressReleasesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-0 md:gap-x-[20px] lg:gap-x-[30px] gap-y-[25px] md:gap-y-[52px] lg:gap-y-[25px] mb-[60px] md:mb-[30px] lg:mb-[60px] px-[19px] md:px-[34px] lg:px-[69px]">
             {pressReleasesList.map((pressRelease) => {
-              const coverUrl = pressRelease.media?.cover?.url;
-              const fullCoverUrl = coverUrl
-                ? getStrapiMediaUrl(coverUrl) || coverUrl
-                : "/images/news/news-1.png";
+              const fullCoverUrl = getResponsiveImageUrl(
+                pressRelease.media?.cover,
+                "medium"
+              );
 
               const source = pressRelease.basic_info.author
                 ? `Источник: ${pressRelease.basic_info.author}`
@@ -176,7 +176,7 @@ export default function PressReleasesPage() {
               return (
                 <PressReleaseCard
                   key={pressRelease.id}
-                  image={fullCoverUrl}
+                  image={fullCoverUrl || "/images/news/news-1.png"}
                   date={formatDate(pressRelease.basic_info.published_at_date)}
                   source={source}
                   title={pressRelease.title}

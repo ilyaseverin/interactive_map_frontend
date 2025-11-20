@@ -18,8 +18,9 @@ import type {
   PressReleaseItem,
   ProjectItem,
   EventItem,
+  StrapiImage,
 } from "@/types/strapi";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl } from "@/utils/strapiUrl";
 
 type SourceType = "news" | "projects" | "press" | "events";
 
@@ -27,12 +28,7 @@ type AlbumEntity = {
   type: SourceType;
   title: string;
   date?: string;
-  photos: {
-    url: string;
-    alternativeText?: string | null;
-    name?: string;
-    id?: number;
-  }[];
+  photos: StrapiImage[];
 };
 
 function PhotoAlbumDetailPage() {
@@ -172,11 +168,8 @@ function PhotoAlbumDetailPage() {
   const photos = album.photos || [];
 
   // Функция для открытия попапа с фото
-  const handlePhotoClick = (
-    photo: { url: string; alternativeText?: string | null; name?: string },
-    index: number
-  ) => {
-    const photoUrl = getStrapiMediaUrl(photo.url) || photo.url;
+  const handlePhotoClick = (photo: StrapiImage, index: number) => {
+    const photoUrl = getResponsiveImageUrl(photo, "large") || photo.url;
 
     setSelectedPhoto({
       url: photoUrl,
@@ -287,7 +280,8 @@ function PhotoAlbumDetailPage() {
         ) : (
           <div className="px-[19px] md:px-[36px] lg:px-[80px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-[30px] md:gap-x-[18px] md:gap-y-[28px] lg:gap-x-[30px] lg:gap-y-[39px] mb-[60px] md:mb-[88px] lg:mb-[150px]">
             {photos.map((photo, i) => {
-              const photoUrl = getStrapiMediaUrl(photo.url) || photo.url;
+              const photoUrl =
+                getResponsiveImageUrl(photo, "medium") || photo.url;
 
               return (
                 <div
