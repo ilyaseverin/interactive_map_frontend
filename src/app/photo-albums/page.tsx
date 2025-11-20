@@ -19,7 +19,7 @@ import {
   useGetPressReleasesQuery,
   useGetProjectsQuery,
 } from "@/services/strapiApi";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl } from "@/utils/strapiUrl";
 import { withSearchParams } from "@/utils/withSearchParams";
 
 type SourceType = "news" | "projects" | "press";
@@ -51,6 +51,7 @@ function PhotoAlbumsPage() {
     {
       page: currentPage,
       pageSize,
+      minimal: true,
     },
     { skip: source !== "news" }
   );
@@ -63,6 +64,7 @@ function PhotoAlbumsPage() {
     {
       page: currentPage,
       pageSize,
+      minimal: true,
     },
     { skip: source !== "projects" }
   );
@@ -75,6 +77,7 @@ function PhotoAlbumsPage() {
     {
       page: currentPage,
       pageSize,
+      minimal: true,
     },
     { skip: source !== "press" }
   );
@@ -96,17 +99,15 @@ function PhotoAlbumsPage() {
               project.media?.gallery && project.media.gallery.length > 0
           )
           .map((project: ProjectItem) => {
-            const coverUrl =
-              project.media?.cover?.url ||
-              project.media?.gallery?.[0]?.url ||
-              "/images/news/news-1.png";
-            const fullCoverUrl = getStrapiMediaUrl(coverUrl) || coverUrl;
+            const cover = project.media?.cover || project.media?.gallery?.[0];
+
+            const fullCoverUrl = getResponsiveImageUrl(cover, "medium");
 
             return {
               id: project.id,
               slug: project.slug,
               title: project.title,
-              coverUrl: fullCoverUrl,
+              coverUrl: fullCoverUrl || "/images/news/news-1.png",
             };
           }) || [];
 
@@ -129,17 +130,15 @@ function PhotoAlbumsPage() {
               press.media?.gallery && press.media.gallery.length > 0
           )
           .map((press: PressReleaseItem) => {
-            const coverUrl =
-              press.media?.cover?.url ||
-              press.media?.gallery?.[0]?.url ||
-              "/images/news/news-1.png";
-            const fullCoverUrl = getStrapiMediaUrl(coverUrl) || coverUrl;
+            const cover = press.media?.cover || press.media?.gallery?.[0];
+
+            const fullCoverUrl = getResponsiveImageUrl(cover, "medium");
 
             return {
               id: press.id,
               slug: press.slug,
               title: press.title,
-              coverUrl: fullCoverUrl,
+              coverUrl: fullCoverUrl || "/images/news/news-1.png",
             };
           }) || [];
 
@@ -163,17 +162,15 @@ function PhotoAlbumsPage() {
             news.media?.gallery && news.media.gallery.length > 0
         )
         .map((news: NewsItem) => {
-          const coverUrl =
-            news.media?.cover?.url ||
-            news.media?.gallery?.[0]?.url ||
-            "/images/news/news-1.png";
-          const fullCoverUrl = getStrapiMediaUrl(coverUrl) || coverUrl;
+          const cover = news.media?.cover || news.media?.gallery?.[0];
+
+          const fullCoverUrl = getResponsiveImageUrl(cover, "medium");
 
           return {
             id: news.id,
             slug: news.slug,
             title: news.title,
-            coverUrl: fullCoverUrl,
+            coverUrl: fullCoverUrl || "/images/news/news-1.png",
           };
         }) || [];
 

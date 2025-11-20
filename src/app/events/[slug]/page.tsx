@@ -6,7 +6,11 @@ import { notFound } from "next/navigation";
 import MediaGallery from "@/components/media/MediaGallery";
 import DownloadLink from "@/components/DownloadLink";
 import { BackButton } from "@/components/buttons";
-import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
+import {
+  getResponsiveImageUrl,
+  getStrapiApiUrl,
+  getStrapiMediaUrl,
+} from "@/utils/strapiUrl";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -216,13 +220,15 @@ export default async function EventDetailPage({
     event.basic_info.datetime_start
   );
 
-  const coverUrl = event.content_info?.cover?.url;
-  const fullCoverUrl = coverUrl ? getStrapiMediaUrl(coverUrl) || null : null;
+  const fullCoverUrl = getResponsiveImageUrl(
+    event.content_info?.cover,
+    "large"
+  );
 
   // Галерея изображений
   const galleryImages =
     event.content_info?.gallery?.map((image) => {
-      const imageUrl = getStrapiMediaUrl(image.url) || image.url;
+      const imageUrl = getResponsiveImageUrl(image, "large") || image.url;
       return {
         url: imageUrl,
         alt: image.alternativeText || event.title,

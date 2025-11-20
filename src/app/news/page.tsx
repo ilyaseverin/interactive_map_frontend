@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useGetNewsQuery } from "@/services/strapiApi";
 import { BackButton, CategoryButton, SecondaryButton } from "@/components/buttons";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
 import { withSearchParams } from "@/utils/withSearchParams";
 
 // Функция для форматирования даты
@@ -57,6 +57,7 @@ function NewsPage() {
     page: currentPage,
     pageSize,
     category,
+    minimal: true,
   });
 
   const fallbackData: NewsListResponse = { data: [], meta: {} };
@@ -249,15 +250,15 @@ function NewsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-0 md:gap-x-[18px] lg:gap-x-[30px] gap-y-[25px] md:gap-y-[25px] lg:gap-y-[25px] mb-[60px] px-[19px] md:px-[36px] lg:px-[69px]">
             {newsList.map((news) => {
-              const coverUrl = news.media?.cover?.url;
-              const fullCoverUrl = coverUrl
-                ? getStrapiMediaUrl(coverUrl) || coverUrl
-                : "/images/news/news-1.png";
+              const fullCoverUrl = getResponsiveImageUrl(
+                news.media?.cover,
+                "medium"
+              );
 
               return (
                 <NewsCard
                   key={news.id}
-                  image={fullCoverUrl}
+                  image={fullCoverUrl || "/images/news/news-1.png"}
                   date={formatDate(news.basic_info.published_at_date)}
                   title={news.title}
                   description={news.content_info?.excerpt || ""}

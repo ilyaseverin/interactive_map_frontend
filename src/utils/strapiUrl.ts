@@ -40,3 +40,53 @@ export function getStrapiMediaUrl(
   const baseUrl = getStrapiUrl();
   return `${baseUrl}${url}`;
 }
+
+import { StrapiImage } from "@/types/strapi";
+
+type ImageSize = "thumbnail" | "small" | "medium" | "large" | "original";
+
+/**
+ * Получить URL изображения с учетом размера
+ * Если запрошенный размер отсутствует, пытается найти ближайший подходящий
+ */
+export function getResponsiveImageUrl(
+  image: StrapiImage | null | undefined,
+  size: ImageSize = "medium"
+): string | undefined {
+  if (!image?.url) return undefined;
+
+  // Если formats отсутствует, возвращаем оригинал
+  if (!image.formats) {
+    return getStrapiMediaUrl(image.url);
+  }
+
+  let targetUrl = image.url;
+
+  // Логика выбора размера
+  switch (size) {
+    case "thumbnail":
+      if (image.formats.thumbnail) targetUrl = image.formats.thumbnail.url;
+      else if (image.formats.small) targetUrl = image.formats.small.url;
+      break;
+    case "small":
+      if (image.formats.small) targetUrl = image.formats.small.url;
+      else if (image.formats.thumbnail) targetUrl = image.formats.thumbnail.url;
+      else if (image.formats.medium) targetUrl = image.formats.medium.url;
+      break;
+    case "medium":
+      if (image.formats.medium) targetUrl = image.formats.medium.url;
+      else if (image.formats.small) targetUrl = image.formats.small.url;
+      else if (image.formats.large) targetUrl = image.formats.large.url;
+      break;
+    case "large":
+      if (image.formats.large) targetUrl = image.formats.large.url;
+      else if (image.formats.medium) targetUrl = image.formats.medium.url;
+      break;
+    case "original":
+    default:
+      targetUrl = image.url;
+      break;
+  }
+
+  return getStrapiMediaUrl(targetUrl);
+}

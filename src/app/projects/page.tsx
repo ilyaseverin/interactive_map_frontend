@@ -7,7 +7,7 @@ import Pagination from "@/components/Pagination";
 import { useState } from "react";
 import { useGetProjectsQuery } from "@/services/strapiApi";
 import { BackButton, SecondaryButton } from "@/components/buttons";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Функция для форматирования даты
 function formatDate(dateString: string): string {
@@ -32,6 +32,7 @@ export default function ProjectsPage() {
   } = useGetProjectsQuery({
     page: currentPage,
     pageSize,
+    minimal: true,
   });
 
   const fallbackData: ProjectListResponse = { data: [], meta: {} };
@@ -118,10 +119,10 @@ export default function ProjectsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-0 md:gap-x-[18px] lg:gap-x-[30px] gap-y-[25px] md:gap-y-[25px] lg:gap-y-[25px] mb-[60px] px-[19px] md:px-[36px] lg:px-[69px]">
             {projectsList.map((project) => {
-              const coverUrl = project.media?.cover?.url;
-              const fullCoverUrl = coverUrl
-                ? getStrapiMediaUrl(coverUrl) || coverUrl
-                : "/images/news/news-1.png";
+              const fullCoverUrl = getResponsiveImageUrl(
+                project.media?.cover,
+                "medium"
+              );
 
               const source = project.basic_info?.category
                 ? `Источник: ${project.basic_info.category}`
@@ -132,7 +133,7 @@ export default function ProjectsPage() {
               return (
                 <ProjectListCard
                   key={project.id}
-                  image={fullCoverUrl}
+                  image={fullCoverUrl || "/images/news/news-1.png"}
                   date={formatDate(project.publishedAt)}
                   category={source}
                   title={project.title}

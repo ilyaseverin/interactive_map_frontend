@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import PersonCard from "@/components/cards/PersonCard";
 import { useGetManagementQuery } from "@/services/strapiApi";
 import { BackButton } from "@/components/buttons";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl } from "@/utils/strapiUrl";
 
 export default function ManagementPage() {
   const router = useRouter();
@@ -47,9 +47,10 @@ export default function ManagementPage() {
         ) : (
           managementData.map((person) => {
             // Формируем URL изображения
-            const imageUrl = person.photo?.url
-              ? getStrapiMediaUrl(person.photo.url) || person.photo.url
-              : "/images/management/placeholder.jpg";
+            const imageUrl = getResponsiveImageUrl(
+              person.photo,
+              "medium"
+            ) || "/images/management/placeholder.jpg";
 
             return (
               <PersonCard

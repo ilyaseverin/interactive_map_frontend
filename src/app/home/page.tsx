@@ -14,11 +14,11 @@ import {
   useGetProjectsQuery,
   useGetPartnersQuery,
 } from "@/services/strapiApi";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { format, parseISO } from "date-fns";
-import { EventItem, NewsItem, PartnerItem } from "@/types/strapi";
+import { EventItem, NewsItem, PartnerItem, StrapiImage } from "@/types/strapi";
 import { ReactElement } from "react";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getStrapiMediaUrl, getResponsiveImageUrl } from "@/utils/strapiUrl";
 import { CategoryButton, PrimaryButton } from "@/components/buttons";
 
 // Конфигурация типов событий
@@ -77,10 +77,11 @@ export default function HomePage() {
   // Загружаем события на ближайшие 3 месяца
   const { data: allEventsData } = useGetEventsQuery({
     pageSize: 100, // Большой размер для получения всех событий
+    minimal: true, // Оптимизация: загружаем только базовую информацию
   });
 
   // Получаем события на выбранную дату
-  const { data: eventsData } = useGetEventsQuery({
+  const { data: eventsData, isFetching: isEventsFetching } = useGetEventsQuery({
     date: selectedDateString,
     pageSize: 10,
   });
@@ -91,23 +92,25 @@ export default function HomePage() {
   >("Главные");
 
   // Получаем новости (первые 3, выбранная категория)
-  const { data: newsData } = useGetNewsQuery({
+  const { data: newsData, isLoading: isNewsLoading } = useGetNewsQuery({
     page: 1,
     pageSize: 3,
     category: selectedNewsCategory,
   });
 
   // Получаем проекты (первые 6)
-  const { data: projectsData } = useGetProjectsQuery({
-    page: 1,
-    pageSize: 6,
-  });
+  const { data: projectsData, isLoading: isProjectsLoading } =
+    useGetProjectsQuery({
+      page: 1,
+      pageSize: 6,
+    });
 
   // Получаем партнеров
-  const { data: partnersData } = useGetPartnersQuery({
-    page: 1,
-    pageSize: 100,
-  });
+  const { data: partnersData, isLoading: isPartnersLoading } =
+    useGetPartnersQuery({
+      page: 1,
+      pageSize: 100,
+    });
 
   // Извлекаем уникальные даты с событиями для подсветки в календаре
   // Используем локальное время для определения даты события
@@ -156,10 +159,15 @@ export default function HomePage() {
     return byType;
   }, [eventsData, selectedDate]);
 
-  // Получаем URL изображения обложки
-  const getImageUrl = (url: string | undefined) => {
-    if (!url) return "/images/news/news-1.png"; // fallback image
-    return getStrapiMediaUrl(url) || url;
+  // Получаем URL изображения с учетом адаптивности
+  const getImageUrl = (
+    image: StrapiImage | string | undefined | null,
+    fallback: string,
+    size: "thumbnail" | "small" | "medium" | "large" | "original" = "medium"
+  ) => {
+    if (!image) return fallback;
+    if (typeof image === "string") return getStrapiMediaUrl(image) || fallback;
+    return getResponsiveImageUrl(image, size) || fallback;
   };
 
   // Получаем описание из HTML
@@ -193,72 +201,82 @@ export default function HomePage() {
     : "Нет события на этот день";
 
   // Функция для рендеринга карточки события
-  const renderEventCard = (
-    config: EventTypeConfig,
-    event: EventItem | undefined
-  ): ReactElement => {
-    const hasEvent = !!event;
+  const renderEventCard = useCallback(
+    (config: EventTypeConfig, event: EventItem | undefined): ReactElement => {
+      const hasEvent = !!event;
 
-    if (hasEvent) {
-      // Если есть событие
-      const props: {
-        type: "person" | "event" | "movie" | "theme";
-        icon: string;
-        title: string;
-        href: string;
-        description?: string;
-        backgroundImage?: string;
-        gradient?: string;
-        disabled?: boolean;
-      } = {
-        type: config.type,
-        icon: config.icon,
-        title: config.title,
-        href: `/events/${event.slug}`,
-        disabled: false,
-      };
+      if (hasEvent) {
+        // Если есть событие
+        const props: {
+          type: "person" | "event" | "movie" | "theme";
+          icon: string;
+          title: string;
+          href: string;
+          description?: string;
+          backgroundImage?: string;
+          gradient?: string;
+          disabled?: boolean;
+        } = {
+          type: config.type,
+          icon: config.icon,
+          title: config.title,
+          href: `/events/${event.slug}`,
+          disabled: false,
+        };
 
-      // Добавляем description для типов, которым он нужен
-      if (config.type !== "event") {
-        props.description =
-          getPlainDescription(event.content_info?.description) || event.title;
+        // Добавляем description для типов, которым он нужен
+        if (config.type !== "event") {
+          props.description =
+            getPlainDescription(event.content_info?.description) || event.title;
+        }
+
+        // Добавляем backgroundImage только если есть обложка у события
+        if (event.content_info?.cover) {
+          props.backgroundImage = getImageUrl(
+            event.content_info.cover,
+            "/images/calendar/event-bg.png", // fallback generic
+            "medium"
+          );
+        }
+
+        // Добавляем gradient если указан
+        if (config.gradient) {
+          props.gradient = config.gradient;
+        }
+
+        return <CalendarCard {...props} />;
+      } else {
+        // Если нет события - делаем карточку disabled
+        const props: {
+          type: "person" | "event" | "movie" | "theme";
+          icon: string;
+          title: string;
+          description: string;
+          disabled: boolean;
+        } = {
+          type: config.type,
+          icon: config.icon,
+          title: config.title,
+          description: noEventText,
+          disabled: true,
+        };
+
+        return <CalendarCard {...props} />;
       }
-
-      // Добавляем backgroundImage только если есть обложка у события
-      if (event.content_info?.cover?.url) {
-        props.backgroundImage = getImageUrl(event.content_info.cover.url);
-      }
-
-      // Добавляем gradient если указан
-      if (config.gradient) {
-        props.gradient = config.gradient;
-      }
-
-      return <CalendarCard {...props} />;
-    } else {
-      // Если нет события - делаем карточку disabled
-      const props: {
-        type: "person" | "event" | "movie" | "theme";
-        icon: string;
-        title: string;
-        description: string;
-        disabled: boolean;
-      } = {
-        type: config.type,
-        icon: config.icon,
-        title: config.title,
-        description: noEventText,
-        disabled: true,
-      };
-
-      return <CalendarCard {...props} />;
-    }
-  };
+    },
+    [noEventText]
+  ); // getImageUrl is defined inside component but doesn't depend on state/props (if we define it properly or memoize it too)
+  // Actually getImageUrl depends on nothing from state, but it's defined inside.
+  // Let's check getImageUrl again. It depends on imported getStrapiMediaUrl/getResponsiveImageUrl.
+  // It is stable if defined outside or memoized. I'll memoize it or just ignore its dependency if it's stable enough.
+  // Best practice: use useCallback for it too if used in dependency.
 
   // Рендерим все карточки событий
-  const eventCards = EVENT_TYPES.map((config) =>
-    renderEventCard(config, eventsByType[config.key])
-  );
+  const eventCards = useMemo(() => {
+    return EVENT_TYPES.map((config) =>
+      renderEventCard(config, eventsByType[config.key])
+    );
+  }, [eventsByType, renderEventCard]);
 
   // Подготавливаем проекты для отображения
   const preparedProjects = useMemo(() => {
@@ -332,10 +350,11 @@ export default function HomePage() {
               {newsData.data.slice(0, 3).map((news: NewsItem) => (
                 <NewsCard
                   key={news.id}
-                  image={
-                    getImageUrl(news.media?.cover?.url) ||
-                    "/images/news/news-1.png"
-                  }
+                  image={getImageUrl(
+                    news.media?.cover,
+                    "/images/news/news-1.png",
+                    "medium"
+                  )}
                   date={formatDisplayDate(news.basic_info?.published_at_date)}
                   title={news.title}
                   description={
@@ -459,10 +478,14 @@ export default function HomePage() {
                           ? getPlainDescription(project.summary?.excerpt)
                           : undefined
                       }
-                      image={
-                        getImageUrl(project.media?.cover?.url) ||
-                        "/images/projects/project-2.png"
-                      }
+                      image={getImageUrl(
+                        project.media?.cover,
+                        "/images/projects/project-2.png",
+                        project.displaySize === "large" ||
+                          project.displaySize === "xlarge"
+                          ? "large"
+                          : "medium"
+                      )}
                       href={`/projects/${project.slug}`}
                       size={project.displaySize}
                     />
@@ -481,10 +504,11 @@ export default function HomePage() {
                           ? getPlainDescription(project.summary?.excerpt)
                           : undefined
                       }
-                      image={
-                        getImageUrl(project.media?.cover?.url) ||
-                        "/images/projects/project-2.png"
-                      }
+                      image={getImageUrl(
+                        project.media?.cover,
+                        "/images/projects/project-2.png",
+                        "medium"
+                      )}
                       href={`/projects/${project.slug}`}
                       size={project.displaySize}
                     />
@@ -503,10 +527,14 @@ export default function HomePage() {
                             ? getPlainDescription(project.summary?.excerpt)
                             : undefined
                         }
-                        image={
-                          getImageUrl(project.media?.cover?.url) ||
-                          "/images/projects/project-2.png"
-                        }
+                        image={getImageUrl(
+                          project.media?.cover,
+                          "/images/projects/project-2.png",
+                          project.displaySize === "large" ||
+                            project.displaySize === "xlarge"
+                            ? "large"
+                            : "medium"
+                        )}
                         href={`/projects/${project.slug}`}
                         size={project.displaySize}
                       />
@@ -546,10 +574,11 @@ export default function HomePage() {
                 <PartnerCard
                   key={partner.id}
                   title={partner.name}
-                  image={
-                    getImageUrl(partner.logo?.url) ||
-                    "/images/partners/partner-bg.png"
-                  }
+                  image={getImageUrl(
+                    partner.logo,
+                    "/images/partners/partner-bg.png",
+                    "medium"
+                  )}
                   websiteUrl={partner.website_url || partner.url || "#"}
                   websiteText={partner.website_url || partner.url || ""}
                   vkUrl={partner.vk_url || "#"}

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import PersonCard from "@/components/cards/PersonCard";
 import { useGetTeamQuery } from "@/services/strapiApi";
 import { BackButton } from "@/components/buttons";
-import { getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl } from "@/utils/strapiUrl";
 
 export default function TeamPage() {
   const router = useRouter();
@@ -46,9 +46,9 @@ export default function TeamPage() {
         ) : (
           teamData.map((member) => {
             // Формируем URL изображения
-            const imageUrl = member.photo?.url
-              ? getStrapiMediaUrl(member.photo.url) || member.photo.url
-              : "/images/management/placeholder.jpg";
+            const imageUrl =
+              getResponsiveImageUrl(member.photo, "medium") ||
+              "/images/management/placeholder.jpg";
 
             return (
               <PersonCard

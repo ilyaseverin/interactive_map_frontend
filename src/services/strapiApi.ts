@@ -9,72 +9,11 @@ import type {
   EventItem,
   EventListResponse,
   PartnerListResponse,
+  TeamResponse,
+  ManagementResponse,
+  ContactsResponse,
+  PaginationArgs,
 } from "@/types/strapi";
-
-export interface TeamMember {
-  id: number;
-  documentId: string;
-  full_name: string;
-  slug: string;
-  photo?: {
-    id: number;
-    url: string;
-    alternativeText?: string | null;
-  };
-  basic_info: {
-    position: string;
-    phone?: string;
-    email?: string;
-    order: number;
-  };
-  bio?: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-export interface TeamResponse {
-  data: TeamMember[];
-  meta: {
-    pagination?: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
-}
-
-export type ManagementMember = TeamMember;
-export type ManagementResponse = TeamResponse;
-
-export interface ContactData {
-  id: number;
-  attributes: {
-    main: {
-      address: string;
-      website: string;
-      email: string;
-      map_embed?: string | null;
-      phones: Array<{
-        id: number;
-        label: string;
-        number: string;
-      }>;
-    };
-  };
-}
-
-export interface ContactsResponse {
-  data: ContactData | null;
-  meta: Record<string, unknown>;
-}
-
-export type PaginationArgs = {
-  page?: number;
-  pageSize?: number;
-};
-
 import { getStrapiUrl } from "@/utils/strapiUrl";
 
 const STRAPI_BASE_URL = `${getStrapiUrl().replace(/\/$/, "")}/api`;
@@ -106,20 +45,33 @@ export const strapiApi = createApi({
   endpoints: (builder) => ({
     getPressReleases: builder.query<
       PressReleaseListResponse,
-      PaginationArgs | void
+      (PaginationArgs & { minimal?: boolean }) | void
     >({
-      query: ({ page = 1, pageSize = 6 } = {}) => ({
-        url: "press-releases",
-        params: {
-          "pagination[page]": page,
-          "pagination[pageSize]": pageSize,
-          "populate[basic_info]": "*",
-          "populate[content_info]": "*",
-          "populate[media][populate][cover]": "true",
-          "populate[media][populate][gallery]": "true",
-          sort: "basic_info.published_at_date:desc",
-        },
-      }),
+      query: ({ page = 1, pageSize = 6, minimal } = {}) => {
+        const populateParams = minimal
+          ? {
+              "populate[basic_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][gallery]": "true",
+              "populate[content_info][fields][0]": "excerpt",
+            }
+          : {
+              "populate[basic_info]": "*",
+              "populate[content_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][gallery]": "true",
+            };
+
+        return {
+          url: "press-releases",
+          params: {
+            "pagination[page]": page,
+            "pagination[pageSize]": pageSize,
+            ...populateParams,
+            sort: "basic_info.published_at_date:desc",
+          },
+        };
+      },
       providesTags: (result) =>
         result?.data
           ? [
@@ -160,23 +112,35 @@ export const strapiApi = createApi({
 
     getNews: builder.query<
       NewsListResponse,
-      (PaginationArgs & { category?: string }) | void
+      (PaginationArgs & { category?: string; minimal?: boolean }) | void
     >({
-      query: ({ page = 1, pageSize = 9, category } = {}) => ({
-        url: "news",
-        params: {
-          "pagination[page]": page,
-          "pagination[pageSize]": pageSize,
-          ...(category
-            ? { "filters[basic_info][category][$eq]": category }
-            : {}),
-          "populate[basic_info]": "*",
-          "populate[content_info]": "*",
-          "populate[media][populate][cover]": "true",
-          "populate[media][populate][gallery]": "true",
-          sort: "basic_info.published_at_date:desc",
-        },
-      }),
+      query: ({ page = 1, pageSize = 9, category, minimal } = {}) => {
+        const populateParams = minimal
+          ? {
+              "populate[basic_info]": "*",
+              "populate[content_info][fields][0]": "excerpt",
+              "populate[media][populate][cover]": "true",
+            }
+          : {
+              "populate[basic_info]": "*",
+              "populate[content_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][gallery]": "true",
+            };
+
+        return {
+          url: "news",
+          params: {
+            "pagination[page]": page,
+            "pagination[pageSize]": pageSize,
+            ...(category
+              ? { "filters[basic_info][category][$eq]": category }
+              : {}),
+            ...populateParams,
+            sort: "basic_info.published_at_date:desc",
+          },
+        };
+      },
       providesTags: (result) =>
         result?.data
           ? [
@@ -209,21 +173,38 @@ export const strapiApi = createApi({
       providesTags: (result, error, slug) => [{ type: "NewsItem", id: slug }],
     }),
 
-    getProjects: builder.query<ProjectListResponse, PaginationArgs | void>({
-      query: ({ page = 1, pageSize = 9 } = {}) => ({
-        url: "projects",
-        params: {
-          "pagination[page]": page,
-          "pagination[pageSize]": pageSize,
-          "populate[basic_info]": "*",
-          "populate[summary]": "*",
-          "populate[content_info]": "*",
-          "populate[media][populate][cover]": "true",
-          "populate[media][populate][gallery]": "true",
-          "populate[media][populate][videos][populate][video_file]": "true",
-          sort: "publishedAt:desc",
-        },
-      }),
+    getProjects: builder.query<
+      ProjectListResponse,
+      (PaginationArgs & { minimal?: boolean }) | void
+    >({
+      query: ({ page = 1, pageSize = 9, minimal } = {}) => {
+        const populateParams = minimal
+          ? {
+              "populate[basic_info]": "*",
+              "populate[summary]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][gallery]": "true",
+              "populate[media][populate][videos][populate][video_file]": "true",
+            }
+          : {
+              "populate[basic_info]": "*",
+              "populate[summary]": "*",
+              "populate[content_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][gallery]": "true",
+              "populate[media][populate][videos][populate][video_file]": "true",
+            };
+
+        return {
+          url: "projects",
+          params: {
+            "pagination[page]": page,
+            "pagination[pageSize]": pageSize,
+            ...populateParams,
+            sort: "publishedAt:desc",
+          },
+        };
+      },
       providesTags: (result) =>
         result?.data
           ? [
@@ -263,18 +244,33 @@ export const strapiApi = createApi({
       providesTags: (result, error, slug) => [{ type: "Project", id: slug }],
     }),
 
-    getPhotoAlbums: builder.query<NewsListResponse, PaginationArgs | void>({
-      query: ({ page = 1, pageSize = 18 } = {}) => ({
-        url: "news",
-        params: {
-          "pagination[page]": page,
-          "pagination[pageSize]": pageSize,
-          "populate[basic_info]": "*",
-          "populate[media][populate][cover]": "true",
-          "populate[media][populate][gallery]": "true",
-          sort: "basic_info.published_at_date:desc",
-        },
-      }),
+    getPhotoAlbums: builder.query<
+      NewsListResponse,
+      (PaginationArgs & { minimal?: boolean }) | void
+    >({
+      query: ({ page = 1, pageSize = 18, minimal } = {}) => {
+        const populateParams = minimal
+          ? {
+              "populate[basic_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][gallery]": "true",
+            }
+          : {
+              "populate[basic_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][gallery]": "true",
+            };
+
+        return {
+          url: "news",
+          params: {
+            "pagination[page]": page,
+            "pagination[pageSize]": pageSize,
+            ...populateParams,
+            sort: "basic_info.published_at_date:desc",
+          },
+        };
+      },
       providesTags: (result) =>
         result?.data
           ? [
@@ -303,19 +299,35 @@ export const strapiApi = createApi({
       providesTags: (result, error, slug) => [{ type: "PhotoAlbum", id: slug }],
     }),
 
-    getVideos: builder.query<NewsListResponse, PaginationArgs | void>({
-      query: ({ page = 1, pageSize = 18 } = {}) => ({
-        url: "news",
-        params: {
-          "pagination[page]": page,
-          "pagination[pageSize]": pageSize,
-          "populate[basic_info]": "*",
-          "populate[media][populate][cover]": "true",
-          "populate[media][populate][video_links][populate][video_file]":
-            "true",
-          sort: "basic_info.published_at_date:desc",
-        },
-      }),
+    getVideos: builder.query<
+      NewsListResponse,
+      (PaginationArgs & { minimal?: boolean }) | void
+    >({
+      query: ({ page = 1, pageSize = 18, minimal } = {}) => {
+        const populateParams = minimal
+          ? {
+              "populate[basic_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][video_links][populate][video_file]":
+                "true",
+            }
+          : {
+              "populate[basic_info]": "*",
+              "populate[media][populate][cover]": "true",
+              "populate[media][populate][video_links][populate][video_file]":
+                "true",
+            };
+
+        return {
+          url: "news",
+          params: {
+            "pagination[page]": page,
+            "pagination[pageSize]": pageSize,
+            ...populateParams,
+            sort: "basic_info.published_at_date:desc",
+          },
+        };
+      },
       providesTags: (result) =>
         result?.data
           ? [
@@ -382,9 +394,14 @@ export const strapiApi = createApi({
 
     getEvents: builder.query<
       EventListResponse,
-      (PaginationArgs & { eventType?: string; date?: string }) | void
+      | (PaginationArgs & {
+          eventType?: string;
+          date?: string;
+          minimal?: boolean;
+        })
+      | void
     >({
-      query: ({ page = 1, pageSize = 10, eventType, date } = {}) => {
+      query: ({ page = 1, pageSize = 10, eventType, date, minimal } = {}) => {
         // Вычисляем диапазон дат для фильтрации
         // Учитываем, что событие может быть сохранено в любом часовом поясе
         // Используем расширенный диапазон: от начала предыдущего дня до конца следующего дня в UTC
@@ -407,6 +424,21 @@ export const strapiApi = createApi({
           };
         }
 
+        const populateParams = minimal
+          ? {
+              "populate[basic_info]": "*",
+            }
+          : {
+              "populate[basic_info]": "*",
+              "populate[content_info][populate][cover]": "true",
+              "populate[content_info][populate][gallery]": "true",
+              "populate[location_info]": "*",
+              "populate[additional_materials][populate][videos][populate][video_file]":
+                "true",
+              "populate[additional_materials][populate][attachments][populate][file]":
+                "true",
+            };
+
         return {
           url: "events",
           params: {
@@ -416,14 +448,7 @@ export const strapiApi = createApi({
               ? { "filters[basic_info][event_type][$eq]": eventType }
               : {}),
             ...dateFilter,
-            "populate[basic_info]": "*",
-            "populate[content_info][populate][cover]": "true",
-            "populate[content_info][populate][gallery]": "true",
-            "populate[location_info]": "*",
-            "populate[additional_materials][populate][videos][populate][video_file]":
-              "true",
-            "populate[additional_materials][populate][attachments][populate][file]":
-              "true",
+            ...populateParams,
             sort: "basic_info.datetime_start:asc",
             publicationState: "live",
           },
