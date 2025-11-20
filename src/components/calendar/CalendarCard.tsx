@@ -16,6 +16,7 @@ interface CalendarCardProps {
   backgroundImage?: string;
   gradient?: string;
   href?: string; // Ссылка на страницу события
+  disabled?: boolean; // Состояние disabled
 }
 
 interface CardConfig {
@@ -145,6 +146,7 @@ export default function CalendarCard({
   backgroundImage,
   gradient,
   href,
+  disabled = false,
 }: CalendarCardProps) {
   const config = CARD_CONFIGS[type];
 
@@ -289,15 +291,15 @@ export default function CalendarCard({
 
   const cardDimensions = getCardDimensions(type);
 
-  const wrapperClassName = `relative group block ${href ? "cursor-pointer" : ""} ${cardDimensions.width} ${cardDimensions.height} ${href ? "pointer-events-auto" : ""}`;
+  const wrapperClassName = `relative group block ${disabled ? "cursor-not-allowed opacity-50" : href ? "cursor-pointer" : ""} ${cardDimensions.width} ${cardDimensions.height} ${disabled ? "" : href ? "pointer-events-auto" : ""}`;
 
-  // Если нет href, используем div, если есть - Link
-  if (!href) {
+  // Если нет href или disabled, используем div, если есть - Link
+  if (!href || disabled) {
     return (
       <div className={wrapperClassName}>
         {/* Контейнер карточки */}
         <div
-          className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform`}
+          className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform ${disabled ? "" : ""}`}
         >
           {/* Фоновое изображение для планшета и десктопа */}
           {backgroundImage && (
@@ -321,10 +323,16 @@ export default function CalendarCard({
     <Link
       href={href}
       className={wrapperClassName}
+      aria-disabled={disabled}
+      onClick={(e) => {
+        if (disabled) {
+          e.preventDefault();
+        }
+      }}
     >
       {/* Контейнер карточки */}
       <div
-        className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform group-hover:scale-[1.02]`}
+        className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform ${disabled ? "" : "group-hover:scale-[1.02]"}`}
       >
         {/* Фоновое изображение для планшета и десктопа */}
         {backgroundImage && (

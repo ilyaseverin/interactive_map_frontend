@@ -209,11 +209,13 @@ export default function HomePage() {
         description?: string;
         backgroundImage?: string;
         gradient?: string;
+        disabled?: boolean;
       } = {
         type: config.type,
         icon: config.icon,
         title: config.title,
         href: `/events/${event.slug}`,
+        disabled: false,
       };
 
       // Добавляем description для типов, которым он нужен
@@ -234,17 +236,19 @@ export default function HomePage() {
 
       return <CalendarCard {...props} />;
     } else {
-      // Если нет события
+      // Если нет события - делаем карточку disabled
       const props: {
         type: "person" | "event" | "movie" | "theme";
         icon: string;
         title: string;
         description: string;
+        disabled: boolean;
       } = {
         type: config.type,
         icon: config.icon,
         title: config.title,
         description: noEventText,
+        disabled: true,
       };
 
       return <CalendarCard {...props} />;
@@ -323,40 +327,31 @@ export default function HomePage() {
           </div>
 
           {/* News Cards Grid */}
-          <div className="flex flex-col md:grid md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-3 gap-6 md:gap-[50px] lg:gap-8 xl:gap-8 mb-8 sm:mb-12">
-            {newsData?.data && newsData.data.length > 0 ? (
-              newsData.data
-                .slice(0, 3)
-                .map((news: NewsItem) => (
-                  <NewsCard
-                    key={news.id}
-                    image={
-                      getImageUrl(news.media?.cover?.url) ||
-                      "/images/news/news-1.png"
-                    }
-                    date={formatDisplayDate(news.basic_info?.published_at_date)}
-                    title={news.title}
-                    description={
-                      getPlainDescription(news.content_info?.excerpt) ||
-                      getPlainDescription(news.content_info?.content) ||
-                      news.title
-                    }
-                    href={`/news/${news.slug}`}
-                  />
-                ))
-            ) : (
-              // Fallback если нет новостей
-              <>
+          {newsData?.data && newsData.data.length > 0 ? (
+            <div className="flex flex-col md:grid md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-3 gap-6 md:gap-[50px] lg:gap-8 xl:gap-8 mb-8 sm:mb-12">
+              {newsData.data.slice(0, 3).map((news: NewsItem) => (
                 <NewsCard
-                  image="/images/news/news-1.png"
-                  date=""
-                  title="Нет новостей"
-                  description="Пока нет новостей для отображения"
-                  href="/news"
+                  key={news.id}
+                  image={
+                    getImageUrl(news.media?.cover?.url) ||
+                    "/images/news/news-1.png"
+                  }
+                  date={formatDisplayDate(news.basic_info?.published_at_date)}
+                  title={news.title}
+                  description={
+                    getPlainDescription(news.content_info?.excerpt) ||
+                    getPlainDescription(news.content_info?.content) ||
+                    news.title
+                  }
+                  href={`/news/${news.slug}`}
                 />
-              </>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 mb-8 sm:mb-12">
+              <p className="text-gray-600">Нет новостей для отображения</p>
+            </div>
+          )}
 
           {/* All News Button */}
           <div className="flex justify-center lg:justify-end">
@@ -450,85 +445,80 @@ export default function HomePage() {
             </h2>
 
             {/* Projects Grid - точное позиционирование из Figma */}
-            <div className="w-full max-w-[1639px] mx-auto mb-8 sm:mb-[66px]">
-              {preparedProjects.length > 0 ? (
-                <>
-                  {/* Mobile: Flex layout */}
-                  <div className="flex flex-col gap-4 md:hidden">
-                    {preparedProjects.map((project) => (
-                      <ProjectCard
-                        key={project.id}
-                        title={project.title}
-                        date={formatDisplayDate(project.publishedAt)}
-                        description={
-                          project.displaySize === "xlarge"
-                            ? getPlainDescription(project.summary?.excerpt)
-                            : undefined
-                        }
-                        image={
-                          getImageUrl(project.media?.cover?.url) ||
-                          "/images/projects/project-2.png"
-                        }
-                        href={`/projects/${project.slug}`}
-                        size={project.displaySize}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Tablet: Grid layout */}
-                  <div className="hidden md:grid lg:hidden grid-cols-2 gap-x-6 gap-y-6">
-                    {preparedProjects.map((project) => (
-                      <ProjectCard
-                        key={project.id}
-                        title={project.title}
-                        date={formatDisplayDate(project.publishedAt)}
-                        description={
-                          project.displaySize === "xlarge"
-                            ? getPlainDescription(project.summary?.excerpt)
-                            : undefined
-                        }
-                        image={
-                          getImageUrl(project.media?.cover?.url) ||
-                          "/images/projects/project-2.png"
-                        }
-                        href={`/projects/${project.slug}`}
-                        size={project.displaySize}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Desktop: Adaptive flex layout - адаптивное позиционирование */}
-                  <div className="hidden lg:flex flex-row flex-wrap gap-[20px] justify-center">
-                    {preparedProjects.map((project) => (
-                      <div key={project.id} className="flex-shrink-0">
-                        <ProjectCard
-                          title={project.title}
-                          date={formatDisplayDate(project.publishedAt)}
-                          description={
-                            project.displaySize === "xlarge"
-                              ? getPlainDescription(project.summary?.excerpt)
-                              : undefined
-                          }
-                          image={
-                            getImageUrl(project.media?.cover?.url) ||
-                            "/images/projects/project-2.png"
-                          }
-                          href={`/projects/${project.slug}`}
-                          size={project.displaySize}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                // Fallback если нет проектов
-                <div className="text-center py-12">
-                  <p className="text-lg text-gray-600">
-                    Пока нет проектов для отображения
-                  </p>
+            {preparedProjects.length > 0 ? (
+              <div className="w-full max-w-[1639px] mx-auto mb-8 sm:mb-[66px]">
+                {/* Mobile: Flex layout */}
+                <div className="flex flex-col gap-4 md:hidden">
+                  {preparedProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      title={project.title}
+                      date={formatDisplayDate(project.publishedAt)}
+                      description={
+                        project.displaySize === "xlarge"
+                          ? getPlainDescription(project.summary?.excerpt)
+                          : undefined
+                      }
+                      image={
+                        getImageUrl(project.media?.cover?.url) ||
+                        "/images/projects/project-2.png"
+                      }
+                      href={`/projects/${project.slug}`}
+                      size={project.displaySize}
+                    />
+                  ))}
                 </div>
-              )}
-            </div>
+
+                {/* Tablet: Grid layout */}
+                <div className="hidden md:grid lg:hidden grid-cols-2 gap-x-6 gap-y-6">
+                  {preparedProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      title={project.title}
+                      date={formatDisplayDate(project.publishedAt)}
+                      description={
+                        project.displaySize === "xlarge"
+                          ? getPlainDescription(project.summary?.excerpt)
+                          : undefined
+                      }
+                      image={
+                        getImageUrl(project.media?.cover?.url) ||
+                        "/images/projects/project-2.png"
+                      }
+                      href={`/projects/${project.slug}`}
+                      size={project.displaySize}
+                    />
+                  ))}
+                </div>
+
+                {/* Desktop: Adaptive flex layout - адаптивное позиционирование */}
+                <div className="hidden lg:flex flex-row flex-wrap gap-[20px] justify-center">
+                  {preparedProjects.map((project) => (
+                    <div key={project.id} className="flex-shrink-0">
+                      <ProjectCard
+                        title={project.title}
+                        date={formatDisplayDate(project.publishedAt)}
+                        description={
+                          project.displaySize === "xlarge"
+                            ? getPlainDescription(project.summary?.excerpt)
+                            : undefined
+                        }
+                        image={
+                          getImageUrl(project.media?.cover?.url) ||
+                          "/images/projects/project-2.png"
+                        }
+                        href={`/projects/${project.slug}`}
+                        size={project.displaySize}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12 mb-8 sm:mb-[66px]">
+                <p className="text-gray-600">Нет проектов для отображения</p>
+              </div>
+            )}
 
             {/* All Projects Button */}
             <div className="flex justify-center mt-[66px]">
@@ -548,9 +538,9 @@ export default function HomePage() {
         </h2>
 
         {/* Partners Grid */}
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-[40px] lg:gap-x-[57px] lg:gap-y-[0px] max-w-[668px] md:max-w-none lg:max-w-[1836px] mx-auto justify-items-stretch">
-          {partnersData?.data && partnersData.data.length > 0 ? (
-            partnersData.data
+        {partnersData?.data && partnersData.data.length > 0 ? (
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-[40px] lg:gap-x-[57px] lg:gap-y-[0px] max-w-[668px] md:max-w-none lg:max-w-[1836px] mx-auto justify-items-stretch">
+            {partnersData.data
               .slice(0, 4)
               .map((partner: PartnerItem, index: number) => (
                 <PartnerCard
@@ -566,37 +556,13 @@ export default function HomePage() {
                   vkText={partner.vk_url || ""}
                   className={index === 3 ? "hidden md:block lg:hidden" : ""}
                 />
-              ))
-          ) : (
-            // Fallback если нет партнеров
-            <>
-              <PartnerCard
-                title="Партнер 1"
-                image="/images/partners/partner-bg.png"
-                websiteUrl="#"
-                websiteText=""
-                vkUrl="#"
-                vkText=""
-              />
-              <PartnerCard
-                title="Партнер 2"
-                image="/images/partners/partner-bg.png"
-                websiteUrl="#"
-                websiteText=""
-                vkUrl="#"
-                vkText=""
-              />
-              <PartnerCard
-                title="Партнер 3"
-                image="/images/partners/partner-bg.png"
-                websiteUrl="#"
-                websiteText=""
-                vkUrl="#"
-                vkText=""
-              />
-            </>
-          )}
-        </div>
+              ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-600">Нет партнеров для отображения</p>
+          </div>
+        )}
       </section>
 
       {/* Contact Form Section */}
