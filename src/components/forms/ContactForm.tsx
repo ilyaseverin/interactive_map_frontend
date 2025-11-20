@@ -3,7 +3,7 @@ import { SubmitButton } from "@/components/buttons";
 
 export default function ContactForm() {
   return (
-    <section className="relative w-full min-h-[492px] md:min-h-[1026px] lg:min-h-[1026px] mt-[100px] md:mt-[0px] lg:mt-[159px]">
+    <section className="relative w-full min-h-[492px] md:min-h-[1026px] lg:min-h-[1026px] md:mt-[0px] lg:mt-[100px]">
       {/* Background */}
       <div className="absolute inset-0">
         <div

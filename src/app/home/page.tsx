@@ -353,9 +353,9 @@ export default function HomePage() {
       </section>
 
       {/* Calendar Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-4 lg:px-[144px] mt-16 md:mt-[110px] lg:mt-[110px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-4 lg:px-[144px] mt-3  lg:mt-[110px] pb-12 lg:pb-[64px]">
         {/* Section Title */}
-        <h2 className="text-center text-xl md:text-[30px] lg:text-[48px] font-semibold font-montserrat text-black mb-8 md:mb-[71px] lg:mb-[72px]">
+        <h2 className="text-center text-xl md:text-[30px] lg:text-[48px] font-semibold font-montserrat text-black mb-8 md:mb-[40px] lg:mb-[72px]">
           Календарь
         </h2>
 
@@ -399,7 +399,7 @@ export default function HomePage() {
       </section>
 
       {/* Projects Section - Full Width Background */}
-      <section className="relative w-full mt-[100px] sm:mt-[167px]">
+      <section className="relative w-full lg:mt-[102px]">
         {/* Background */}
         <div className="absolute inset-0">
           <div
@@ -421,7 +421,7 @@ export default function HomePage() {
         </div>
 
         {/* Content Container with Backdrop Blur */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 lg:px-[93px] pt-12 sm:pt-[102px] pb-12 sm:pb-[102px]">
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 lg:px-[93px] pt-12 sm:pt-[102px] lg:pt-[102px] pb-12 sm:pb-[102px] lg:pb-[102px]">
           <div
             className="w-full sm:max-w-[1733px] mx-auto px-6 lg:px-[47px] pt-12 lg:pt-[72px] pb-12 lg:pb-[66px] rounded-[15px]"
             style={{
@@ -526,7 +526,7 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <section className="w-full max-w-[1920px] mx-auto px-[34px] lg:px-[42px] mt-16 sm:mt-[120px] pb-12 lg:pb-16">
+      <section className="w-full max-w-[1920px] mx-auto px-[34px] lg:px-[42px] sm:mt-[40px] lg:mt-[120px] pb-12">
         {/* Section Title */}
         <h2 className="text-center text-lg sm:text-3xl lg:text-[48px] font-semibold font-montserrat text-black mb-8 sm:mb-12 lg:mb-[72px]">
           Партнеры
