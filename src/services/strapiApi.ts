@@ -384,32 +384,41 @@ export const strapiApi = createApi({
       EventListResponse,
       (PaginationArgs & { eventType?: string; date?: string }) | void
     >({
-      query: ({ page = 1, pageSize = 10, eventType, date } = {}) => ({
-        url: "events",
-        params: {
-          "pagination[page]": page,
-          "pagination[pageSize]": pageSize,
-          ...(eventType
-            ? { "filters[basic_info][event_type][$eq]": eventType }
-            : {}),
-          ...(date
-            ? {
-                "filters[basic_info][datetime_start][$gte]": `${date}T00:00:00.000Z`,
-                "filters[basic_info][datetime_start][$lt]": `${date}T23:59:59.999Z`,
-              }
-            : {}),
-          "populate[basic_info]": "*",
-          "populate[content_info][populate][cover]": "true",
-          "populate[content_info][populate][gallery]": "true",
-          "populate[location_info]": "*",
-          "populate[additional_materials][populate][videos][populate][video_file]":
-            "true",
-          "populate[additional_materials][populate][attachments][populate][file]":
-            "true",
-          sort: "basic_info.datetime_start:asc",
-          publicationState: "live",
-        },
-      }),
+      query: ({ page = 1, pageSize = 10, eventType, date } = {}) => {
+        // Вычисляем следующую дату для фильтрации (начало следующего дня в UTC)
+        let dateFilter = {};
+        if (date) {
+          const nextDate = new Date(`${date}T00:00:00.000Z`);
+          nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+          const nextDateString = nextDate.toISOString().split("T")[0];
+          dateFilter = {
+            "filters[basic_info][datetime_start][$gte]": `${date}T00:00:00.000Z`,
+            "filters[basic_info][datetime_start][$lt]": `${nextDateString}T00:00:00.000Z`,
+          };
+        }
+
+        return {
+          url: "events",
+          params: {
+            "pagination[page]": page,
+            "pagination[pageSize]": pageSize,
+            ...(eventType
+              ? { "filters[basic_info][event_type][$eq]": eventType }
+              : {}),
+            ...dateFilter,
+            "populate[basic_info]": "*",
+            "populate[content_info][populate][cover]": "true",
+            "populate[content_info][populate][gallery]": "true",
+            "populate[location_info]": "*",
+            "populate[additional_materials][populate][videos][populate][video_file]":
+              "true",
+            "populate[additional_materials][populate][attachments][populate][file]":
+              "true",
+            sort: "basic_info.datetime_start:asc",
+            publicationState: "live",
+          },
+        };
+      },
       providesTags: (result) =>
         result?.data
           ? [

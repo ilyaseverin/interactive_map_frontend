@@ -110,18 +110,26 @@ export default function HomePage() {
   });
 
   // Извлекаем уникальные даты с событиями для подсветки в календаре
+  // Используем UTC для согласованности с фильтром
   const highlightedDates = useMemo(() => {
     if (!allEventsData?.data) return [];
 
     const dates = new Set<string>();
     allEventsData.data.forEach((event) => {
       if (event.basic_info?.datetime_start) {
-        const eventDate = parseISO(event.basic_info.datetime_start);
-        dates.add(format(eventDate, "yyyy-MM-dd"));
+        // Парсим дату и используем UTC для определения дня
+        const eventDate = new Date(event.basic_info.datetime_start);
+        const year = eventDate.getUTCFullYear();
+        const month = String(eventDate.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(eventDate.getUTCDate()).padStart(2, "0");
+        const dateStr = `${year}-${month}-${day}`;
+        dates.add(dateStr);
       }
     });
 
-    return Array.from(dates).map((dateStr) => parseISO(dateStr));
+    return Array.from(dates).map((dateStr) =>
+      parseISO(`${dateStr}T00:00:00.000Z`)
+    );
   }, [allEventsData]);
 
   // Разделяем события по типам
