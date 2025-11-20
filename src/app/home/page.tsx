@@ -110,36 +110,43 @@ export default function HomePage() {
   });
 
   // Извлекаем уникальные даты с событиями для подсветки в календаре
-  // Используем UTC для согласованности с фильтром
+  // Используем локальное время для определения даты события
   const highlightedDates = useMemo(() => {
     if (!allEventsData?.data) return [];
 
     const dates = new Set<string>();
     allEventsData.data.forEach((event) => {
       if (event.basic_info?.datetime_start) {
-        // Парсим дату и используем UTC для определения дня
+        // Парсим дату и используем локальное время для определения дня
+        // Это соответствует тому, как пользователь видит дату события
         const eventDate = new Date(event.basic_info.datetime_start);
-        const year = eventDate.getUTCFullYear();
-        const month = String(eventDate.getUTCMonth() + 1).padStart(2, "0");
-        const day = String(eventDate.getUTCDate()).padStart(2, "0");
+        const year = eventDate.getFullYear();
+        const month = String(eventDate.getMonth() + 1).padStart(2, "0");
+        const day = String(eventDate.getDate()).padStart(2, "0");
         const dateStr = `${year}-${month}-${day}`;
         dates.add(dateStr);
       }
     });
 
-    return Array.from(dates).map((dateStr) =>
-      parseISO(`${dateStr}T00:00:00.000Z`)
-    );
+    return Array.from(dates).map((dateStr) => parseISO(dateStr));
   }, [allEventsData]);
 
-  // Разделяем события по типам
+  // Разделяем события по типам и фильтруем по выбранной дате (локальное время)
   const eventsByType = useMemo(() => {
     if (!eventsData?.data) return {};
 
-    const events = eventsData.data;
-    const byType: Record<string, (typeof events)[0] | undefined> = {};
+    // Фильтруем события по выбранной дате, используя локальное время
+    const selectedDateStr = format(selectedDate, "yyyy-MM-dd");
+    const filteredEvents = eventsData.data.filter((event) => {
+      if (!event.basic_info?.datetime_start) return false;
+      const eventDate = new Date(event.basic_info.datetime_start);
+      const eventDateStr = format(eventDate, "yyyy-MM-dd");
+      return eventDateStr === selectedDateStr;
+    });
 
-    events.forEach((event) => {
+    const byType: Record<string, (typeof filteredEvents)[0] | undefined> = {};
+
+    filteredEvents.forEach((event) => {
       const eventType = event.basic_info.event_type;
       if (eventType && !byType[eventType]) {
         byType[eventType] = event;
@@ -147,7 +154,7 @@ export default function HomePage() {
     });
 
     return byType;
-  }, [eventsData]);
+  }, [eventsData, selectedDate]);
 
   // Получаем URL изображения обложки
   const getImageUrl = (url: string | undefined) => {

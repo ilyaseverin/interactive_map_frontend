@@ -385,15 +385,25 @@ export const strapiApi = createApi({
       (PaginationArgs & { eventType?: string; date?: string }) | void
     >({
       query: ({ page = 1, pageSize = 10, eventType, date } = {}) => {
-        // Вычисляем следующую дату для фильтрации (начало следующего дня в UTC)
+        // Вычисляем диапазон дат для фильтрации
+        // Учитываем, что событие может быть сохранено в любом часовом поясе
+        // Используем расширенный диапазон: от начала предыдущего дня до конца следующего дня в UTC
+        // Это гарантирует, что событие будет найдено независимо от часового пояса
         let dateFilter = {};
         if (date) {
-          const nextDate = new Date(`${date}T00:00:00.000Z`);
-          nextDate.setUTCDate(nextDate.getUTCDate() + 1);
-          const nextDateString = nextDate.toISOString().split("T")[0];
+          // Конец выбранного дня + 1 день для учета всех часовых поясов
+          const endDate = new Date(`${date}T00:00:00.000Z`);
+          endDate.setUTCDate(endDate.getUTCDate() + 2); // +2 дня для учета всех часовых поясов
+          const endDateString = endDate.toISOString().split("T")[0];
+
+          // Начало предыдущего дня для учета событий, которые могут быть в UTC-часовых поясах
+          const prevDate = new Date(`${date}T00:00:00.000Z`);
+          prevDate.setUTCDate(prevDate.getUTCDate() - 1);
+          const prevDateString = prevDate.toISOString().split("T")[0];
+
           dateFilter = {
-            "filters[basic_info][datetime_start][$gte]": `${date}T00:00:00.000Z`,
-            "filters[basic_info][datetime_start][$lt]": `${nextDateString}T00:00:00.000Z`,
+            "filters[basic_info][datetime_start][$gte]": `${prevDateString}T00:00:00.000Z`,
+            "filters[basic_info][datetime_start][$lt]": `${endDateString}T00:00:00.000Z`,
           };
         }
 
