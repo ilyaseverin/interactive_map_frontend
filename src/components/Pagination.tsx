@@ -112,7 +112,7 @@ export default function Pagination({
 
   return (
     <div
-      className={`flex items-center justify-center gap-[16px] md:gap-[36px] mb-[60px] md:mb-[150px] lg:mb-[150px] ${className}`}
+      className={`flex items-center justify-center gap-[16px] md:gap-[36px] mb-[30px] md:mb-[40px] lg:mb-[60px] ${className}`}
     >
       {/* Кнопка Назад - мобильная */}
       {renderMobileArrowButton("prev")}

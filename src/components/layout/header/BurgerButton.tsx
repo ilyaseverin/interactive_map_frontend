@@ -14,7 +14,7 @@ export default function BurgerButton({
   return (
     <button
       onClick={onClick}
-      className="hover:opacity-70 transition-opacity flex items-center justify-center p-1"
+      className="hover:opacity-70 transition-opacity flex items-center justify-center"
       aria-label="Меню"
     >
       <div className="flex flex-col" style={{ gap: `${gap}px` }}>

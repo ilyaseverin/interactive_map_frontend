@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import Logo from "./header/Logo";
 import SearchButton from "./header/SearchButton";
 import BurgerButton from "./header/BurgerButton";
 import PartnersLink from "./header/PartnersLink";
 import DropdownMenu, { type SubMenuItem } from "./header/DropdownMenu";
+import SearchForm from "@/components/forms/SearchForm";
+import ExpandingSearch from "./header/ExpandingSearch";
 
 type MenuItem = {
   label: string;
@@ -18,9 +21,12 @@ type MenuItem = {
 };
 
 export default function Header() {
+  const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const mobileSearchButtonRef = useRef<HTMLButtonElement>(null);
 
   const menuItems: MenuItem[] = [
     {
@@ -274,8 +280,8 @@ export default function Header() {
               />
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={37}
-                lineHeight={4}
+                lineWidth={47}
+                lineHeight={5}
                 gap={11}
               />
             </div>
@@ -303,7 +309,7 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 lineWidth={37}
                 lineHeight={4}
-                gap={11}
+                gap={8}
               />
             </div>
           </div>
@@ -313,18 +319,39 @@ export default function Header() {
       {/* Мобильная версия для экранов <768px */}
       <div className="block md:hidden">
         <div className="w-full px-[19px] mx-auto" style={{ height: "80px" }}>
-          <div className="flex items-center justify-between h-full">
+          <div className="flex items-center justify-between h-full relative">
             <Logo
               logoSize={{ width: 49, height: 45 }}
-              fontSize="14px"
+              fontSize="12px"
               gap="14px"
               lineHeight="17px"
+              hideText={mobileSearchOpen}
             />
-            <BurgerButton
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              lineWidth={27}
-              lineHeight={3}
-              gap={8}
+            <div className="flex items-center gap-[14px] relative flex-1 justify-end">
+              <div
+                className={`transition-opacity duration-300 flex items-center ${
+                  mobileSearchOpen
+                    ? "opacity-0 pointer-events-none"
+                    : "opacity-100"
+                }`}
+              >
+                <SearchButton
+                  ref={mobileSearchButtonRef}
+                  onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                  size={{ width: 24, height: 24 }}
+                />
+              </div>
+              <BurgerButton
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                lineWidth={27}
+                lineHeight={3}
+                gap={5}
+              />
+            </div>
+            <ExpandingSearch
+              isOpen={mobileSearchOpen}
+              onClose={() => setMobileSearchOpen(false)}
+              searchButtonRef={mobileSearchButtonRef}
             />
           </div>
         </div>
@@ -339,18 +366,25 @@ export default function Header() {
       />
 
       {/* Search Bar */}
-      {searchOpen && (
-        <div className="border-t border-gray-200">
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          searchOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="border-t border-gray-200 bg-white">
           <div className="w-full mx-auto px-[19px] md:px-[35px] lg:px-[60px] xl:px-[70px] py-4">
-            <input
-              type="text"
-              placeholder="Поиск..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-montserrat"
+            <SearchForm
+              onSubmit={(query) => {
+                router.push(`/search?q=${encodeURIComponent(query)}&page=1`);
+                setSearchOpen(false);
+              }}
+              placeholder="Поиск"
               autoFocus
+              variant="header"
             />
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
