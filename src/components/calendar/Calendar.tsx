@@ -170,13 +170,20 @@ export default function Calendar({
                         key={dayIndex}
                         className={`relative flex items-center justify-center h-[30px] ${tabletWidth} ${
                           isClickable ? "cursor-pointer" : "cursor-default"
-                        }`}
+                        } group`}
                         onClick={() => isClickable && handleDateClick(date)}
                       >
-                        {/* Event indicator (gray circle) */}
+                        {/* Hover indicator (pale gray) */}
+                        {isClickable && !isCurrentDay && !isDateSelected && (
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-gray-200" />
+                          </div>
+                        )}
+
+                        {/* Event indicator (light blue circle) */}
                         {hasEvent && !isCurrentDay && !isDateSelected && (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#C7D1DB]" />
+                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-blue-200" />
                           </div>
                         )}
 
@@ -187,10 +194,10 @@ export default function Calendar({
                           </div>
                         )}
 
-                        {/* Selected date indicator (light red circle for user-selected date) */}
+                        {/* Selected date indicator (darker blue circle for user-selected date) */}
                         {isDateSelected && !isCurrentDay && (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#FF8A80]" />
+                            <div className="w-[29px] h-[29px] md:w-[58px] md:h-[58px] lg:w-[58px] lg:h-[58px] rounded-full bg-[#1D4E89]" />
                           </div>
                         )}
 
