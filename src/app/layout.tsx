@@ -22,8 +22,8 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: {
-    default: "Интерактивная карта с кластеризацией",
-    template: "%s | Интерактивная карта России",
+    default: "Интерактивная Карта Боевой славы Липецкой области",
+    template: "%s | Интерактивная Карта Боевой славы Липецкой области",
   },
   description:
     "Интерактивная карта России с автоматической кластеризацией точек, встраиванием на сайты и публичным API. Исследуйте достопримечательности городов России.",
@@ -31,15 +31,31 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
 
+  // Иконки и фавиконы
+  // Next.js автоматически обрабатывает favicon.ico из app/ (не нужно указывать в metadata)
+  // Остальные иконки указываем явно, так как они находятся в public/
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  // Web App Manifest для PWA и Android устройств
+  // Android иконки (android-chrome-192x192.png) обрабатываются через manifest
+  manifest: "/site.webmanifest",
+
   // Open Graph
   openGraph: {
     type: "website",
     locale: "ru_RU",
     url: "/",
-    title: "Интерактивная карта России с кластеризацией",
+    title: "Интерактивная Карта Боевой славы Липецкой области",
     description:
       "Интерактивная карта России с автоматической кластеризацией точек, встраиванием на сайты и публичным API",
-    siteName: "Интерактивная карта России",
+    siteName: "Интерактивная Карта Боевой славы Липецкой области",
   },
 
   // Роботы поисковиков

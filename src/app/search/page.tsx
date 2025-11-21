@@ -27,13 +27,22 @@ const PAGE_SIZE = 10;
 
 // Маппинг типов контента на URL
 const getItemUrl = (item: SearchResultItem): string => {
-  const urlMap: Record<SearchResultItem["type"], string> = {
+  const urlMap: Record<
+    Exclude<SearchResultItem["type"], "document">,
+    string
+  > = {
     news: `/news/${item.slug}`,
     project: `/projects/${item.slug}`,
     "press-release": `/press-releases/${item.slug}`,
     event: `/events/${item.slug}`,
   };
-  return urlMap[item.type] || "/";
+  // Для документов используем родительский URL
+  if (item.type === "document" && item.parentType && item.parentSlug) {
+    return urlMap[item.parentType] || "/";
+  }
+  return (
+    urlMap[item.type as Exclude<SearchResultItem["type"], "document">] || "/"
+  );
 };
 
 // Компонент для сообщений (loading, error, empty)
