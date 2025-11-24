@@ -119,6 +119,8 @@ export async function generateMetadata({
       type: "article",
       locale: "ru_RU",
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      publishedTime: project.publishedAt,
+      modifiedTime: project.updatedAt,
     },
     robots: robots,
     alternates: {

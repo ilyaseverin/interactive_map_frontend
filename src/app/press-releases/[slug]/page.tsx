@@ -120,6 +120,8 @@ export async function generateMetadata({
       type: "article",
       locale: "ru_RU",
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      publishedTime: pressRelease.publishedAt,
+      modifiedTime: pressRelease.updatedAt,
     },
     robots: robots,
     alternates: {

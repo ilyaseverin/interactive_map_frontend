@@ -12,6 +12,7 @@ import {
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
 import { formatFileSize } from "@/utils/fileSize";
+import { buildKeywords } from "@/utils/seoKeywords";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -97,21 +98,41 @@ export async function generateMetadata({
   const robots = seo?.metaRobots || "index, follow";
   const canonical = seo?.canonicalURL || `/events/${slug}`;
 
+  // Формируем keywords: категория + дополнительные keywords из SEO
+  const keywords = buildKeywords(event.basic_info?.category, seo?.keywords);
+
+  // Мета-теги для события
+  const locationStr =
+    event.location_info?.location ||
+    event.location_info?.location_map_link?.address ||
+    null;
+
+  const otherMeta: Record<string, string> = {
+    "event:start_time": event.basic_info.datetime_start,
+    ...(locationStr && { "event:location": locationStr }),
+    ...(event.basic_info.category && {
+      "event:category": event.basic_info.category,
+    }),
+  };
+
   return {
     title: seoTitle,
     description: seoDescription,
-    ...(seo?.keywords && { keywords: seo.keywords }),
+    ...(keywords && { keywords }),
     openGraph: {
       title: ogTitle,
       description: ogDescription,
       type: "article",
       locale: "ru_RU",
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      publishedTime: event.publishedAt,
+      modifiedTime: event.updatedAt,
     },
     robots: robots,
     alternates: {
       canonical: canonical,
     },
+    other: otherMeta,
   };
 }
 
