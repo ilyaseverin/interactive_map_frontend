@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStrapiUrl } from "@/utils/strapiUrl";
+import { formatFileSize } from "@/utils/fileSize";
 import type {
   NewsItem,
   ProjectItem,
@@ -89,14 +90,6 @@ const containsSearchTerm = (
 ): boolean => {
   if (!text) return false;
   return text.toLowerCase().includes(searchTerm.toLowerCase());
-};
-
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return "0 B";
-  const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
 };
 
 interface FoundDocument {

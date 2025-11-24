@@ -51,7 +51,7 @@ export default function BackButton({
         <button
           onClick={onClick}
           aria-label={ariaLabel}
-          className={`inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group ${className}`}
+          className={`inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group cursor-pointer ${className}`}
         >
           {iconContent}
         </button>
@@ -61,7 +61,7 @@ export default function BackButton({
     return (
       <Link
         href={href || "#"}
-        className={`inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group ${className}`}
+        className={`inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] border border-[#C62828] hover:bg-[#C62828] active:bg-[#B71C1C] active:scale-95 transition-all duration-150 group cursor-pointer ${className}`}
       >
         {iconContent}
       </Link>
@@ -130,7 +130,7 @@ export default function BackButton({
           <button
             onClick={onClick}
             aria-label={ariaLabel}
-            className={`md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors ${className}`}
+            className={`md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors cursor-pointer ${className}`}
           >
             {mobileIcon}
           </button>
@@ -139,7 +139,7 @@ export default function BackButton({
           <button
             onClick={onClick}
             aria-label={ariaLabel}
-            className={`hidden md:inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[16px] md:text-[16px] lg:text-[20px] font-medium font-montserrat rounded-[12px] transition-colors leading-[1.219] ${className}`}
+            className={`hidden md:inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[16px] md:text-[16px] lg:text-[20px] font-medium font-montserrat rounded-[12px] transition-colors leading-[1.219] cursor-pointer ${className}`}
           >
             {desktopContent}
           </button>
@@ -152,7 +152,7 @@ export default function BackButton({
         {/* Мобильная версия (только иконка) */}
         <Link
           href={href || "#"}
-          className={`md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors ${className}`}
+          className={`md:hidden inline-flex items-center justify-center w-[34px] h-[34px] rounded-[7px] bg-[#C62828] hover:bg-[#B71C1C] transition-colors cursor-pointer ${className}`}
         >
           {mobileIcon}
         </Link>
@@ -160,7 +160,7 @@ export default function BackButton({
         {/* Планшет и десктоп версия (с текстом) */}
         <Link
           href={href || "#"}
-          className={`hidden md:inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[16px] md:text-[16px] lg:text-[20px] font-medium font-montserrat rounded-[12px] transition-colors leading-[1.219] ${className}`}
+          className={`hidden md:inline-flex items-center justify-center gap-[10px] px-[24px] py-[16px] bg-[#C62828] hover:bg-[#B71C1C] text-[#EDF3F7] text-[16px] md:text-[16px] lg:text-[20px] font-medium font-montserrat rounded-[12px] transition-colors leading-[1.219] cursor-pointer ${className}`}
         >
           {desktopContent}
         </Link>
@@ -202,7 +202,7 @@ export default function BackButton({
       <button
         onClick={onClick}
         aria-label={ariaLabel}
-        className={`inline-flex items-center justify-center gap-[10px] px-[16px] md:px-[20px] lg:px-[24px] py-[12px] md:py-[14px] lg:py-[16px] border border-[#C62828] text-[#C62828] text-[14px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] ${className}`}
+        className={`inline-flex items-center justify-center gap-[10px] px-[16px] md:px-[20px] lg:px-[24px] py-[12px] md:py-[14px] lg:py-[16px] border border-[#C62828] text-[#C62828] text-[14px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] cursor-pointer ${className}`}
       >
         {defaultContent}
       </button>
@@ -212,7 +212,7 @@ export default function BackButton({
   return (
     <Link
       href={href || "#"}
-      className={`inline-flex items-center justify-center gap-[10px] px-[16px] md:px-[20px] lg:px-[24px] py-[12px] md:py-[14px] lg:py-[16px] border border-[#C62828] text-[#C62828] text-[14px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] ${className}`}
+      className={`inline-flex items-center justify-center gap-[10px] px-[16px] md:px-[20px] lg:px-[24px] py-[12px] md:py-[14px] lg:py-[16px] border border-[#C62828] text-[#C62828] text-[14px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] cursor-pointer ${className}`}
     >
       {defaultContent}
     </Link>

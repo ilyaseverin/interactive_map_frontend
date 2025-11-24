@@ -12,6 +12,7 @@ import type {
   TeamResponse,
   ManagementResponse,
   ContactsResponse,
+  BrandResponse,
   PaginationArgs,
 } from "@/types/strapi";
 import { getStrapiUrl } from "@/utils/strapiUrl";
@@ -41,6 +42,7 @@ export const strapiApi = createApi({
     "Event",
     "Partners",
     "Partner",
+    "Brand",
   ],
   endpoints: (builder) => ({
     getPressReleases: builder.query<
@@ -510,6 +512,21 @@ export const strapiApi = createApi({
             ]
           : [{ type: "Partners" as const, id: "LIST" }],
     }),
+
+    getBrand: builder.query<BrandResponse, void>({
+      query: () => ({
+        url: "brand",
+        params: {
+          "populate[content]": "*",
+          "populate[content][populate][logo_with_description]": "*",
+          "populate[content][populate][logo_with_description][populate][files]":
+            "true",
+          "populate[content][populate][logos]": "true",
+          "populate[content][populate][brand_colors]": "*",
+        },
+      }),
+      providesTags: [{ type: "Brand", id: "SINGLE" }],
+    }),
   }),
 });
 
@@ -529,6 +546,7 @@ export const {
   useGetEventsQuery,
   useGetEventBySlugQuery,
   useGetPartnersQuery,
+  useGetBrandQuery,
 } = strapiApi;
 
 export type StrapiApi = typeof strapiApi;

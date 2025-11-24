@@ -11,6 +11,7 @@ import {
   getStrapiApiUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { formatFileSize } from "@/utils/fileSize";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -188,19 +189,6 @@ function EventDateDisplay({ date, time }: { date: string; time?: string }) {
 }
 
 // Форматирование размера файла
-function formatFileSize(bytes: number | undefined): string {
-  if (!bytes) return "";
-
-  if (bytes < 1024) {
-    return `${bytes} Б`;
-  } else if (bytes < 1024 * 1024) {
-    const kb = bytes / 1024;
-    return `${kb.toFixed(kb >= 10 ? 0 : 1)} КБ`;
-  } else {
-    const mb = bytes / (1024 * 1024);
-    return `${mb.toFixed(mb >= 10 ? 1 : 1)} МБ`;
-  }
-}
 
 // Серверный компонент страницы события
 export default async function EventDetailPage({
@@ -439,7 +427,9 @@ export default async function EventDetailPage({
           {/* Нижняя часть: кнопка назад и дата публикации */}
           <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between gap-6 pt-[25px] md:pt-[40px] lg:pt-[64px]">
             <BackButton href="/home" />
-            <PublishDateDisplay date={publishDate} />
+            <div className="hidden md:block">
+              <PublishDateDisplay date={publishDate} />
+            </div>
           </div>
         </div>
       </main>

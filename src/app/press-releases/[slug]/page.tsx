@@ -11,6 +11,9 @@ import {
   getStrapiApiUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { formatFileSize } from "@/utils/fileSize";
+import { formatDate } from "@/utils/dateUtils";
+import { buildKeywords } from "@/utils/seoKeywords";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -101,10 +104,16 @@ export async function generateMetadata({
   const robots = seo?.metaRobots || "index, follow";
   const canonical = seo?.canonicalURL || `/press-releases/${slug}`;
 
+  // Формируем keywords: категория + дополнительные keywords из SEO
+  const keywords = buildKeywords(
+    pressRelease.basic_info?.category,
+    seo?.keywords
+  );
+
   return {
     title: seoTitle,
     description: seoDescription,
-    ...(seo?.keywords && { keywords: seo.keywords }),
+    ...(keywords && { keywords }),
     openGraph: {
       title: ogTitle,
       description: ogDescription,
@@ -120,29 +129,8 @@ export async function generateMetadata({
 }
 
 // Форматирование даты
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
 
 // Форматирование размера файла
-function formatFileSize(bytes: number | undefined): string {
-  if (!bytes) return "";
-
-  if (bytes < 1024) {
-    return `${bytes} Б`;
-  } else if (bytes < 1024 * 1024) {
-    const kb = bytes / 1024;
-    return `${kb.toFixed(kb >= 10 ? 0 : 1)} КБ`;
-  } else {
-    const mb = bytes / (1024 * 1024);
-    return `${mb.toFixed(mb >= 10 ? 1 : 1)} МБ`;
-  }
-}
 
 // Компонент даты с иконкой
 function DateDisplay({ date }: { date: string }) {

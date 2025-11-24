@@ -372,6 +372,42 @@ export interface ContactsResponse {
   meta: Record<string, unknown>;
 }
 
+// Фирменный стиль / Brand
+export interface BrandColorItem {
+  id: number;
+  color_name?: string | null;
+  hex_value?: string | null;
+  rgb_value?: string | null;
+  cmyk_value?: string | null;
+}
+
+export interface BrandLogoDocument {
+  id: number;
+  description?: string | null;
+  files?: StrapiImage[];
+}
+
+export interface BrandContent {
+  id: number;
+  logo_with_description?: BrandLogoDocument | null;
+  logos?: StrapiImage[];
+  brand_colors?: BrandColorItem[];
+}
+
+export interface BrandData {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  content?: BrandContent | null;
+}
+
+export interface BrandResponse {
+  data: BrandData | null;
+  meta: Record<string, unknown>;
+}
+
 // Общие типы
 export type PaginationArgs = {
   page?: number;

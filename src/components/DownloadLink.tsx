@@ -7,12 +7,14 @@ interface DownloadLinkProps {
   url: string;
   fileName: string;
   fileSize?: string;
+  hideIcon?: boolean;
 }
 
 export default function DownloadLink({
   url,
   fileName,
   fileSize,
+  hideIcon = false,
 }: DownloadLinkProps) {
   const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -35,6 +37,25 @@ export default function DownloadLink({
       window.open(url, "_blank");
     }
   };
+
+  if (hideIcon) {
+    return (
+      <a
+        href={url}
+        onClick={handleDownload}
+        className="flex flex-col gap-[3px] hover:opacity-80 transition-opacity group cursor-pointer"
+      >
+        <p className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#474747] leading-[1.219] break-words group-hover:underline">
+          {fileName}
+        </p>
+        {fileSize && (
+          <p className="text-[12px] md:text-[15px] font-normal font-montserrat text-[#737373] leading-[1.219]">
+            {fileSize}
+          </p>
+        )}
+      </a>
+    );
+  }
 
   return (
     <a

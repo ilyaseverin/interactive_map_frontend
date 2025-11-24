@@ -10,16 +10,7 @@ import { useGetNewsQuery } from "@/services/strapiApi";
 import { BackButton, CategoryButton, SecondaryButton } from "@/components/buttons";
 import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
 import { withSearchParams } from "@/utils/withSearchParams";
-
-// Функция для форматирования даты
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
+import { formatDate } from "@/utils/dateUtils";
 
 // Функция для преобразования английского значения из URL в русское для API
 function mapUrlCategoryToApiCategory(
