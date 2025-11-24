@@ -38,6 +38,15 @@ const nextConfig: NextConfig = {
       strapiRemotePattern,
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/home",
+        permanent: true, // 308 редирект (постоянный)
+      },
+    ];
+  },
 };
 
 export default nextConfig;

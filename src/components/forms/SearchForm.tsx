@@ -88,7 +88,7 @@ export default function SearchForm({
           {/* Кнопка на мобильной - иконка */}
           <button
             type="submit"
-            className="md:hidden w-[34px] h-[34px] p-[5px] bg-[#C62828] rounded-[7px] hover:bg-[#B71C1C] active:scale-95 transition-all duration-150 flex items-center justify-center flex-shrink-0"
+            className="md:hidden w-[34px] h-[34px] p-[5px] bg-[#C62828] rounded-[7px] hover:bg-[#B71C1C] active:scale-95 transition-all duration-150 flex items-center justify-center flex-shrink-0 cursor-pointer"
             aria-label="Найти"
           >
             <svg
@@ -117,7 +117,7 @@ export default function SearchForm({
           {/* Кнопка на планшете/десктопе - текст */}
           <button
             type="submit"
-            className="hidden md:inline-flex items-center justify-center px-[20px] md:px-[24px] py-[12px] md:py-[14px] lg:py-[16px] bg-[#C62828] text-white text-[14px] md:text-[16px] lg:text-[20px] font-medium font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#B71C1C] transition-colors leading-[1.219] whitespace-nowrap"
+            className="hidden md:inline-flex items-center justify-center px-[20px] md:px-[24px] py-[12px] md:py-[14px] lg:py-[16px] bg-[#C62828] text-white text-[14px] md:text-[16px] lg:text-[20px] font-medium font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#B71C1C] transition-colors leading-[1.219] whitespace-nowrap cursor-pointer"
           >
             Найти
           </button>
@@ -125,7 +125,7 @@ export default function SearchForm({
       ) : (
         <button
           type="submit"
-          className="px-[16px] md:px-[20px] lg:px-[24px] py-[10px] md:py-[12px] lg:py-[14px] bg-[#C62828] text-white text-[14px] md:text-[16px] lg:text-[18px] font-medium font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#B71C1C] transition-colors leading-[1.219] whitespace-nowrap"
+          className="px-[16px] md:px-[20px] lg:px-[24px] py-[10px] md:py-[12px] lg:py-[14px] bg-[#C62828] text-white text-[14px] md:text-[16px] lg:text-[18px] font-medium font-montserrat rounded-[10px] lg:rounded-[12px] hover:bg-[#B71C1C] transition-colors leading-[1.219] whitespace-nowrap cursor-pointer"
         >
           Найти
         </button>

@@ -129,7 +129,7 @@ export default function MediaModal({
             {/* Крестик закрытия */}
             <button
               onClick={onClose}
-              className="absolute right-[10px] sm:right-[8px] lg:right-[20px] top-[10px] sm:top-[8px] lg:top-[20px] z-10 w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] lg:w-[60px] lg:h-[60px] rounded-full hover:shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center group"
+              className="absolute right-[10px] sm:right-[8px] lg:right-[20px] top-[10px] sm:top-[8px] lg:top-[20px] z-10 w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] lg:w-[60px] lg:h-[60px] rounded-full hover:shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center group cursor-pointer"
               style={{ backgroundColor: "rgba(54, 54, 54, 0.7)" }}
               aria-label="Закрыть"
             >

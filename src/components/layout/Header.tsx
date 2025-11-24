@@ -226,7 +226,7 @@ export default function Header() {
               className="flex items-center flex-shrink-0"
               style={{ gap: "clamp(6px, 1.25vw, 24px)" }}
             >
-              <Link href="/partners" className="flex-shrink-0">
+              <Link href="/about/partners" className="flex-shrink-0">
                 <Image
                   src="/images/partners.svg"
                   alt="Партнеры"
@@ -241,7 +241,7 @@ export default function Header() {
               </Link>
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="flex-shrink-0 hover:opacity-70 transition-opacity"
+                className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
                 aria-label="Поиск"
               >
                 <Image
@@ -249,7 +249,7 @@ export default function Header() {
                   alt="Поиск"
                   width={46}
                   height={45}
-                  className="object-contain"
+                  className="object-contain pointer-events-none"
                   style={{
                     width: "clamp(18px, 2.396vw, 46px)",
                     height: "clamp(18px, 2.344vw, 45px)",

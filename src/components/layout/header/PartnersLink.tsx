@@ -7,7 +7,7 @@ type PartnersLinkProps = {
 
 export default function PartnersLink({ size }: PartnersLinkProps) {
   return (
-    <Link href="/partners" className="flex-shrink-0">
+    <Link href="/about/partners" className="flex-shrink-0">
       <Image
         src="/images/partners.svg"
         alt="Партнеры"
