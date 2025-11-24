@@ -263,6 +263,8 @@ export default async function NewsDetailPage({
                 videoFileUrl={firstVideoFileUrl}
                 slug={news.slug}
                 sourceType="news"
+                title={news.title}
+                date={formatDate(news.basic_info.published_at_date)}
               />
             </div>
           )}

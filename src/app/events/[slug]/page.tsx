@@ -384,6 +384,8 @@ export default async function EventDetailPage({
                 videoFileUrl={firstVideoFileUrl}
                 slug={event.slug}
                 sourceType="events"
+                title={event.title}
+                date={eventDate + (eventTime ? ` в ${eventTime}` : "")}
               />
             </div>
           )}

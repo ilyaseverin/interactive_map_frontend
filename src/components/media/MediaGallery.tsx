@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
+import MediaModal from "@/components/modals/MediaModal";
 
 // Import Swiper styles
 import "swiper/css";
@@ -22,6 +24,8 @@ interface MediaGalleryProps {
   videoFileUrl?: string;
   slug?: string;
   sourceType?: "news" | "projects" | "press" | "events";
+  title?: string;
+  date?: string;
 }
 
 // Swiper Configuration - скопировано из HeroSlider
@@ -47,9 +51,49 @@ export default function MediaGallery({
   videoFileUrl,
   slug,
   sourceType = "news",
+  title = "",
+  date,
 }: MediaGalleryProps) {
-  // Если нет ни изображений, ни видео файла - не показываем компонент
-  if (images.length === 0 && !videoFileUrl) return null;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<{
+    url: string;
+    isVKVideo: boolean;
+    videoName?: string;
+  } | null>(null);
+
+  // Если нет ни изображений, ни видео - не показываем компонент
+  if (images.length === 0 && !videoFileUrl && !videoUrl) return null;
+
+  // Определяем, является ли видео VK видео
+  const isVKVideo = (url: string) => {
+    return (
+      url.includes("vk.com") ||
+      url.includes("video_ext.php") ||
+      /video(-?\d+)_(\d+)/.test(url)
+    );
+  };
+
+  // Обработчик клика на кнопку "Смотреть видео"
+  const handleVideoClick = () => {
+    // Приоритет: сначала загруженное видео, потом ссылка
+    const videoToShow = videoFileUrl || videoUrl;
+    if (!videoToShow) return;
+
+    setSelectedVideo({
+      url: videoToShow,
+      isVKVideo: videoFileUrl ? false : videoUrl ? isVKVideo(videoUrl) : false,
+      videoName: videoFileUrl
+        ? videoFileUrl.split("/").pop() || "video.mp4"
+        : undefined,
+    });
+    setIsModalOpen(true);
+  };
+
+  // Закрытие модального окна
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedVideo(null);
+  };
 
   return (
     <div className="mb-[25px] lg:mb-[50px]">
@@ -86,20 +130,18 @@ export default function MediaGallery({
           {hasPhotoAlbum && slug && (
             <Link
               href={`/photo-albums/${slug}?source=${sourceType}`}
-              className="inline-flex items-center justify-center h-[40px] md:h-[48px] lg:h-[56px] px-[24px] md:px-[20px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
+              className="inline-flex items-center justify-center h-[40px] md:h-[48px] lg:h-[56px] px-[24px] md:px-[20px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] cursor-pointer"
             >
               К фотоальбому
             </Link>
           )}
           {(videoUrl || videoFileUrl) && (
-            <Link
-              href={videoUrl || videoFileUrl || "#"}
-              target={videoUrl ? "_blank" : undefined}
-              rel={videoUrl ? "noopener noreferrer" : undefined}
-              className="inline-flex items-center justify-center h-[40px] md:h-[48px] lg:h-[56px] px-[24px] md:px-[20px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
+            <button
+              onClick={handleVideoClick}
+              className="inline-flex items-center justify-center h-[40px] md:h-[48px] lg:h-[56px] px-[24px] md:px-[20px] lg:px-[24px] py-0 md:py-0 lg:py-0 border border-[#C62828] text-[#C62828] text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219] cursor-pointer"
             >
               Смотреть видео
-            </Link>
+            </button>
           )}
         </div>
       )}
@@ -179,6 +221,21 @@ export default function MediaGallery({
           }
         }
       `}</style>
+
+      {/* Модальное окно для видео */}
+      {selectedVideo && (
+        <MediaModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          mediaUrl={selectedVideo.url}
+          title={title}
+          date={date}
+          alt={title}
+          mediaType="video"
+          isVKVideo={selectedVideo.isVKVideo}
+          mediaName={selectedVideo.videoName}
+        />
+      )}
     </div>
   );
 }

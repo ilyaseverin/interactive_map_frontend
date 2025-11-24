@@ -303,6 +303,8 @@ export default async function PressReleaseDetailPage({
                 hasPhotoAlbum={galleryImages.length > 0}
                 slug={pressRelease.slug}
                 sourceType="press"
+                title={pressRelease.title}
+                date={formatDate(pressRelease.basic_info.published_at_date)}
               />
             </div>
           )}

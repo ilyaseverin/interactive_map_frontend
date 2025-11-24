@@ -314,6 +314,8 @@ export default async function ProjectDetailPage({
                 videoFileUrl={firstVideoFileUrl}
                 slug={project.slug}
                 sourceType="projects"
+                title={project.title}
+                date={formatDate(project.publishedAt)}
               />
             </div>
           )}
