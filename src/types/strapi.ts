@@ -408,6 +408,29 @@ export interface BrandResponse {
   meta: Record<string, unknown>;
 }
 
+// Типы для документов
+export interface DocumentAttachments {
+  id: number;
+  files?: StrapiImage[];
+}
+
+export interface DocumentItem {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  category: "Реестр" | "Метод. Рекомендации";
+  description?: string;
+  files?: StrapiImage[];
+  attachments?: DocumentAttachments;
+}
+
+export type DocumentListResponse = StrapiResponse<DocumentItem[]>;
+export type DocumentItemResponse = StrapiResponse<DocumentItem>;
+
 // Общие типы
 export type PaginationArgs = {
   page?: number;

@@ -132,7 +132,7 @@ function DateDisplay({ date }: { date: string }) {
     <div className="flex items-center gap-[8px]">
       <div className="relative w-[26px] h-[26px]">
         <Image
-          src="/images/calendar/calendar-icon.png"
+          src="/images/calendar/calendar-icon-publish.png"
           alt="Calendar"
           width={26}
           height={26}

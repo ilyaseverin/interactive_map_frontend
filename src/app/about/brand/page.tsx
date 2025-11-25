@@ -46,7 +46,7 @@ export default function BrandPage() {
   const DateWithIcon = ({ date }: { date: string }) => (
     <div className="flex items-center gap-[10px]">
       <Image
-        src="/images/calendar/calendar-icon.png"
+        src="/images/calendar/calendar-icon-publish.png"
         alt="Календарь"
         width={22}
         height={22}

@@ -8,6 +8,20 @@ interface DownloadLinkProps {
   fileName: string;
   fileSize?: string;
   hideIcon?: boolean;
+  isImage?: boolean; // Флаг для определения, является ли файл изображением
+}
+
+// Функция для определения, является ли файл изображением
+export function isImageFile(
+  fileName: string,
+  mime?: string | null,
+  ext?: string | null
+): boolean {
+  return (
+    mime?.startsWith("image/") ||
+    /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i.test(fileName) ||
+    !!ext?.match(/^(jpg|jpeg|png|gif|bmp|webp|svg)$/i)
+  );
 }
 
 export default function DownloadLink({
@@ -15,6 +29,7 @@ export default function DownloadLink({
   fileName,
   fileSize,
   hideIcon = false,
+  isImage = false,
 }: DownloadLinkProps) {
   const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -45,7 +60,10 @@ export default function DownloadLink({
         onClick={handleDownload}
         className="flex flex-col gap-[3px] hover:opacity-80 transition-opacity group cursor-pointer"
       >
-        <p className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#474747] leading-[1.219] break-words group-hover:underline">
+        <p
+          className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#474747] leading-[1.219] group-hover:underline truncate"
+          title={fileName}
+        >
           {fileName}
         </p>
         {fileSize && (
@@ -61,25 +79,32 @@ export default function DownloadLink({
     <a
       href={url}
       onClick={handleDownload}
-      className="flex items-start gap-[11px] lg:gap-[8px] hover:opacity-80 transition-opacity group cursor-pointer"
+      className="flex items-center gap-[14px] md:gap-[16px] lg:gap-[18px] hover:opacity-80 transition-opacity group cursor-pointer"
     >
       {/* Иконка файла */}
-      <div className="w-[30px] h-[30px] md:w-[41px] md:h-[41px] lg:w-[68px] lg:h-[68px] flex-shrink-0 relative">
+      <div className="flex-shrink-0 relative flex items-center justify-center w-[30px] h-[30px] md:w-[40px] md:h-[40px]">
         <Image
-          src="/images/document-icon.png"
-          alt="Документ"
-          width={68}
-          height={68}
-          className="object-contain"
+          src={
+            isImage
+              ? "/images/documents/image-icon.png"
+              : "/images/document-icon.png"
+          }
+          alt={isImage ? "Изображение" : "Документ"}
+          width={40}
+          height={40}
+          className="object-contain w-full h-full"
         />
       </div>
       {/* Название и размер */}
-      <div className="flex flex-col gap-[3px] lg:gap-[10px] min-w-0 flex-1 lg:pt-[5px]">
-        <p className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-black leading-[1.219] break-words group-hover:underline">
+      <div className="flex flex-col gap-[3px] min-w-0 flex-1">
+        <p
+          className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-black leading-[1.219] group-hover:underline truncate"
+          title={fileName}
+        >
           {fileName}
         </p>
         {fileSize && (
-          <p className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#737373] leading-[1.219]">
+          <p className="text-[12px] md:text-[14px] lg:text-[15px] font-normal font-montserrat text-[#737373] leading-[1.219]">
             {fileSize}
           </p>
         )}
