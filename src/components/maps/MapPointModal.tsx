@@ -118,7 +118,7 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
       />
 
       {/* Контейнер для модалки и крестика */}
-      <div className="fixed md:absolute left-1/2 md:left-[14px] lg:left-auto lg:right-[30px] top-1/2 md:top-[26px] -translate-x-1/2 md:translate-x-0 -translate-y-1/2 md:translate-y-0 w-[calc(100%-38px)] max-w-[400px] md:w-[460px] md:max-w-none lg:w-[432px] h-[90vh] md:h-[654px] lg:h-[774px] z-50">
+      <div className="fixed md:absolute left-1/2 md:left-[14px] lg:left-auto lg:right-[30px] top-1/2 md:top-[76px] lg:top-[26px] lg:bottom-[30px] -translate-x-1/2 md:translate-x-0 -translate-y-1/2 md:translate-y-0 lg:translate-y-0 w-[calc(100%-38px)] max-w-[400px] md:w-[460px] md:max-w-none lg:w-[432px] h-auto max-h-[90vh] md:h-auto md:max-h-[calc(100%-76px-12px)] lg:h-auto lg:max-h-[calc(100%-26px-30px)] z-50 flex flex-col">
         {/* Крестик закрытия - зафиксирован на правом верхнем углу попапа, вне контейнера с overflow */}
         <button
           onClick={onClose}
@@ -144,11 +144,14 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
         </button>
 
         {/* Модалка */}
-        <div className="w-full h-full bg-white rounded-[10px] shadow-xl overflow-y-scroll scrollbar-visible relative">
-          <div className="px-[19px] md:px-[30px] pt-[19px] md:pt-[32px] pb-[24px] md:pb-[32px] flex flex-col gap-[15px]">
+        <div className="w-full flex-1 min-h-0 bg-white rounded-[10px] shadow-xl overflow-hidden relative flex flex-col">
+          <div className="h-[19px] md:h-[32px] shrink-0"></div>
+          <div className="px-[19px] md:px-[30px] flex flex-col gap-[15px] overflow-y-auto scrollbar-visible h-full min-h-0">
+            {/* Пустой контейнер сверху для компенсации отступа при скролле */}
+
             {/* Слайдер изображений */}
             {hasImages && (
-              <div className="relative w-full h-[131px] md:h-[179px] rounded-[10px] overflow-hidden">
+              <div className="relative w-full h-[131px] md:h-[179px] rounded-[10px] overflow-hidden shrink-0">
                 <Swiper
                   {...swiperConfig}
                   className="map-point-modal-swiper w-full h-full rounded-[10px]"
@@ -265,7 +268,10 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
                 {point.description}
               </p>
             )}
+
+            {/* Пустой контейнер снизу для компенсации отступа при скролле */}
           </div>
+          <div className="h-[24px] md:h-[32px] shrink-0"></div>
         </div>
       </div>
 

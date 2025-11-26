@@ -60,9 +60,9 @@ export default function BattleGloryPage() {
               }`}
             >
               <div className="w-[11px] h-[11px] shrink-0 rounded-full" style={{ backgroundColor: "#1D4E89" }}></div>
-              <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
-                Доски
-              </p>
+                <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
+                  Доски
+                </p>
             </button>
 
             <button
@@ -74,9 +74,9 @@ export default function BattleGloryPage() {
               }`}
             >
               <div className="w-[11px] h-[11px] shrink-0 rounded-full" style={{ backgroundColor: "#545455" }}></div>
-              <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
-                Захоронения
-              </p>
+                <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
+                  Захоронения
+                </p>
             </button>
           </div>
 
