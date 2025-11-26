@@ -18,18 +18,28 @@ export default function DocsPage() {
     clustering: true,
   });
 
+  // Нормализует высоту: если это число без единиц, добавляет "px"
+  const normalizeHeight = (height: string): string => {
+    if (/^\d+$/.test(height)) {
+      return `${height}px`;
+    }
+    return height;
+  };
+
   const generateEmbedCode = () => {
+    const normalizedHeight = normalizeHeight(embedCode.height);
     const params = new URLSearchParams({
       lng: embedCode.lng,
       lat: embedCode.lat,
       zoom: embedCode.zoom,
       clustering: embedCode.clustering.toString(),
+      height: normalizedHeight,
     });
 
     return `<iframe
   src="${origin || "https://your-domain.com"}/embed?${params.toString()}"
   width="${embedCode.width}"
-  height="${embedCode.height}"
+  height="${normalizedHeight}"
   frameborder="0"
   style="border: 0;"
   allowfullscreen
@@ -221,18 +231,28 @@ fetch('/api/battle-glory-points')
           {/* Предпросмотр */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              Предпросмотр
+              Интерактивный предпросмотр
             </h3>
             <div
-              className="border border-gray-300 rounded-lg overflow-hidden"
-              style={{ height: "400px" }}
+              className="border border-gray-300 rounded-lg overflow-hidden bg-gray-50"
+              style={{
+                height: normalizeHeight(embedCode.height),
+                minHeight: "400px",
+              }}
             >
               <iframe
-                src={`/embed?lng=${embedCode.lng}&lat=${embedCode.lat}&zoom=${embedCode.zoom}&clustering=${embedCode.clustering}`}
+                src={`/embed?lng=${embedCode.lng}&lat=${embedCode.lat}&zoom=${
+                  embedCode.zoom
+                }&clustering=${
+                  embedCode.clustering
+                }&height=${encodeURIComponent(
+                  normalizeHeight(embedCode.height)
+                )}`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 title="Предпросмотр карты"
+                allowFullScreen
               />
             </div>
           </div>

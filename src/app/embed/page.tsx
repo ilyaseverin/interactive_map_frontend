@@ -11,7 +11,11 @@ function EmbedMapContent() {
 
   // Параметры из URL
   const width = searchParams.get("width") || "100%";
-  const height = searchParams.get("height") || "600px";
+  let height = searchParams.get("height") || "600px";
+  // Если height - это число без единиц, добавляем "px"
+  if (height && /^\d+$/.test(height)) {
+    height = `${height}px`;
+  }
   const clustering = searchParams.get("clustering") !== "false";
   const pointType = searchParams.get("point_type") as BattleGloryFilterType;
 
