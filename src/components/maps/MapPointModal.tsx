@@ -187,13 +187,13 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
                 style={{ borderColor: color }}
               >
                 {iconPath && (
-                  <div className="relative w-[10px] h-[17px] shrink-0">
+                  <div className="relative w-auto h-[17px] shrink-0">
                     <Image
                       src={iconPath}
                       alt={point.point_type}
                       width={10}
                       height={17}
-                      className="w-full h-full object-contain"
+                      className="h-[17px] w-auto object-contain"
                     />
                   </div>
                 )}
