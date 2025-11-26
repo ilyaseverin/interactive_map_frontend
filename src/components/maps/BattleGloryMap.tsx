@@ -207,7 +207,7 @@ const BattleGloryMap: React.FC<BattleGloryMapProps> = ({
 
       {/* Информация о количестве объектов - внутри карты */}
       <div className="absolute top-[26px] md:top-[19px] left-[26px] md:left-[14px] bg-white box-border flex gap-[10px] items-start p-[15px] md:p-[10px] rounded-[10px] md:rounded-[7px] z-10">
-        <p className="font-montserrat font-normal leading-normal text-[14px] md:text-[10px] text-black">
+        <p className="font-montserrat font-normal leading-normal text-[10px] md:text-[12px] lg:text-[14px] text-black">
           Всего объектов:{" "}
           <span className="font-semibold">{filteredPoints.length}</span>
         </p>
