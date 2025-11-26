@@ -132,13 +132,11 @@ export interface BattleGloryPoint {
   coordinates: BattleGloryCoordinates;
   region: string;
   object_name: string;
-  geocoding_status: string;
   original_number: string;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  image: StrapiImage | null;
-  preview_image: StrapiImage | null;
+  images?: StrapiImage[] | null;
   video: StrapiImage | null;
 }
 

@@ -19,6 +19,7 @@ import {
 import { calculateBufferedViewportBounds } from "@/utils/mapUtils";
 import BattleGloryMarker from "./markers/BattleGloryMarker";
 import ClusterMarker from "./markers/ClusterMarker";
+import MapPointModal from "./MapPointModal";
 
 interface BattleGloryMapProps {
   points: BattleGloryPoint[];
@@ -26,7 +27,6 @@ interface BattleGloryMapProps {
   className?: string;
   enableClustering?: boolean;
   filterType?: BattleGloryFilterType;
-  onFilterChange?: (filter: BattleGloryFilterType) => void;
 }
 
 // Центр Липецкой области
@@ -56,7 +56,6 @@ const BattleGloryMap: React.FC<BattleGloryMapProps> = ({
   className = "",
   enableClustering = true,
   filterType = null,
-  onFilterChange,
 }) => {
   const [selectedPoint, setSelectedPoint] = useState<BattleGloryPoint | null>(
     null
@@ -206,73 +205,21 @@ const BattleGloryMap: React.FC<BattleGloryMapProps> = ({
         })}
       </Map>
 
-      {/* Кнопки фильтрации и информация */}
-      <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg z-10 p-3">
-        {/* Кнопки фильтрации */}
-        {onFilterChange && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            <button
-              onClick={() => onFilterChange(null)}
-              className={`px-3 py-2 rounded-lg font-semibold text-sm transition-colors ${
-                filterType === null
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Все объекты
-            </button>
-            <button
-              onClick={() => onFilterChange("памятник/мемориал")}
-              className={`px-3 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-1 ${
-                filterType === "памятник/мемориал"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              <span className="w-2 h-2 rounded-full bg-red-600"></span>
-              Памятники
-            </button>
-            <button
-              onClick={() => onFilterChange("мемориальная доска")}
-              className={`px-3 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-1 ${
-                filterType === "мемориальная доска"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              <span className="w-2 h-2 rounded-full bg-blue-600"></span>
-              Доски
-            </button>
-            <button
-              onClick={() => onFilterChange("воинское захоронение")}
-              className={`px-3 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-1 ${
-                filterType === "воинское захоронение"
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              <span className="w-2 h-2 rounded-full bg-green-600"></span>
-              Захоронения
-            </button>
-          </div>
-        )}
-
-        {/* Информация о количестве объектов */}
-        <div className="text-sm text-gray-600 border-t pt-2">
-          <p>
-            Всего объектов:{" "}
-            <span className="font-semibold text-gray-900">
-              {filteredPoints.length}
-            </span>
-          </p>
-          {filterType && (
-            <p className="mt-1">
-              Фильтр:{" "}
-              <span className="font-semibold text-gray-900">{filterType}</span>
-            </p>
-          )}
-        </div>
+      {/* Информация о количестве объектов - внутри карты */}
+      <div className="absolute top-[26px] md:top-[19px] left-[26px] md:left-[14px] bg-white box-border flex gap-[10px] items-start p-[15px] md:p-[10px] rounded-[10px] md:rounded-[7px] z-10">
+        <p className="font-montserrat font-normal leading-normal text-[14px] md:text-[10px] text-black">
+          Всего объектов:{" "}
+          <span className="font-semibold">{filteredPoints.length}</span>
+        </p>
       </div>
+
+      {/* Модалка с информацией о точке */}
+      {selectedPoint && (
+        <MapPointModal
+          point={selectedPoint}
+          onClose={() => setSelectedPoint(null)}
+        />
+      )}
     </div>
   );
 };
