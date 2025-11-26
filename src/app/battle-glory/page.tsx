@@ -45,7 +45,7 @@ export default function BattleGloryPage() {
                   : "bg-white hover:bg-gray-50"
               }`}
             >
-              <div className="w-[11px] h-[11px] rounded-full bg-red-600"></div>
+              <div className="w-[11px] h-[11px] shrink-0 rounded-full" style={{ backgroundColor: "#C62828" }}></div>
               <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
                 Памятники
               </p>
@@ -53,34 +53,30 @@ export default function BattleGloryPage() {
 
             <button
               onClick={() => handleFilterChange("мемориальная доска")}
-              className={`bg-white box-border flex flex-col gap-[10px] items-start justify-center p-[15px] rounded-[10px] transition-colors ${
+              className={`bg-white box-border flex items-center gap-[6px] p-[15px] rounded-[10px] transition-colors ${
                 activeFilter === "мемориальная доска"
                   ? "bg-white"
                   : "bg-white hover:bg-gray-50"
               }`}
             >
-              <div className="flex gap-[6px] items-center w-full">
-                <div className="w-[11px] h-[11px] rounded-full bg-blue-600"></div>
-                <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
-                  Доски
-                </p>
-              </div>
+              <div className="w-[11px] h-[11px] shrink-0 rounded-full" style={{ backgroundColor: "#1D4E89" }}></div>
+              <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
+                Доски
+              </p>
             </button>
 
             <button
               onClick={() => handleFilterChange("воинское захоронение")}
-              className={`bg-white box-border flex flex-col gap-[10px] items-start justify-center p-[15px] rounded-[10px] transition-colors ${
+              className={`bg-white box-border flex items-center gap-[6px] p-[15px] rounded-[10px] transition-colors ${
                 activeFilter === "воинское захоронение"
                   ? "bg-white"
                   : "bg-white hover:bg-gray-50"
               }`}
             >
-              <div className="flex gap-[6px] items-center w-full">
-                <div className="w-[11px] h-[11px] rounded-full bg-green-600"></div>
-                <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
-                  Захоронения
-                </p>
-              </div>
+              <div className="w-[11px] h-[11px] shrink-0 rounded-full" style={{ backgroundColor: "#545455" }}></div>
+              <p className="font-montserrat font-normal leading-normal text-[16px] text-black">
+                Захоронения
+              </p>
             </button>
           </div>
 
@@ -158,41 +154,41 @@ export default function BattleGloryPage() {
           {/* Информационные карточки */}
           {activeFilter !== "history" && (
             <>
-              <div className="flex flex-col md:flex-row flex-wrap gap-[15px] items-stretch">
-                <div className="bg-white box-border flex flex-col gap-[7px] items-start p-[30px] rounded-[10px] w-full md:w-[calc((100%-30px)/3)]">
-                  <div className="flex gap-[10px] items-center">
-                    <div className="w-[15px] h-[15px] rounded-full bg-red-600"></div>
-                    <p className="font-montserrat font-bold leading-normal text-[16px] text-black">
+              <div className="flex flex-col lg:flex-row flex-wrap gap-[15px] items-stretch">
+                <div className="bg-white box-border flex flex-col gap-[7px] items-start p-[21px] md:p-[30px] rounded-[7.108px] md:rounded-[10px] w-full lg:w-[calc((100%-30px)/3)]">
+                  <div className="flex gap-[7.108px] md:gap-[10px] items-center w-full">
+                    <div className="w-[10.661px] h-[10.661px] md:w-[15px] md:h-[15px] shrink-0 rounded-full" style={{ backgroundColor: "#C62828" }}></div>
+                    <p className="font-montserrat font-bold leading-normal text-[12px] md:text-[14px] lg:text-[16px] text-black">
                       Памятники и мемориалы
                     </p>
                   </div>
-                  <p className="font-montserrat font-normal leading-normal text-[16px] text-black whitespace-pre-wrap">
+                  <p className="font-montserrat font-normal leading-normal text-[12px] md:text-[14px] lg:text-[16px] text-black whitespace-pre-wrap">
                     Объекты, увековечивающие память о погибших в годы Великой
                     Отечественной войны.
                   </p>
                 </div>
 
-                <div className="bg-white box-border flex flex-col gap-[7px] items-start p-[30px] rounded-[10px] w-full md:w-[calc((100%-30px)/3)]">
-                  <div className="flex gap-[10px] items-center">
-                    <div className="w-[15px] h-[15px] rounded-full bg-blue-600"></div>
-                    <p className="font-montserrat font-bold leading-normal text-[16px] text-black">
+                <div className="bg-white box-border flex flex-col gap-[7px] items-start p-[21px] md:p-[30px] rounded-[7.108px] md:rounded-[10px] w-full lg:w-[calc((100%-30px)/3)]">
+                  <div className="flex gap-[7.108px] md:gap-[10px] items-center w-full">
+                    <div className="w-[10.661px] h-[10.661px] md:w-[15px] md:h-[15px] shrink-0 rounded-full" style={{ backgroundColor: "#1D4E89" }}></div>
+                    <p className="font-montserrat font-bold leading-normal text-[12px] md:text-[14px] lg:text-[16px] text-black">
                       Мемориальные доски
                     </p>
                   </div>
-                  <p className="font-montserrat font-normal leading-normal text-[16px] text-black whitespace-pre-wrap">
+                  <p className="font-montserrat font-normal leading-normal text-[12px] md:text-[14px] lg:text-[16px] text-black whitespace-pre-wrap">
                     Доски памяти, установленные в честь героев войны и значимых
                     событий.
                   </p>
                 </div>
 
-                <div className="bg-white box-border flex flex-col gap-[7px] items-start p-[30px] rounded-[10px] w-full md:w-[calc((100%-30px)/3)] overflow-hidden">
-                  <div className="flex gap-[10px] items-center">
-                    <div className="w-[15px] h-[15px] rounded-full bg-green-600"></div>
-                    <p className="font-montserrat font-bold leading-normal text-[16px] text-black">
+                <div className="bg-white box-border flex flex-col gap-[7px] items-start p-[21px] md:p-[30px] rounded-[7.108px] md:rounded-[10px] w-full lg:w-[calc((100%-30px)/3)] overflow-hidden">
+                  <div className="flex gap-[7.108px] md:gap-[10px] items-center w-full">
+                    <div className="w-[10.661px] h-[10.661px] md:w-[15px] md:h-[15px] shrink-0 rounded-full" style={{ backgroundColor: "#545455" }}></div>
+                    <p className="font-montserrat font-bold leading-normal text-[12px] md:text-[14px] lg:text-[16px] text-black">
                       Воинские захоронения
                     </p>
                   </div>
-                  <p className="font-montserrat font-normal leading-normal text-[16px] text-black whitespace-pre-wrap">
+                  <p className="font-montserrat font-normal leading-normal text-[12px] md:text-[14px] lg:text-[16px] text-black whitespace-pre-wrap">
                     Места захоронения воинов, павших в годы Великой
                     Отечественной войны.
                   </p>

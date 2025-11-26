@@ -29,10 +29,12 @@ const ClusterMarker: React.FC<ClusterMarkerProps> = ({
       onClick={onClick}
     >
       <div
-        className={`flex items-center justify-center rounded-full bg-blue-500 text-white font-bold shadow-lg border-4 border-white ${sizeClasses[size]}`}
+        className={`flex items-center justify-center rounded-full font-bold shadow-lg ${sizeClasses[size]}`}
         style={{
           width: dynamicSize,
           height: dynamicSize,
+          backgroundColor: "#1D4E89",
+          color: "#FFFFFF",
         }}
       >
         {pointCount}
