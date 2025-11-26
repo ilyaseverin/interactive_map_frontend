@@ -283,7 +283,7 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
       />
 
       {/* Контейнер для модалки и крестика */}
-      <div className="fixed md:absolute left-1/2 md:left-[14px] lg:left-auto lg:right-[30px] top-1/2 md:top-[76px] lg:top-[26px] lg:bottom-[30px] -translate-x-1/2 md:translate-x-0 -translate-y-1/2 md:translate-y-0 lg:translate-y-0 w-[calc(100%-38px)] max-w-[400px] md:w-[460px] md:max-w-none lg:w-[432px] h-auto max-h-[90vh] md:h-auto md:max-h-[calc(100%-76px-12px)] lg:h-auto lg:max-h-[calc(100%-26px-30px)] z-50 flex flex-col">
+      <div className="fixed md:absolute left-1/2 md:left-[14px] lg:left-auto lg:right-[30px] top-1/2 md:top-[76px] lg:top-[26px] -translate-x-1/2 md:translate-x-0 -translate-y-1/2 md:translate-y-0 lg:translate-y-0 w-[calc(100%-38px)] max-w-[400px] md:w-[460px] md:max-w-none lg:w-[432px] h-auto max-h-[90vh] md:h-auto md:max-h-[calc(100%-76px-12px)] lg:h-auto lg:max-h-[calc(100%-26px-30px)] z-50 flex flex-col">
         {/* Крестик закрытия - зафиксирован на правом верхнем углу попапа, вне контейнера с overflow */}
         <button
           onClick={onClose}
