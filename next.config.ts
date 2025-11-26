@@ -27,6 +27,7 @@ const strapiRemotePattern = parseUrlToRemotePattern(strapiUrl);
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  devIndicators: false,
   images: {
     remotePatterns: [
       {
