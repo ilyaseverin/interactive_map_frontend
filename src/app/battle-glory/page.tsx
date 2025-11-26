@@ -141,10 +141,10 @@ export default function BattleGloryPage() {
             </div>
           ) : (
             // Карта
-            <div className="bg-white rounded-[10px] overflow-hidden w-full h-[830px]">
+            <div className="bg-white rounded-[10px] overflow-hidden w-full h-[514px] md:h-[753px] lg:h-[830px]">
               <BattleGloryMapWithData
-                height="830px"
-                className="rounded-[10px]"
+                height="100%"
+                className="rounded-[10px] h-full"
                 filterType={activeFilter}
                 onFilterChange={handleFilterChange}
               />
