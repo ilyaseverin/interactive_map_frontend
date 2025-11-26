@@ -37,8 +37,8 @@ export default function DropdownMenu({
                   href={subItem.href}
                   className="block font-montserrat font-normal text-white hover:underline"
                   style={{
-                    fontSize: "clamp(12px, 0.833vw, 16px)",
-                    lineHeight: "clamp(15px, 1.042vw, 20px)",
+                    fontSize: "clamp(13px, 0.938vw, 18px)",
+                    lineHeight: "clamp(16px, 1.146vw, 22px)",
                   }}
                 >
                   {subItem.label}
@@ -53,8 +53,8 @@ export default function DropdownMenu({
                   href={subItem.href}
                   className="block font-montserrat font-normal text-white hover:underline"
                   style={{
-                    fontSize: "clamp(12px, 0.833vw, 16px)",
-                    lineHeight: "clamp(15px, 1.042vw, 20px)",
+                    fontSize: "clamp(13px, 0.938vw, 18px)",
+                    lineHeight: "clamp(16px, 1.146vw, 22px)",
                   }}
                 >
                   {subItem.label}

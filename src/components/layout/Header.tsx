@@ -39,7 +39,28 @@ export default function Header() {
         { label: "Видео", href: "/videos?source=news" },
       ],
     },
-    { label: "Карта", href: "/battle-glory" },
+    {
+      label: "Карта",
+      href: "/battle-glory",
+      subMenu: [
+        {
+          label: "История Липецкой области в годы ВОВ",
+          href: "/battle-glory/history",
+        },
+        {
+          label: "Памятники и мемориалы",
+          href: "/battle-glory?filter=monument",
+        },
+        {
+          label: "Мемориальные доски",
+          href: "/battle-glory?filter=memorial-board",
+        },
+        {
+          label: "Воинские захоронения",
+          href: "/battle-glory?filter=burial",
+        },
+      ],
+    },
     {
       label: "О центре",
       href: "/about",

@@ -1,11 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
-import { BattleGloryPoint } from "@/types/strapi";
-import { getStrapiUrl } from "@/utils/strapiUrl";
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import { BattleGloryPoint, StrapiImage } from "@/types/strapi";
+import { getStrapiUrl, getResponsiveImageUrl } from "@/utils/strapiUrl";
 
 // Import Swiper styles
 import "swiper/css";
@@ -15,6 +19,80 @@ interface MapPointModalProps {
   point: BattleGloryPoint | null;
   onClose: () => void;
 }
+
+interface GalleryGridProps {
+  images: StrapiImage[];
+  strapiUrl: string;
+  title: string;
+  onImageClick: (index: number) => void;
+  onClose: () => void;
+}
+
+// Компонент галереи с grid-раскладкой
+const GalleryGrid: React.FC<GalleryGridProps> = ({
+  images,
+  strapiUrl,
+  title,
+  onImageClick,
+  onClose,
+}) => (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-90 z-[100] overflow-y-auto"
+    onClick={onClose}
+  >
+    <div className="container mx-auto px-4 py-8">
+      {/* Кнопка закрытия */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+        aria-label="Закрыть"
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M18 6L6 18M6 6l12 12"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+
+      {/* Grid с фотографиями */}
+      <div
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {images.map((image, index) => {
+          const imageUrl =
+            getResponsiveImageUrl(image, "medium") ||
+            `${strapiUrl}${image.url}`;
+          return (
+            <div
+              key={index}
+              className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
+              onClick={() => onImageClick(index)}
+            >
+              <Image
+                src={imageUrl}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) calc(50vw - 24px), (max-width: 1024px) calc(33.33vw - 24px), calc(25vw - 24px)"
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+);
 
 // Цвета для разных типов объектов
 const TYPE_COLORS = {
@@ -44,70 +122,157 @@ const swiperConfig = {
   loop: true,
 };
 
+// Утилиты
+const buildRouteUrl = (
+  lat: number,
+  lng: number,
+  userLat?: number,
+  userLng?: number
+): string => {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    const origin = userLat && userLng ? `${userLat},${userLng}~` : "~";
+    return `https://yandex.ru/maps/?rtext=${origin}${lat},${lng}&rtt=auto`;
+  }
+
+  if (userLat && userLng) {
+    return `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}`;
+  }
+
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+};
+
+const getPointTypeLabel = (pointType: string): string => {
+  const labels: Record<string, string> = {
+    "памятник/мемориал": "Памятник / Мемориал",
+    "мемориальная доска": "Мемориальная доска",
+    "воинское захоронение": "Воинское захоронение",
+  };
+  return labels[pointType] || pointType;
+};
+
+// Хук для блокировки скролла
+const useScrollLock = (isLocked: boolean) => {
+  useEffect(() => {
+    if (!isLocked) return;
+
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [isLocked]);
+};
+
 const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
   const STRAPI_URL = getStrapiUrl();
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  if (!point) return null;
+  // Блокировка скролла страницы при открытии grid-галереи или lightbox
+  useScrollLock(galleryOpen || lightboxOpen);
 
-  const color = TYPE_COLORS[point.point_type] || "#C62828";
-  const iconPath =
-    TYPE_ICONS[point.point_type] || TYPE_ICONS["памятник/мемориал"];
+  // Мемоизированные значения
+  const color = useMemo(
+    () =>
+      TYPE_COLORS[point?.point_type as keyof typeof TYPE_COLORS] || "#C62828",
+    [point?.point_type]
+  );
 
-  // Получаем все изображения из галереи
-  const images = point.images || [];
+  const iconPath = useMemo(
+    () =>
+      TYPE_ICONS[point?.point_type as keyof typeof TYPE_ICONS] ||
+      TYPE_ICONS["памятник/мемориал"],
+    [point?.point_type]
+  );
 
-  // Если нет изображений, не показываем слайдер
+  const images = useMemo(() => point?.images || [], [point?.images]);
   const hasImages = images.length > 0;
 
-  // Функция для построения маршрута
-  const handleNavigate = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const lightboxSlides = useMemo(
+    () =>
+      images.map((image) => {
+        const imageUrl =
+          getResponsiveImageUrl(image, "original") ||
+          `${STRAPI_URL}${image.url}`;
+        return {
+          src: imageUrl,
+          alt: point?.title || "",
+        };
+      }),
+    [images, STRAPI_URL, point?.title]
+  );
 
-    const { lat, lng } = point.coordinates;
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  // Обработчики событий
+  const handleSliderClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement;
+      if (target.closest(".map-point-modal-pagination")) return;
+      if (hasImages) setGalleryOpen(true);
+    },
+    [hasImages]
+  );
 
-    // Получаем текущее местоположение пользователя
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
+  const handleImageClick = useCallback((index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  }, []);
 
-          if (isMobile) {
-            // Yandex Maps - маршрут от текущего местоположения до точки назначения
-            // rtext - координаты: откуда~куда, rtt=auto - автоматический тип маршрута
-            const yandexMapsUrl = `https://yandex.ru/maps/?rtext=${userLat},${userLng}~${lat},${lng}&rtt=auto`;
-            window.open(yandexMapsUrl, "_blank");
-          } else {
-            // На десктопе используем Google Maps
-            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}`;
-            window.open(googleMapsUrl, "_blank");
+  const handleNavigate = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!point?.coordinates) return;
+
+      const { lat, lng } = point.coordinates;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const url = buildRouteUrl(
+              lat,
+              lng,
+              position.coords.latitude,
+              position.coords.longitude
+            );
+            window.open(url, "_blank");
+          },
+          (error) => {
+            console.warn("Не удалось получить текущее местоположение:", error);
+            const url = buildRouteUrl(lat, lng);
+            window.open(url, "_blank");
           }
-        },
-        (error) => {
-          // Если не удалось получить местоположение, строим маршрут без точки отправления
-          console.warn("Не удалось получить текущее местоположение:", error);
-          if (isMobile) {
-            const yandexMapsUrl = `https://yandex.ru/maps/?rtext=~${lat},${lng}&rtt=auto`;
-            window.open(yandexMapsUrl, "_blank");
-          } else {
-            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-            window.open(googleMapsUrl, "_blank");
-          }
-        }
-      );
-    } else {
-      // Если геолокация не поддерживается, строим маршрут без точки отправления
-      if (isMobile) {
-        const yandexMapsUrl = `https://yandex.ru/maps/?rtext=~${lat},${lng}&rtt=auto`;
-        window.open(yandexMapsUrl, "_blank");
+        );
       } else {
-        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-        window.open(googleMapsUrl, "_blank");
+        const url = buildRouteUrl(lat, lng);
+        window.open(url, "_blank");
       }
-    }
-  };
+    },
+    [point?.coordinates]
+  );
+
+  const handleLightboxClose = useCallback(() => {
+    setLightboxOpen(false);
+    setLightboxIndex(0);
+    setGalleryOpen(true);
+  }, []);
+
+  const handleGalleryClose = useCallback(() => {
+    setGalleryOpen(false);
+  }, []);
+
+  if (!point) return null;
 
   return (
     <>
@@ -151,25 +316,33 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
 
             {/* Слайдер изображений */}
             {hasImages && (
-              <div className="relative w-full h-[131px] md:h-[179px] rounded-[10px] overflow-hidden shrink-0">
+              <div
+                className="relative w-full h-[131px] md:h-[179px] rounded-[10px] overflow-hidden shrink-0 cursor-pointer"
+                onClick={handleSliderClick}
+              >
                 <Swiper
                   {...swiperConfig}
                   className="map-point-modal-swiper w-full h-full rounded-[10px]"
                 >
-                  {images.map((image, index) => (
-                    <SwiperSlide key={index}>
-                      <div className="relative w-full h-full rounded-[10px] overflow-hidden">
-                        <Image
-                          src={`${STRAPI_URL}${image.url}`}
-                          alt={point.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) calc(100vw - 38px), 460px"
-                          priority={index === 0}
-                        />
-                      </div>
-                    </SwiperSlide>
-                  ))}
+                  {images.map((image, index) => {
+                    const imageUrl =
+                      getResponsiveImageUrl(image, "medium") ||
+                      `${STRAPI_URL}${image.url}`;
+                    return (
+                      <SwiperSlide key={index}>
+                        <div className="relative w-full h-full rounded-[10px] overflow-hidden">
+                          <Image
+                            src={imageUrl}
+                            alt={point.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) calc(100vw - 38px), 460px"
+                            priority={index === 0}
+                          />
+                        </div>
+                      </SwiperSlide>
+                    );
+                  })}
                 </Swiper>
 
                 {/* Pagination Dots */}
@@ -198,11 +371,7 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
                   </div>
                 )}
                 <p className="font-montserrat font-bold leading-normal text-[12px] text-black whitespace-nowrap">
-                  {point.point_type === "памятник/мемориал"
-                    ? "Памятник / Мемориал"
-                    : point.point_type === "мемориальная доска"
-                    ? "Мемориальная доска"
-                    : "Воинское захоронение"}
+                  {getPointTypeLabel(point.point_type)}
                 </p>
               </div>
 
@@ -341,6 +510,42 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
         `
           : ""}
       `}</style>
+
+      {/* Модалка с галереей плитками */}
+      {hasImages && galleryOpen && (
+        <GalleryGrid
+          images={images}
+          strapiUrl={STRAPI_URL}
+          title={point.title}
+          onImageClick={handleImageClick}
+          onClose={handleGalleryClose}
+        />
+      )}
+
+      {/* Lightbox для просмотра отдельного изображения */}
+      {hasImages && (
+        <Lightbox
+          open={lightboxOpen && lightboxIndex >= 0}
+          close={handleLightboxClose}
+          index={lightboxIndex}
+          slides={lightboxSlides}
+          plugins={[Thumbnails]}
+          thumbnails={{
+            position: "bottom",
+            width: 120,
+            height: 80,
+            gap: 10,
+            showToggle: false,
+            border: 2,
+            borderRadius: 4,
+          }}
+          animation={{ fade: 250, swipe: 300 }}
+          on={{
+            entered: () => setGalleryOpen(false),
+            exiting: () => setGalleryOpen(true),
+          }}
+        />
+      )}
     </>
   );
 };

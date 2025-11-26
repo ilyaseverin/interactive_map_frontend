@@ -93,10 +93,6 @@ The Battle Glory Map requires a Strapi CMS backend running with the `battle-glor
   - `page` - Page number (default: 1)
   - `pageSize` - Items per page (default: 10000)
 
-### Map Points (Demo)
-
-- **GET** `/api/map-points` - Get demo map points
-
 ## Development
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
