@@ -6,10 +6,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Video from "yet-another-react-lightbox/plugins/video";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import { BattleGloryPoint, StrapiImage } from "@/types/strapi";
-import { getStrapiUrl, getResponsiveImageUrl } from "@/utils/strapiUrl";
+import {
+  getStrapiUrl,
+  getResponsiveImageUrl,
+  getStrapiMediaUrl,
+} from "@/utils/strapiUrl";
 
 // Import Swiper styles
 import "swiper/css";
@@ -22,6 +27,7 @@ interface MapPointModalProps {
 
 interface GalleryGridProps {
   images: StrapiImage[];
+  video: StrapiImage | null;
   strapiUrl: string;
   title: string;
   onImageClick: (index: number) => void;
@@ -31,68 +37,112 @@ interface GalleryGridProps {
 // Компонент галереи с grid-раскладкой
 const GalleryGrid: React.FC<GalleryGridProps> = ({
   images,
+  video,
   strapiUrl,
   title,
   onImageClick,
   onClose,
-}) => (
-  <div
-    className="fixed inset-0 bg-black bg-opacity-90 z-[100] overflow-y-auto"
-    onClick={onClose}
-  >
-    <div className="container mx-auto px-4 py-8">
-      {/* Кнопка закрытия */}
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
-        aria-label="Закрыть"
-      >
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M18 6L6 18M6 6l12 12"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
+}) => {
+  // Вычисляем индекс видео (после всех изображений)
+  const videoIndex = images.length;
+  const hasVideo = video !== null;
 
-      {/* Grid с фотографиями */}
-      <div
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {images.map((image, index) => {
-          const imageUrl =
-            getResponsiveImageUrl(image, "medium") ||
-            `${strapiUrl}${image.url}`;
-          return (
+  return (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-90 z-[100] overflow-y-auto"
+      onClick={onClose}
+    >
+      <div className="container mx-auto px-4 py-8">
+        {/* Кнопка закрытия */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+          aria-label="Закрыть"
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6L6 18M6 6l12 12"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+
+        {/* Grid с фотографиями и видео */}
+        <div
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {images.map((image, index) => {
+            const imageUrl =
+              getResponsiveImageUrl(image, "medium") ||
+              `${strapiUrl}${image.url}`;
+            return (
+              <div
+                key={index}
+                className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
+                onClick={() => onImageClick(index)}
+              >
+                <Image
+                  src={imageUrl}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) calc(50vw - 24px), (max-width: 1024px) calc(33.33vw - 24px), calc(25vw - 24px)"
+                />
+              </div>
+            );
+          })}
+
+          {/* Видео */}
+          {hasVideo && (
             <div
-              key={index}
               className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
-              onClick={() => onImageClick(index)}
+              onClick={() => onImageClick(videoIndex)}
             >
-              <Image
-                src={imageUrl}
-                alt={title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) calc(50vw - 24px), (max-width: 1024px) calc(33.33vw - 24px), calc(25vw - 24px)"
+              <video
+                src={getStrapiMediaUrl(video.url) || `${strapiUrl}${video.url}`}
+                poster={
+                  video.previewUrl
+                    ? getStrapiMediaUrl(video.previewUrl) ||
+                      `${strapiUrl}${video.previewUrl}`
+                    : undefined
+                }
+                muted
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-cover rounded-lg pointer-events-none"
               />
+              {/* Иконка воспроизведения */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                <div className="bg-white/30 backdrop-blur-sm rounded-full p-3">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-white drop-shadow-lg"
+                  >
+                    <path d="M8 5v14l11-7z" fill="currentColor" />
+                  </svg>
+                </div>
+              </div>
             </div>
-          );
-        })}
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Цвета для разных типов объектов
 const TYPE_COLORS = {
@@ -197,30 +247,67 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
   );
 
   const images = useMemo(() => point?.images || [], [point?.images]);
+  const video = useMemo(() => point?.video || null, [point?.video]);
   const hasImages = images.length > 0;
+  const hasVideo = video !== null;
+  const hasMedia = hasImages || hasVideo;
 
-  const lightboxSlides = useMemo(
-    () =>
-      images.map((image) => {
-        const imageUrl =
-          getResponsiveImageUrl(image, "original") ||
-          `${STRAPI_URL}${image.url}`;
-        return {
-          src: imageUrl,
-          alt: point?.title || "",
-        };
-      }),
-    [images, STRAPI_URL, point?.title]
-  );
+  const lightboxSlides = useMemo(() => {
+    const slides: Array<
+      | { src: string; alt: string }
+      | {
+          type: "video";
+          width: number;
+          height: number;
+          sources: Array<{ src: string; type: string }>;
+          poster?: string;
+        }
+    > = [];
+
+    // Добавляем изображения
+    images.forEach((image) => {
+      const imageUrl =
+        getResponsiveImageUrl(image, "original") || `${STRAPI_URL}${image.url}`;
+      slides.push({
+        src: imageUrl,
+        alt: point?.title || "",
+      });
+    });
+
+    // Добавляем видео
+    if (hasVideo && video) {
+      const videoUrl =
+        getStrapiMediaUrl(video.url) || `${STRAPI_URL}${video.url}`;
+      const posterUrl = video.previewUrl
+        ? getStrapiMediaUrl(video.previewUrl) ||
+          `${STRAPI_URL}${video.previewUrl}`
+        : undefined;
+
+      slides.push({
+        type: "video",
+        width: video.width || 1280,
+        height: video.height || 720,
+        poster: posterUrl,
+        sources: [
+          {
+            src: videoUrl,
+            type: video.mime || "video/mp4",
+          },
+        ],
+      });
+    }
+
+    return slides;
+  }, [images, video, STRAPI_URL, point?.title, hasVideo]);
 
   // Обработчики событий
   const handleSliderClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const target = e.target as HTMLElement;
       if (target.closest(".map-point-modal-pagination")) return;
-      if (hasImages) setGalleryOpen(true);
+      if (hasMedia) setGalleryOpen(true);
     },
-    [hasImages]
+    [hasMedia]
   );
 
   const handleImageClick = useCallback((index: number) => {
@@ -512,9 +599,10 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
       `}</style>
 
       {/* Модалка с галереей плитками */}
-      {hasImages && galleryOpen && (
+      {hasMedia && galleryOpen && (
         <GalleryGrid
           images={images}
+          video={video}
           strapiUrl={STRAPI_URL}
           title={point.title}
           onImageClick={handleImageClick}
@@ -522,14 +610,14 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
         />
       )}
 
-      {/* Lightbox для просмотра отдельного изображения */}
-      {hasImages && (
+      {/* Lightbox для просмотра изображений и видео */}
+      {hasMedia && (
         <Lightbox
           open={lightboxOpen && lightboxIndex >= 0}
           close={handleLightboxClose}
           index={lightboxIndex}
           slides={lightboxSlides}
-          plugins={[Thumbnails]}
+          plugins={[Thumbnails, Video]}
           thumbnails={{
             position: "bottom",
             width: 120,
@@ -538,6 +626,11 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
             showToggle: false,
             border: 2,
             borderRadius: 4,
+          }}
+          video={{
+            autoPlay: true,
+            controls: true,
+            playsInline: true,
           }}
           animation={{ fade: 250, swipe: 300 }}
           on={{
