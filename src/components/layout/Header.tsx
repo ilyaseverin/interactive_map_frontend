@@ -255,8 +255,8 @@ export default function Header() {
                   height={105}
                   className="object-contain"
                   style={{
-                    width: "clamp(60px, 12.5vw, 240px)",
-                    height: "clamp(26px, 5.469vw, 105px)",
+                    width: "clamp(50px, 10.5vw, 200px)",
+                    height: "clamp(22px, 4.5vw, 88px)",
                   }}
                 />
               </Link>
@@ -272,8 +272,8 @@ export default function Header() {
                   height={45}
                   className="object-contain pointer-events-none"
                   style={{
-                    width: "clamp(18px, 2.396vw, 46px)",
-                    height: "clamp(18px, 2.344vw, 45px)",
+                    width: "clamp(16px, 2.1vw, 40px)",
+                    height: "clamp(16px, 2.0vw, 40px)",
                   }}
                 />
               </button>
@@ -294,16 +294,16 @@ export default function Header() {
             />
 
             <div className="flex items-center gap-[41px]">
-              <PartnersLink size={{ width: 187, height: 82 }} />
+              <PartnersLink size={{ width: 160, height: 70 }} />
               <SearchButton
                 onClick={() => setSearchOpen(!searchOpen)}
-                size={{ width: 35, height: 34 }}
+                size={{ width: 30, height: 29 }}
               />
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={47}
-                lineHeight={5}
-                gap={11}
+                lineWidth={40}
+                lineHeight={4}
+                gap={9}
               />
             </div>
           </div>
@@ -324,13 +324,13 @@ export default function Header() {
             <div className="flex items-center gap-[43px]">
               <SearchButton
                 onClick={() => setSearchOpen(!searchOpen)}
-                size={{ width: 32, height: 31 }}
+                size={{ width: 28, height: 27 }}
               />
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={37}
-                lineHeight={4}
-                gap={8}
+                lineWidth={32}
+                lineHeight={3}
+                gap={7}
               />
             </div>
           </div>
@@ -359,14 +359,14 @@ export default function Header() {
                 <SearchButton
                   ref={mobileSearchButtonRef}
                   onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                  size={{ width: 24, height: 24 }}
+                  size={{ width: 20, height: 20 }}
                 />
               </div>
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={27}
-                lineHeight={3}
-                gap={5}
+                lineWidth={23}
+                lineHeight={2}
+                gap={4}
               />
             </div>
             <ExpandingSearch
