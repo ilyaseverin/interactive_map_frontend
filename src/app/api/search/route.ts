@@ -6,6 +6,8 @@ import type {
   ProjectItem,
   PressReleaseItem,
   EventItem,
+  DocumentItem,
+  BrandData,
   StrapiImage,
 } from "@/types/strapi";
 
@@ -188,7 +190,7 @@ export async function GET(request: Request) {
     const searchTerm = query.trim();
 
     // Параллельный поиск во всех типах контента
-    const [newsData, projectsData, pressReleasesData, eventsData] =
+    const [newsData, projectsData, pressReleasesData, eventsData, documentsData, brandData] =
       await Promise.all([
         // Новости
         searchStrapiContent("news", {
@@ -255,6 +257,23 @@ export async function GET(request: Request) {
           "populate[additional_materials][populate][attachments][populate][file]":
             "true",
           sort: "basic_info.datetime_start:desc",
+        }),
+        // Документы из коллекции documents
+        searchStrapiContent("documents", {
+          "filters[$or][0][title][$containsi]": searchTerm,
+          "filters[$or][1][description][$containsi]": searchTerm,
+          "filters[$or][2][files][name][$containsi]": searchTerm,
+          "filters[$or][3][attachments][files][name][$containsi]": searchTerm,
+          "populate[files]": "true",
+          "populate[attachments][populate][files]": "true",
+          sort: "publishedAt:desc",
+        }),
+        // Brand (для поиска по файлам)
+        searchStrapiContent("brand", {
+          "populate[content]": "*",
+          "populate[content][populate][logo_with_description]": "*",
+          "populate[content][populate][logo_with_description][populate][files]": "true",
+          "populate[content][populate][logos]": "true",
         }),
       ]);
 
@@ -424,6 +443,135 @@ export async function GET(request: Request) {
           });
         }
       });
+    }
+
+    // Обработка документов из коллекции documents
+    if (documentsData.data) {
+      documentsData.data.forEach((item: DocumentItem) => {
+        // Проверяем, соответствует ли документ поисковому запросу
+        const titleMatch = containsSearchTerm(item.title, searchTerm);
+        const descriptionMatch = containsSearchTerm(item.description, searchTerm);
+        
+        // Проверяем файлы документа
+        const filesMatch = item.files?.some((file) =>
+          containsSearchTerm(file.name, searchTerm)
+        );
+        
+        // Проверяем файлы в attachments
+        const attachmentsFilesMatch = item.attachments?.files?.some((file) =>
+          containsSearchTerm(file.name, searchTerm)
+        );
+
+        if (titleMatch || descriptionMatch || filesMatch || attachmentsFilesMatch) {
+          // Для документов из коллекции documents показываем только файлы, не заголовок
+          // Если документ найден по title/description, показываем все его файлы
+          // Если найден только по имени файла, показываем только соответствующие файлы
+
+          // Добавляем файлы документа
+          if (item.files) {
+            item.files.forEach((file, index) => {
+              // Показываем файл, если он соответствует поиску ИЛИ документ найден по title/description
+              if (containsSearchTerm(file.name, searchTerm) || titleMatch || descriptionMatch) {
+                const fileUrl = file.url ? `${STRAPI_URL}${file.url}` : "";
+                const fileName = file.name || "Документ";
+                const fileSize = file.size ? formatFileSize(file.size) : undefined;
+
+                searchResults.push({
+                  id: `document-file-${item.id}-${index}`,
+                  type: "document",
+                  title: fileName,
+                  excerpt: "",
+                  slug: item.slug,
+                  documentUrl: fileUrl,
+                  documentFileName: fileName,
+                  documentFileSize: fileSize,
+                  parentTitle: "Документы",
+                  date: item.publishedAt,
+                });
+              }
+            });
+          }
+
+          // Добавляем файлы из attachments
+          if (item.attachments?.files) {
+            item.attachments.files.forEach((file, index) => {
+              // Показываем файл, если он соответствует поиску ИЛИ документ найден по title/description
+              if (containsSearchTerm(file.name, searchTerm) || titleMatch || descriptionMatch) {
+                const fileUrl = file.url ? `${STRAPI_URL}${file.url}` : "";
+                const fileName = file.name || "Документ";
+                const fileSize = file.size ? formatFileSize(file.size) : undefined;
+
+                searchResults.push({
+                  id: `document-attachment-${item.id}-${index}`,
+                  type: "document",
+                  title: fileName,
+                  excerpt: "",
+                  slug: item.slug,
+                  documentUrl: fileUrl,
+                  documentFileName: fileName,
+                  documentFileSize: fileSize,
+                  parentTitle: "Документы",
+                  date: item.publishedAt,
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+
+    // Обработка файлов из brand
+    if (brandData.data) {
+      const brandItem = brandData.data as BrandData;
+      const content = brandItem.content;
+
+      // Обрабатываем файлы из logo_with_description
+      if (content?.logo_with_description?.files) {
+        content.logo_with_description.files.forEach((file, index) => {
+          if (containsSearchTerm(file.name, searchTerm)) {
+            const fileUrl = file.url ? `${STRAPI_URL}${file.url}` : "";
+            const fileName = file.name || "Файл";
+            const fileSize = file.size ? formatFileSize(file.size) : undefined;
+
+            searchResults.push({
+              id: `brand-logo-desc-${index}`,
+              type: "document",
+              title: fileName,
+              excerpt: "",
+              slug: "about/brand",
+              documentUrl: fileUrl,
+              documentFileName: fileName,
+              documentFileSize: fileSize,
+              parentTitle: "Фирменный стиль",
+              date: brandItem.publishedAt,
+            });
+          }
+        });
+      }
+
+      // Обрабатываем файлы из logos
+      if (content?.logos) {
+        content.logos.forEach((logo, index) => {
+          if (containsSearchTerm(logo.name, searchTerm)) {
+            const fileUrl = logo.url ? `${STRAPI_URL}${logo.url}` : "";
+            const fileName = logo.name || "Логотип";
+            const fileSize = logo.size ? formatFileSize(logo.size) : undefined;
+
+            searchResults.push({
+              id: `brand-logo-${index}`,
+              type: "document",
+              title: fileName,
+              excerpt: "",
+              slug: "about/brand",
+              documentUrl: fileUrl,
+              documentFileName: fileName,
+              documentFileSize: fileSize,
+              parentTitle: "Фирменный стиль",
+              date: brandItem.publishedAt,
+            });
+          }
+        });
+      }
     }
 
     // Сортируем по дате (новые первые)

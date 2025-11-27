@@ -36,9 +36,18 @@ const getItemUrl = (item: SearchResultItem): string => {
     "press-release": `/press-releases/${item.slug}`,
     event: `/events/${item.slug}`,
   };
-  // Для документов используем родительский URL
-  if (item.type === "document" && item.parentType && item.parentSlug) {
-    return urlMap[item.parentType] || "/";
+  // Для документов
+  if (item.type === "document") {
+    // Если есть parentType, используем родительский URL
+    if (item.parentType && item.parentSlug) {
+      return urlMap[item.parentType] || "/";
+    }
+    // Если slug указывает на about/brand, это файл из brand
+    if (item.slug === "about/brand") {
+      return "/about/brand";
+    }
+    // Иначе это документ из коллекции documents
+    return "/documents";
   }
   return (
     urlMap[item.type as Exclude<SearchResultItem["type"], "document">] || "/"

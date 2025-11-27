@@ -37,6 +37,8 @@ export default function SearchResultCard({
     const parentUrl =
       item.parentType && item.parentSlug
         ? getItemUrl({ ...item, type: item.parentType, slug: item.parentSlug })
+        : item.parentTitle
+        ? getItemUrl(item)
         : "#";
 
     return (
