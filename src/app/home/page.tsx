@@ -20,6 +20,7 @@ import { EventItem, NewsItem, PartnerItem, StrapiImage } from "@/types/strapi";
 import { ReactElement } from "react";
 import { getStrapiMediaUrl, getResponsiveImageUrl } from "@/utils/strapiUrl";
 import { CategoryButton, PrimaryButton } from "@/components/buttons";
+import MediaModal from "@/components/modals/MediaModal";
 
 // Конфигурация типов событий
 type EventTypeKey = "Человек дня" | "Событие дня" | "Фильм дня" | "Тема дня";
@@ -51,7 +52,7 @@ const EVENT_TYPES: EventTypeConfig[] = [
     icon: "/images/calendar/movie-icon.svg",
     title: "Фильм дня",
     gradient:
-      "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 78%)",
+      "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 78%)",
   },
   {
     key: "Тема дня",
@@ -67,6 +68,22 @@ export default function HomePage() {
 
   // Состояние выбранной даты (по умолчанию сегодня)
   const [selectedDate, setSelectedDate] = useState<Date>(todayDate);
+
+  // Состояние для модального окна видео
+  const [videoModal, setVideoModal] = useState<{
+    isOpen: boolean;
+    videoUrl: string;
+    title: string;
+    date: string;
+    isVKVideo: boolean;
+    videoName?: string;
+  }>({
+    isOpen: false,
+    videoUrl: "",
+    title: "",
+    date: "",
+    isVKVideo: false,
+  });
 
   // Получаем формат выбранной даты для запроса
   const selectedDateString = useMemo(() => {
@@ -160,15 +177,71 @@ export default function HomePage() {
   }, [eventsData, selectedDate]);
 
   // Получаем URL изображения с учетом адаптивности
-  const getImageUrl = (
-    image: StrapiImage | string | undefined | null,
-    fallback: string,
-    size: "thumbnail" | "small" | "medium" | "large" | "original" = "medium"
-  ) => {
-    if (!image) return fallback;
-    if (typeof image === "string") return getStrapiMediaUrl(image) || fallback;
-    return getResponsiveImageUrl(image, size) || fallback;
-  };
+  const getImageUrl = useCallback(
+    (
+      image: StrapiImage | string | undefined | null,
+      fallback: string,
+      size: "thumbnail" | "small" | "medium" | "large" | "original" = "medium"
+    ) => {
+      if (!image) return fallback;
+      if (typeof image === "string")
+        return getStrapiMediaUrl(image) || fallback;
+      return getResponsiveImageUrl(image, size) || fallback;
+    },
+    []
+  );
+
+  // Получаем видео из события для "Фильм дня"
+  const getVideoFromEvent = useCallback((event: EventItem | undefined) => {
+    // Проверяем наличие события и дополнительных материалов
+    if (!event?.additional_materials) {
+      return null;
+    }
+
+    // Проверяем наличие видео
+    const videos = event.additional_materials.videos;
+    if (!videos || videos.length === 0) {
+      return null;
+    }
+
+    const firstVideo = videos[0];
+
+    // Проверяем загруженный файл видео (приоритет)
+    const videoFileUrl =
+      firstVideo.video_file?.url &&
+      typeof firstVideo.video_file.url === "string" &&
+      firstVideo.video_file.url.trim() !== ""
+        ? getStrapiMediaUrl(firstVideo.video_file.url)
+        : null;
+
+    // Проверяем URL видео (внешняя ссылка, если файла нет)
+    const videoUrl =
+      firstVideo.url &&
+      typeof firstVideo.url === "string" &&
+      firstVideo.url.trim() !== ""
+        ? firstVideo.url.trim()
+        : null;
+
+    // Приоритет: сначала загруженное видео, потом ссылка
+    const finalVideoUrl = videoFileUrl || videoUrl;
+    if (!finalVideoUrl || finalVideoUrl.trim() === "") {
+      return null;
+    }
+
+    return {
+      url: finalVideoUrl,
+      isVKVideo: videoFileUrl
+        ? false
+        : videoUrl
+        ? videoUrl.includes("vk.com") ||
+          videoUrl.includes("video_ext.php") ||
+          /video(-?\d+)_(\d+)/.test(videoUrl)
+        : false,
+      videoName: videoFileUrl
+        ? finalVideoUrl.split("/").pop() || "video.mp4"
+        : undefined,
+    };
+  }, []);
 
   // Получаем описание из HTML
   const getPlainDescription = (html: string | undefined) => {
@@ -179,14 +252,14 @@ export default function HomePage() {
   };
 
   // Форматируем дату для отображения
-  const formatDisplayDate = (dateString: string | undefined) => {
+  const formatDisplayDate = useCallback((dateString: string | undefined) => {
     if (!dateString) return "";
     try {
       return format(parseISO(dateString), "dd.MM.yyyy");
     } catch {
       return "";
     }
-  };
+  }, []);
 
   // Проверяем, выбрана ли сегодняшняя дата
   const isTodaySelected = useMemo(() => {
@@ -211,7 +284,8 @@ export default function HomePage() {
           type: "person" | "event" | "movie" | "theme";
           icon: string;
           title: string;
-          href: string;
+          href?: string;
+          onClick?: () => void;
           description?: string;
           backgroundImage?: string;
           gradient?: string;
@@ -220,14 +294,42 @@ export default function HomePage() {
           type: config.type,
           icon: config.icon,
           title: config.title,
-          href: `/events/${event.slug}`,
           disabled: false,
         };
 
-        // Добавляем description для типов, которым он нужен
-        if (config.type !== "event") {
-          props.description =
-            getPlainDescription(event.content_info?.description) || event.title;
+        // Для "Фильм дня" проверяем наличие видео и открываем модальное окно
+        // Если видео нет - карточка disabled (без возможности открыть страницу)
+        if (config.type === "movie") {
+          const video = getVideoFromEvent(event);
+          if (video) {
+            // Если есть видео, используем onClick для открытия модального окна
+            props.onClick = () => {
+              setVideoModal({
+                isOpen: true,
+                videoUrl: video.url,
+                title: event.title,
+                date: formatDisplayDate(event.basic_info?.datetime_start),
+                isVKVideo: video.isVKVideo,
+                videoName: video.videoName,
+              });
+            };
+            // Для "Фильм дня" с видео показываем название фильма
+            props.description = event.title;
+          } else {
+            // Если видео нет - карточка disabled (неактивная)
+            props.disabled = true;
+            props.description = noEventText;
+          }
+        } else {
+          // Для остальных типов событий используем обычную ссылку
+          props.href = `/events/${event.slug}`;
+
+          // Добавляем description для типов, которым он нужен
+          if (config.type !== "event") {
+            props.description =
+              getPlainDescription(event.content_info?.description) ||
+              event.title;
+          }
         }
 
         // Добавляем backgroundImage только если есть обложка у события
@@ -264,12 +366,8 @@ export default function HomePage() {
         return <CalendarCard {...props} />;
       }
     },
-    [noEventText]
-  ); // getImageUrl is defined inside component but doesn't depend on state/props (if we define it properly or memoize it too)
-  // Actually getImageUrl depends on nothing from state, but it's defined inside.
-  // Let's check getImageUrl again. It depends on imported getStrapiMediaUrl/getResponsiveImageUrl.
-  // It is stable if defined outside or memoized. I'll memoize it or just ignore its dependency if it's stable enough.
-  // Best practice: use useCallback for it too if used in dependency.
+    [noEventText, getImageUrl, getVideoFromEvent, formatDisplayDate]
+  );
 
   // Рендерим все карточки событий
   const eventCards = useMemo(() => {
@@ -596,6 +694,29 @@ export default function HomePage() {
 
       {/* Contact Form Section */}
       <ContactForm />
+
+      {/* Модальное окно для видео "Фильм дня" */}
+      {videoModal.isOpen && (
+        <MediaModal
+          isOpen={videoModal.isOpen}
+          onClose={() =>
+            setVideoModal({
+              isOpen: false,
+              videoUrl: "",
+              title: "",
+              date: "",
+              isVKVideo: false,
+            })
+          }
+          mediaUrl={videoModal.videoUrl}
+          title={videoModal.title}
+          date={videoModal.date}
+          alt={videoModal.title}
+          mediaType="video"
+          isVKVideo={videoModal.isVKVideo}
+          mediaName={videoModal.videoName}
+        />
+      )}
     </>
   );
 }

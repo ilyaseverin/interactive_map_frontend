@@ -25,7 +25,7 @@ async function getEventBySlug(slug: string): Promise<EventItem | null> {
     const res = await fetch(
       `${getStrapiApiUrl(
         "events"
-      )}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info][populate][cover]=true&populate[content_info][populate][gallery]=true&populate[location_info]=*&populate[additional_materials][populate][videos][populate][video_file]=true&populate[additional_materials][populate][attachments][populate][file]=true&populate[seo][populate][ogImage]=true&publicationState=live`,
+      )}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info][populate][cover]=true&populate[content_info][populate][gallery]=true&populate[location_info]=*&populate[additional_materials]=*&populate[additional_materials][populate][videos]=*&populate[additional_materials][populate][videos][populate][video_file]=true&populate[additional_materials][populate][attachments][populate][file]=true&populate[seo][populate][ogImage]=true&publicationState=live`,
       {
         cache: "no-store",
       }

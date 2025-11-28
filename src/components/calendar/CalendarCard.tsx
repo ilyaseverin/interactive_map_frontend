@@ -16,6 +16,7 @@ interface CalendarCardProps {
   backgroundImage?: string;
   gradient?: string;
   href?: string; // Ссылка на страницу события
+  onClick?: () => void; // Обработчик клика (приоритет над href)
   disabled?: boolean; // Состояние disabled
 }
 
@@ -146,6 +147,7 @@ export default function CalendarCard({
   backgroundImage,
   gradient,
   href,
+  onClick,
   disabled = false,
 }: CalendarCardProps) {
   const config = CARD_CONFIGS[type];
@@ -205,12 +207,12 @@ export default function CalendarCard({
             {/* Текст внизу карточки */}
             {description && (
               <div className="absolute left-[23px] md:left-[23px] lg:left-10 bottom-[30px] md:bottom-[50px] lg:bottom-[50px] max-w-[234px] md:max-w-[234px] lg:max-w-[377px]">
-                <CardText 
-                  text={description} 
+                <CardText
+                  text={description}
                   config={{
                     ...config,
-                    textColor: backgroundImage ? config.textColor : "black"
-                  }} 
+                    textColor: backgroundImage ? config.textColor : "black",
+                  }}
                 />
               </div>
             )}
@@ -237,7 +239,11 @@ export default function CalendarCard({
           )}
           {title && (
             <div className="w-full flex items-center justify-center mb-1">
-              <p className="text-[12px] font-montserrat text-black font-normal leading-[1.667] text-center">
+              <p
+                className={`text-[12px] font-montserrat text-black leading-[1.667] text-center ${
+                  type === "movie" ? "font-bold" : "font-normal"
+                }`}
+              >
                 {title}
               </p>
             </div>
@@ -273,17 +279,35 @@ export default function CalendarCard({
           )}
 
           {/* Текст внизу карточки */}
-          {description && (
-            <div className="absolute left-[23px] md:left-[23px] lg:left-10 bottom-[30px] md:bottom-[50px] lg:bottom-[50px] max-w-[234px] md:max-w-[234px] lg:max-w-[377px]">
-              <CardText 
-                text={description} 
+          <div className="absolute left-[23px] md:left-[23px] lg:left-10 bottom-[30px] md:bottom-[50px] lg:bottom-[50px] max-w-[234px] md:max-w-[234px] lg:max-w-[377px]">
+            {type === "movie" && title && description ? (
+              <div className="flex flex-col">
+                <CardText
+                  text={title}
+                  config={{
+                    ...config,
+                    fontWeight: "bold",
+                    textColor: backgroundImage ? config.textColor : "black",
+                  }}
+                />
+                <CardText
+                  text={description}
+                  config={{
+                    ...config,
+                    textColor: backgroundImage ? config.textColor : "black",
+                  }}
+                />
+              </div>
+            ) : description ? (
+              <CardText
+                text={description}
                 config={{
                   ...config,
-                  textColor: backgroundImage ? config.textColor : "black"
-                }} 
+                  textColor: backgroundImage ? config.textColor : "black",
+                }}
               />
-            </div>
-          )}
+            ) : null}
+          </div>
         </div>
       </>
     );
@@ -291,15 +315,29 @@ export default function CalendarCard({
 
   const cardDimensions = getCardDimensions(type);
 
-  const wrapperClassName = `relative group block ${disabled ? "cursor-not-allowed opacity-50" : href ? "cursor-pointer" : ""} ${cardDimensions.width} ${cardDimensions.height} ${disabled ? "" : href ? "pointer-events-auto" : ""}`;
+  const wrapperClassName = `relative group block ${
+    disabled
+      ? "cursor-not-allowed opacity-50"
+      : href || onClick
+      ? "cursor-pointer"
+      : ""
+  } ${cardDimensions.width} ${cardDimensions.height} ${
+    disabled ? "" : href || onClick ? "pointer-events-auto" : ""
+  }`;
 
-  // Если нет href или disabled, используем div, если есть - Link
-  if (!href || disabled) {
+  const handleClick = () => {
+    if (!disabled && onClick) {
+      onClick();
+    }
+  };
+
+  // Если есть onClick, используем div с обработчиком
+  if (onClick && !disabled) {
     return (
-      <div className={wrapperClassName}>
+      <div className={wrapperClassName} onClick={handleClick}>
         {/* Контейнер карточки */}
         <div
-          className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform ${disabled ? "" : ""}`}
+          className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform group-hover:scale-[1.02]`}
         >
           {/* Фоновое изображение для планшета и десктопа */}
           {backgroundImage && (
@@ -319,6 +357,35 @@ export default function CalendarCard({
     );
   }
 
+  // Если нет href или disabled, используем div
+  if (!href || disabled) {
+    return (
+      <div className={wrapperClassName}>
+        {/* Контейнер карточки */}
+        <div
+          className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform ${
+            disabled ? "" : ""
+          }`}
+        >
+          {/* Фоновое изображение для планшета и десктопа */}
+          {backgroundImage && (
+            <div className="hidden md:block absolute inset-0">
+              <BackgroundImage
+                src={backgroundImage}
+                alt={title}
+                gradient={gradient}
+              />
+            </div>
+          )}
+
+          {/* Содержимое */}
+          {renderContent()}
+        </div>
+      </div>
+    );
+  }
+
+  // Если есть href, используем Link
   return (
     <Link
       href={href}
@@ -332,7 +399,9 @@ export default function CalendarCard({
     >
       {/* Контейнер карточки */}
       <div
-        className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform ${disabled ? "" : "group-hover:scale-[1.02]"}`}
+        className={`relative bg-white rounded-[15px] w-full h-full shadow-[0_3px_14px_0_rgba(0,0,0,0.08)] overflow-hidden transition-transform ${
+          disabled ? "" : "group-hover:scale-[1.02]"
+        }`}
       >
         {/* Фоновое изображение для планшета и десктопа */}
         {backgroundImage && (
