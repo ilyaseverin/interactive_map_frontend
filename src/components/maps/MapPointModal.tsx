@@ -15,6 +15,7 @@ import {
   getResponsiveImageUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { BATTLE_GLORY_TYPE_ICONS } from "./constants/battleGlory";
 
 // Import Swiper styles
 import "swiper/css";
@@ -144,20 +145,6 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
   );
 };
 
-// Цвета для разных типов объектов
-const TYPE_COLORS = {
-  "памятник/мемориал": "#C62828", // красный
-  "мемориальная доска": "#2563eb", // синий
-  "воинское захоронение": "#059669", // зеленый
-} as const;
-
-// Иконки для типов объектов
-const TYPE_ICONS = {
-  "памятник/мемориал": "/images/monument-icon.svg",
-  "мемориальная доска": "/images/memorial-board-icon.svg",
-  "воинское захоронение": "/images/burial-icon.svg",
-} as const;
-
 // Swiper Configuration
 const swiperConfig = {
   modules: [Pagination, Autoplay],
@@ -233,16 +220,11 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
   useScrollLock(galleryOpen || lightboxOpen);
 
   // Мемоизированные значения
-  const color = useMemo(
-    () =>
-      TYPE_COLORS[point?.point_type as keyof typeof TYPE_COLORS] || "#C62828",
-    [point?.point_type]
-  );
-
   const iconPath = useMemo(
     () =>
-      TYPE_ICONS[point?.point_type as keyof typeof TYPE_ICONS] ||
-      TYPE_ICONS["памятник/мемориал"],
+      BATTLE_GLORY_TYPE_ICONS[
+        point?.point_type as keyof typeof BATTLE_GLORY_TYPE_ICONS
+      ] || BATTLE_GLORY_TYPE_ICONS["памятник/мемориал"],
     [point?.point_type]
   );
 
@@ -444,7 +426,16 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
               {/* Кнопка типа объекта */}
               <div
                 className="border border-solid box-border flex gap-[5px] h-[41px] items-center justify-center px-[10px] md:px-[10px] py-[10px] rounded-[10px] shrink w-full md:flex-1 md:min-w-0"
-                style={{ borderColor: color }}
+                style={{
+                  borderColor:
+                    point?.point_type === "памятник/мемориал"
+                      ? "#C62828"
+                      : point?.point_type === "мемориальная доска"
+                      ? "#2563eb"
+                      : point?.point_type === "воинское захоронение"
+                      ? "#059669"
+                      : "#C62828",
+                }}
               >
                 {iconPath && (
                   <div className="relative w-auto h-[17px] shrink-0">

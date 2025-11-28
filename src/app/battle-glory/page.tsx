@@ -67,7 +67,7 @@ export default function BattleGloryPage() {
         {/* Контейнер контента */}
         <div className="w-full max-w-[1654px] mx-auto flex flex-col gap-[28px]">
           {/* Фильтры */}
-          <div className="flex flex-wrap gap-[15px] items-center">
+          <div className="grid grid-cols-2 md:flex md:flex-wrap gap-[15px] items-center">
             <FilterButton
               filter={null}
               label="Все объекты"
@@ -79,21 +79,18 @@ export default function BattleGloryPage() {
               label="Памятники"
               activeFilter={activeFilter}
               onClick={handleFilterChange}
-              color="#C62828"
             />
             <FilterButton
               filter="мемориальная доска"
               label="Доски"
               activeFilter={activeFilter}
               onClick={handleFilterChange}
-              color="#1D4E89"
             />
             <FilterButton
               filter="воинское захоронение"
               label="Захоронения"
               activeFilter={activeFilter}
               onClick={handleFilterChange}
-              color="#545455"
             />
           </div>
 
