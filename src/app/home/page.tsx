@@ -466,7 +466,9 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="text-center py-8 mb-8 sm:mb-12">
-              <p className="text-gray-600">Нет новостей для отображения</p>
+              <p className="text-white font-semibold text-lg sm:text-xl drop-shadow-lg">
+                Нет новостей для отображения
+              </p>
             </div>
           )}
 
@@ -677,8 +679,8 @@ export default function HomePage() {
                     "/images/partners/partner-bg.png",
                     "medium"
                   )}
-                  websiteUrl={partner.website_url || partner.url || "#"}
-                  websiteText={partner.website_url || partner.url || ""}
+                  websiteUrl={partner.url || "#"}
+                  websiteText={partner.url || ""}
                   vkUrl={partner.vk_url || "#"}
                   vkText={partner.vk_url || ""}
                   className={index === 3 ? "hidden md:block lg:hidden" : ""}
