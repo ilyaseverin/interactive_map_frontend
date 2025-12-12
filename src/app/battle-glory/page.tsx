@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import BattleGloryMapWithData from "@/components/maps/BattleGloryMapWithData";
 import Link from "next/link";
@@ -27,7 +27,7 @@ const filterTypeToUrl: Record<Exclude<FilterType, null>, string> = {
   "воинское захоронение": "burial",
 };
 
-export default function BattleGloryPage() {
+function BattleGloryPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const filterParam = searchParams.get("filter");
@@ -100,7 +100,6 @@ export default function BattleGloryPage() {
               height="100%"
               className="rounded-[10px] h-full"
               filterType={activeFilter}
-              onFilterChange={handleFilterChange}
             />
           </div>
 
@@ -172,5 +171,25 @@ export default function BattleGloryPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function BattleGloryPage() {
+  return (
+    <Suspense
+      fallback={
+        <div
+          className="min-h-screen flex items-center justify-center"
+          style={{ backgroundColor: "#F1F2F3" }}
+        >
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+            <p className="mt-4 text-gray-600">Загрузка...</p>
+          </div>
+        </div>
+      }
+    >
+      <BattleGloryPageContent />
+    </Suspense>
   );
 }

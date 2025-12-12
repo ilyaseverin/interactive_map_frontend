@@ -11,7 +11,6 @@ interface BattleGloryMapWithDataProps {
   enableClustering?: boolean;
   showLoading?: boolean;
   filterType?: BattleGloryFilterType;
-  onFilterChange?: (filter: BattleGloryFilterType) => void;
 }
 
 const BattleGloryMapWithData: React.FC<BattleGloryMapWithDataProps> = ({
@@ -20,7 +19,6 @@ const BattleGloryMapWithData: React.FC<BattleGloryMapWithDataProps> = ({
   enableClustering = true,
   showLoading = true,
   filterType = null,
-  onFilterChange,
 }) => {
   const [points, setPoints] = useState<BattleGloryPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -89,7 +87,6 @@ const BattleGloryMapWithData: React.FC<BattleGloryMapWithDataProps> = ({
       className={className}
       enableClustering={enableClustering}
       filterType={filterType}
-      onFilterChange={onFilterChange}
     />
   );
 };

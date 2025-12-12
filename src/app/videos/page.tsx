@@ -255,13 +255,12 @@ function VideosPage() {
                 // Приоритет: сначала загруженное видео, потом ссылка
                 const videoFileUrl = video.video_file?.url;
                 const videoLinkUrl = video.url;
-                const videoToUse = videoFileUrl || videoLinkUrl || "";
 
                 const isExternalVideo = videoLinkUrl
-                  ? (videoLinkUrl.includes("youtube.com") ||
-                      videoLinkUrl.includes("youtu.be") ||
-                      videoLinkUrl.includes("rutube.ru") ||
-                      videoLinkUrl.includes("vk.com"))
+                  ? videoLinkUrl.includes("youtube.com") ||
+                    videoLinkUrl.includes("youtu.be") ||
+                    videoLinkUrl.includes("rutube.ru") ||
+                    videoLinkUrl.includes("vk.com")
                   : false;
 
                 const fullVideoUrl = videoFileUrl
@@ -281,15 +280,15 @@ function VideosPage() {
                 const isVKVideo = videoFileUrl
                   ? false
                   : videoLinkUrl
-                  ? (videoLinkUrl.includes("vk.com") ||
-                      /video(-?\d+)_(\d+)/.test(videoLinkUrl))
+                  ? videoLinkUrl.includes("vk.com") ||
+                    /video(-?\d+)_(\d+)/.test(videoLinkUrl)
                   : false;
 
                 return (
                   <div
                     key={project.id}
                     onClick={() => {
-                      if (!isModalOpen) {
+                      if (!isModalOpen && fullVideoUrl) {
                         handleVideoClick(
                           fullVideoUrl,
                           project.title,
@@ -336,11 +335,11 @@ function VideosPage() {
               const isExternalVideo = videoFileUrl
                 ? false
                 : videoLinkUrl
-                ? (videoLinkUrl.includes("youtube.com") ||
-                    videoLinkUrl.includes("youtu.be") ||
-                    videoLinkUrl.includes("rutube.ru") ||
-                    videoLinkUrl.includes("vk.com") ||
-                    video.open_in_vk)
+                ? videoLinkUrl.includes("youtube.com") ||
+                  videoLinkUrl.includes("youtu.be") ||
+                  videoLinkUrl.includes("rutube.ru") ||
+                  videoLinkUrl.includes("vk.com") ||
+                  video.open_in_vk
                 : false;
 
               const fullVideoUrl = videoFileUrl
@@ -362,16 +361,16 @@ function VideosPage() {
               const isVKVideo = videoFileUrl
                 ? false
                 : videoLinkUrl
-                ? (video.open_in_vk ||
-                    videoLinkUrl.includes("vk.com") ||
-                    /video(-?\d+)_(\d+)/.test(videoLinkUrl))
+                ? video.open_in_vk ||
+                  videoLinkUrl.includes("vk.com") ||
+                  /video(-?\d+)_(\d+)/.test(videoLinkUrl)
                 : false;
 
               return (
                 <div
                   key={news.id}
                   onClick={() => {
-                    if (!isModalOpen) {
+                    if (!isModalOpen && fullVideoUrl) {
                       handleVideoClick(
                         fullVideoUrl,
                         news.title,
