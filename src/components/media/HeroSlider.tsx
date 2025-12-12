@@ -162,6 +162,8 @@ const swiperConfig = {
   modules: [Pagination, Autoplay, EffectFade],
   effect: "fade" as const,
   fadeEffect: { crossFade: true },
+  speed: 800,
+  slidesPerView: 1,
   pagination: {
     clickable: true,
     el: ".hero-pagination",
@@ -170,7 +172,10 @@ const swiperConfig = {
     delay: 5000,
     disableOnInteraction: false,
   },
-  loop: true,
+  // Fade + loop иногда даёт двойное мерцание из-за работы дубликатов слайдов,
+  // поэтому используем rewind для бесконечного цикла без создания клонов.
+  loop: false,
+  rewind: true,
 };
 
 export default function HeroSlider() {
