@@ -1,26 +1,25 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import BattleGloryMapWithData from "@/components/maps/BattleGloryMapWithData";
 import { BattleGloryFilterType } from "@/types/map";
 import { useSearchParams } from "next/navigation";
 
 function EmbedMapContent() {
   const searchParams = useSearchParams();
-  const [activeFilter, setActiveFilter] = useState<BattleGloryFilterType>(null);
 
   // Параметры из URL
   const width = searchParams.get("width") || "100%";
-  const height = searchParams.get("height") || "600px";
+  let height = searchParams.get("height") || "600px";
+  // Если height - это число без единиц, добавляем "px"
+  if (height && /^\d+$/.test(height)) {
+    height = `${height}px`;
+  }
   const clustering = searchParams.get("clustering") !== "false";
   const pointType = searchParams.get("point_type") as BattleGloryFilterType;
 
-  // Используем фильтр из URL или состояние
-  const currentFilter = pointType || activeFilter;
-
-  const handleFilterChange = (filter: BattleGloryFilterType) => {
-    setActiveFilter(filter);
-  };
+  // Используем фильтр из URL
+  const currentFilter = pointType || null;
 
   return (
     <div
@@ -41,7 +40,6 @@ function EmbedMapContent() {
         showLoading={true}
         className="w-full h-full"
         filterType={currentFilter}
-        onFilterChange={handleFilterChange}
       />
     </div>
   );

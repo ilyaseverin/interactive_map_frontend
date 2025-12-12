@@ -11,6 +11,9 @@ import {
   getStrapiApiUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { formatFileSize } from "@/utils/fileSize";
+import { formatDate } from "@/utils/dateUtils";
+import { buildKeywords } from "@/utils/seoKeywords";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -101,16 +104,24 @@ export async function generateMetadata({
   const robots = seo?.metaRobots || "index, follow";
   const canonical = seo?.canonicalURL || `/press-releases/${slug}`;
 
+  // Формируем keywords: категория + дополнительные keywords из SEO
+  const keywords = buildKeywords(
+    pressRelease.basic_info?.category,
+    seo?.keywords
+  );
+
   return {
     title: seoTitle,
     description: seoDescription,
-    ...(seo?.keywords && { keywords: seo.keywords }),
+    ...(keywords && { keywords }),
     openGraph: {
       title: ogTitle,
       description: ogDescription,
       type: "article",
       locale: "ru_RU",
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      publishedTime: pressRelease.publishedAt,
+      modifiedTime: pressRelease.updatedAt,
     },
     robots: robots,
     alternates: {
@@ -120,29 +131,8 @@ export async function generateMetadata({
 }
 
 // Форматирование даты
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
 
 // Форматирование размера файла
-function formatFileSize(bytes: number | undefined): string {
-  if (!bytes) return "";
-
-  if (bytes < 1024) {
-    return `${bytes} Б`;
-  } else if (bytes < 1024 * 1024) {
-    const kb = bytes / 1024;
-    return `${kb.toFixed(kb >= 10 ? 0 : 1)} КБ`;
-  } else {
-    const mb = bytes / (1024 * 1024);
-    return `${mb.toFixed(mb >= 10 ? 1 : 1)} МБ`;
-  }
-}
 
 // Компонент даты с иконкой
 function DateDisplay({ date }: { date: string }) {
@@ -150,7 +140,7 @@ function DateDisplay({ date }: { date: string }) {
     <div className="flex items-center gap-[8px]">
       <div className="relative w-[15px] h-[15px] md:w-[21px] md:h-[21px] lg:w-[26px] lg:h-[26px]">
         <Image
-          src="/images/calendar/calendar-icon.png"
+          src="/images/calendar/calendar-icon-publish.png"
           alt="Calendar"
           width={26}
           height={26}
@@ -313,6 +303,8 @@ export default async function PressReleaseDetailPage({
                 hasPhotoAlbum={galleryImages.length > 0}
                 slug={pressRelease.slug}
                 sourceType="press"
+                title={pressRelease.title}
+                date={formatDate(pressRelease.basic_info.published_at_date)}
               />
             </div>
           )}

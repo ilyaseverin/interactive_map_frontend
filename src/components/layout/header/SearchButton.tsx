@@ -12,7 +12,7 @@ const SearchButton = forwardRef<HTMLButtonElement, SearchButtonProps>(
       <button
         ref={ref}
         onClick={onClick}
-        className="flex-shrink-0 hover:opacity-70 transition-opacity"
+        className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
         aria-label="Поиск"
       >
         <Image

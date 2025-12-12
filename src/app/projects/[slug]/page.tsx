@@ -11,6 +11,9 @@ import {
   getStrapiApiUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { formatFileSize } from "@/utils/fileSize";
+import { formatDate } from "@/utils/dateUtils";
+import { buildKeywords } from "@/utils/seoKeywords";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -21,7 +24,9 @@ export const fetchCache = "force-no-store";
 async function getProjectBySlug(slug: string): Promise<ProjectItem | null> {
   try {
     const res = await fetch(
-      `${getStrapiApiUrl("projects")}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos][populate][video_file]=true&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&populate[seo][populate][ogImage]=true&publicationState=live`,
+      `${getStrapiApiUrl(
+        "projects"
+      )}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[summary]=*&populate[content_info]=*&populate[media][populate][cover]=true&populate[media][populate][gallery]=true&populate[media][populate][videos][populate][video_file]=true&populate[attachments_block][populate][attachments][populate][file]=true&populate[links][populate][external_links]=*&populate[seo][populate][ogImage]=true&publicationState=live`,
       {
         cache: "no-store",
       }
@@ -97,16 +102,25 @@ export async function generateMetadata({
   const robots = seo?.metaRobots || "index, follow";
   const canonical = seo?.canonicalURL || `/projects/${slug}`;
 
+  // Формируем keywords: тип материала + категория + дополнительные keywords из SEO
+  const keywords = buildKeywords(
+    project.basic_info?.material_type,
+    project.basic_info?.category,
+    seo?.keywords
+  );
+
   return {
     title: seoTitle,
     description: seoDescription,
-    ...(seo?.keywords && { keywords: seo.keywords }),
+    ...(keywords && { keywords }),
     openGraph: {
       title: ogTitle,
       description: ogDescription,
       type: "article",
       locale: "ru_RU",
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      publishedTime: project.publishedAt,
+      modifiedTime: project.updatedAt,
     },
     robots: robots,
     alternates: {
@@ -116,29 +130,8 @@ export async function generateMetadata({
 }
 
 // Форматирование даты
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
 
 // Форматирование размера файла
-function formatFileSize(bytes: number | undefined): string {
-  if (!bytes) return "";
-
-  if (bytes < 1024) {
-    return `${bytes} Б`;
-  } else if (bytes < 1024 * 1024) {
-    const kb = bytes / 1024;
-    return `${kb.toFixed(kb >= 10 ? 0 : 1)} КБ`;
-  } else {
-    const mb = bytes / (1024 * 1024);
-    return `${mb.toFixed(mb >= 10 ? 1 : 1)} МБ`;
-  }
-}
 
 // Компонент даты с иконкой
 function DateDisplay({ date }: { date: string }) {
@@ -146,7 +139,7 @@ function DateDisplay({ date }: { date: string }) {
     <div className="flex items-center gap-[8px]">
       <div className="relative w-[15px] h-[15px] md:w-[21px] md:h-[21px] lg:w-[26px] lg:h-[26px]">
         <Image
-          src="/images/calendar/calendar-icon.png"
+          src="/images/calendar/calendar-icon-publish.png"
           alt="Calendar"
           width={26}
           height={26}
@@ -159,7 +152,6 @@ function DateDisplay({ date }: { date: string }) {
     </div>
   );
 }
-
 
 // Серверный компонент страницы проекта
 export default async function ProjectDetailPage({
@@ -252,7 +244,11 @@ export default async function ProjectDetailPage({
               </div>
               <div className="flex-shrink-0">
                 <div className="md:hidden">
-                  <BackButton href="/projects" variant="icon" ariaLabel="Назад к проектам" />
+                  <BackButton
+                    href="/projects"
+                    variant="icon"
+                    ariaLabel="Назад к проектам"
+                  />
                 </div>
                 <div className="hidden md:block">
                   <BackButton href="/projects" />
@@ -318,6 +314,8 @@ export default async function ProjectDetailPage({
                 videoFileUrl={firstVideoFileUrl}
                 slug={project.slug}
                 sourceType="projects"
+                title={project.title}
+                date={formatDate(project.publishedAt)}
               />
             </div>
           )}
@@ -362,7 +360,9 @@ export default async function ProjectDetailPage({
                   if (file.name && !file.url.startsWith("http")) {
                     const baseUrl = getStrapiMediaUrl(file.url);
                     if (baseUrl) {
-                      fileUrl = `${baseUrl}?filename=${encodeURIComponent(file.name)}`;
+                      fileUrl = `${baseUrl}?filename=${encodeURIComponent(
+                        file.name
+                      )}`;
                     }
                   }
 

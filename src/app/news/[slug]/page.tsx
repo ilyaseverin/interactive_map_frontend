@@ -10,6 +10,8 @@ import {
   getStrapiApiUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { formatDate } from "@/utils/dateUtils";
+import { buildKeywords } from "@/utils/seoKeywords";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -99,16 +101,21 @@ export async function generateMetadata({
   const robots = seo?.metaRobots || "index, follow";
   const canonical = seo?.canonicalURL || `/news/${slug}`;
 
+  // Формируем keywords: категория + дополнительные keywords из SEO
+  const keywords = buildKeywords(news.basic_info?.category, seo?.keywords);
+
   return {
     title: seoTitle,
     description: seoDescription,
-    ...(seo?.keywords && { keywords: seo.keywords }),
+    ...(keywords && { keywords }),
     openGraph: {
       title: ogTitle,
       description: ogDescription,
       type: "article",
       locale: "ru_RU",
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      publishedTime: news.publishedAt,
+      modifiedTime: news.updatedAt,
     },
     robots: robots,
     alternates: {
@@ -118,14 +125,6 @@ export async function generateMetadata({
 }
 
 // Форматирование даты
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
 
 // Компонент даты с иконкой
 function DateDisplay({ date }: { date: string }) {
@@ -133,7 +132,7 @@ function DateDisplay({ date }: { date: string }) {
     <div className="flex items-center gap-[8px]">
       <div className="relative w-[26px] h-[26px]">
         <Image
-          src="/images/calendar/calendar-icon.png"
+          src="/images/calendar/calendar-icon-publish.png"
           alt="Calendar"
           width={26}
           height={26}
@@ -264,6 +263,8 @@ export default async function NewsDetailPage({
                 videoFileUrl={firstVideoFileUrl}
                 slug={news.slug}
                 sourceType="news"
+                title={news.title}
+                date={formatDate(news.basic_info.published_at_date)}
               />
             </div>
           )}

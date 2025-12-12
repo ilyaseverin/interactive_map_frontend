@@ -252,17 +252,24 @@ function VideosPage() {
                   getResponsiveImageUrl(thumbnail, "medium") ||
                   "/images/news/news-1.png";
 
-                const videoUrl = video.url || video.video_file?.url || "";
+                // Приоритет: сначала загруженное видео, потом ссылка
+                const videoFileUrl = video.video_file?.url;
+                const videoLinkUrl = video.url;
 
-                const isExternalVideo =
-                  videoUrl.includes("youtube.com") ||
-                  videoUrl.includes("youtu.be") ||
-                  videoUrl.includes("rutube.ru") ||
-                  videoUrl.includes("vk.com");
+                const isExternalVideo = videoLinkUrl
+                  ? videoLinkUrl.includes("youtube.com") ||
+                    videoLinkUrl.includes("youtu.be") ||
+                    videoLinkUrl.includes("rutube.ru") ||
+                    videoLinkUrl.includes("vk.com")
+                  : false;
 
-                const fullVideoUrl = isExternalVideo
-                  ? videoUrl
-                  : getStrapiMediaUrl(videoUrl) || videoUrl;
+                const fullVideoUrl = videoFileUrl
+                  ? getStrapiMediaUrl(videoFileUrl) || videoFileUrl
+                  : isExternalVideo
+                  ? videoLinkUrl
+                  : videoLinkUrl
+                  ? getStrapiMediaUrl(videoLinkUrl) || videoLinkUrl
+                  : "";
 
                 const relativeDate = project.publishedAt
                   ? getRelativeTime(project.publishedAt)
@@ -270,15 +277,18 @@ function VideosPage() {
 
                 const videoFileName = video.video_file?.name;
 
-                const isVKVideo =
-                  videoUrl.includes("vk.com") ||
-                  /video(-?\d+)_(\d+)/.test(videoUrl);
+                const isVKVideo = videoFileUrl
+                  ? false
+                  : videoLinkUrl
+                  ? videoLinkUrl.includes("vk.com") ||
+                    /video(-?\d+)_(\d+)/.test(videoLinkUrl)
+                  : false;
 
                 return (
                   <div
                     key={project.id}
                     onClick={() => {
-                      if (!isModalOpen) {
+                      if (!isModalOpen && fullVideoUrl) {
                         handleVideoClick(
                           fullVideoUrl,
                           project.title,
@@ -317,20 +327,28 @@ function VideosPage() {
                 "/images/news/news-1.png";
 
               // Получаем URL видео
-              // Если есть внешняя ссылка (url), используем её, иначе используем локальный файл
-              const videoUrl = video.url || video.video_file?.url || "";
+              // Приоритет: сначала загруженное видео, потом ссылка
+              const videoFileUrl = video.video_file?.url;
+              const videoLinkUrl = video.url;
 
-              // Определяем тип видео по URL
-              const isExternalVideo =
-                videoUrl.includes("youtube.com") ||
-                videoUrl.includes("youtu.be") ||
-                videoUrl.includes("rutube.ru") ||
-                videoUrl.includes("vk.com") ||
-                video.open_in_vk;
+              // Определяем тип видео по ссылке (только если нет загруженного файла)
+              const isExternalVideo = videoFileUrl
+                ? false
+                : videoLinkUrl
+                ? videoLinkUrl.includes("youtube.com") ||
+                  videoLinkUrl.includes("youtu.be") ||
+                  videoLinkUrl.includes("rutube.ru") ||
+                  videoLinkUrl.includes("vk.com") ||
+                  video.open_in_vk
+                : false;
 
-              const fullVideoUrl = isExternalVideo
-                ? videoUrl
-                : getStrapiMediaUrl(videoUrl) || videoUrl;
+              const fullVideoUrl = videoFileUrl
+                ? getStrapiMediaUrl(videoFileUrl) || videoFileUrl
+                : isExternalVideo
+                ? videoLinkUrl
+                : videoLinkUrl
+                ? getStrapiMediaUrl(videoLinkUrl) || videoLinkUrl
+                : "";
 
               const relativeDate = news.basic_info?.published_at_date
                 ? getRelativeTime(news.basic_info.published_at_date)
@@ -339,17 +357,20 @@ function VideosPage() {
               // Получаем имя файла видео (только для локальных файлов)
               const videoFileName = video.video_file?.name;
 
-              // Определяем, является ли видео VK видео
-              const isVKVideo =
-                video.open_in_vk ||
-                videoUrl.includes("vk.com") ||
-                /video(-?\d+)_(\d+)/.test(videoUrl);
+              // Определяем, является ли видео VK видео (только для ссылок)
+              const isVKVideo = videoFileUrl
+                ? false
+                : videoLinkUrl
+                ? video.open_in_vk ||
+                  videoLinkUrl.includes("vk.com") ||
+                  /video(-?\d+)_(\d+)/.test(videoLinkUrl)
+                : false;
 
               return (
                 <div
                   key={news.id}
                   onClick={() => {
-                    if (!isModalOpen) {
+                    if (!isModalOpen && fullVideoUrl) {
                       handleVideoClick(
                         fullVideoUrl,
                         news.title,

@@ -11,6 +11,8 @@ import {
   getStrapiApiUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { formatFileSize } from "@/utils/fileSize";
+import { buildKeywords } from "@/utils/seoKeywords";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -23,7 +25,7 @@ async function getEventBySlug(slug: string): Promise<EventItem | null> {
     const res = await fetch(
       `${getStrapiApiUrl(
         "events"
-      )}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info][populate][cover]=true&populate[content_info][populate][gallery]=true&populate[location_info]=*&populate[additional_materials][populate][videos][populate][video_file]=true&populate[additional_materials][populate][attachments][populate][file]=true&populate[seo][populate][ogImage]=true&publicationState=live`,
+      )}?filters[slug][$eq]=${slug}&pagination[pageSize]=1&populate[basic_info]=*&populate[content_info][populate][cover]=true&populate[content_info][populate][gallery]=true&populate[location_info]=*&populate[additional_materials]=*&populate[additional_materials][populate][videos]=*&populate[additional_materials][populate][videos][populate][video_file]=true&populate[additional_materials][populate][attachments][populate][file]=true&populate[seo][populate][ogImage]=true&publicationState=live`,
       {
         cache: "no-store",
       }
@@ -96,21 +98,41 @@ export async function generateMetadata({
   const robots = seo?.metaRobots || "index, follow";
   const canonical = seo?.canonicalURL || `/events/${slug}`;
 
+  // Формируем keywords: категория + дополнительные keywords из SEO
+  const keywords = buildKeywords(event.basic_info?.category, seo?.keywords);
+
+  // Мета-теги для события
+  const locationStr =
+    event.location_info?.location ||
+    event.location_info?.location_map_link?.address ||
+    null;
+
+  const otherMeta: Record<string, string> = {
+    "event:start_time": event.basic_info.datetime_start,
+    ...(locationStr && { "event:location": locationStr }),
+    ...(event.basic_info.category && {
+      "event:category": event.basic_info.category,
+    }),
+  };
+
   return {
     title: seoTitle,
     description: seoDescription,
-    ...(seo?.keywords && { keywords: seo.keywords }),
+    ...(keywords && { keywords }),
     openGraph: {
       title: ogTitle,
       description: ogDescription,
       type: "article",
       locale: "ru_RU",
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      publishedTime: event.publishedAt,
+      modifiedTime: event.updatedAt,
     },
     robots: robots,
     alternates: {
       canonical: canonical,
     },
+    other: otherMeta,
   };
 }
 
@@ -172,7 +194,7 @@ function EventDateDisplay({ date, time }: { date: string; time?: string }) {
     <div className="flex items-center gap-[8px]">
       <div className="relative w-[15px] h-[15px] md:w-[21px] md:h-[21px] lg:w-[26px] lg:h-[26px]">
         <Image
-          src="/images/calendar/calendar-icon-event.png"
+          src="/images/calendar/calendar-icon-publish.png"
           alt="Calendar"
           width={26}
           height={26}
@@ -188,19 +210,6 @@ function EventDateDisplay({ date, time }: { date: string; time?: string }) {
 }
 
 // Форматирование размера файла
-function formatFileSize(bytes: number | undefined): string {
-  if (!bytes) return "";
-
-  if (bytes < 1024) {
-    return `${bytes} Б`;
-  } else if (bytes < 1024 * 1024) {
-    const kb = bytes / 1024;
-    return `${kb.toFixed(kb >= 10 ? 0 : 1)} КБ`;
-  } else {
-    const mb = bytes / (1024 * 1024);
-    return `${mb.toFixed(mb >= 10 ? 1 : 1)} МБ`;
-  }
-}
 
 // Серверный компонент страницы события
 export default async function EventDetailPage({
@@ -375,6 +384,8 @@ export default async function EventDetailPage({
                 videoFileUrl={firstVideoFileUrl}
                 slug={event.slug}
                 sourceType="events"
+                title={event.title}
+                date={eventDate + (eventTime ? ` в ${eventTime}` : "")}
               />
             </div>
           )}
@@ -439,7 +450,9 @@ export default async function EventDetailPage({
           {/* Нижняя часть: кнопка назад и дата публикации */}
           <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between gap-6 pt-[25px] md:pt-[40px] lg:pt-[64px]">
             <BackButton href="/home" />
-            <PublishDateDisplay date={publishDate} />
+            <div className="hidden md:block">
+              <PublishDateDisplay date={publishDate} />
+            </div>
           </div>
         </div>
       </main>

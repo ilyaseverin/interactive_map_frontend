@@ -8,16 +8,7 @@ import { useState } from "react";
 import { useGetProjectsQuery } from "@/services/strapiApi";
 import { BackButton, SecondaryButton } from "@/components/buttons";
 import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
-
-// Функция для форматирования даты
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
+import { formatDate } from "@/utils/dateUtils";
 
 // Клиентский компонент
 export default function ProjectsPage() {

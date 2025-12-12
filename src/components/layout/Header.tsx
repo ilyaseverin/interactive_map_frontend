@@ -39,7 +39,28 @@ export default function Header() {
         { label: "Видео", href: "/videos?source=news" },
       ],
     },
-    { label: "Карта", href: "/battle-glory" },
+    {
+      label: "Карта",
+      href: "/battle-glory",
+      subMenu: [
+        {
+          label: "История Липецкой области в годы ВОВ",
+          href: "/battle-glory/history",
+        },
+        {
+          label: "Памятники и мемориалы",
+          href: "/battle-glory?filter=monument",
+        },
+        {
+          label: "Мемориальные доски",
+          href: "/battle-glory?filter=memorial-board",
+        },
+        {
+          label: "Воинские захоронения",
+          href: "/battle-glory?filter=burial",
+        },
+      ],
+    },
     {
       label: "О центре",
       href: "/about",
@@ -126,8 +147,10 @@ export default function Header() {
             className="flex items-center justify-between h-full"
             style={{
               gap: "clamp(6px, 0.833vw, 16px)",
-              paddingTop: "clamp(8px, 1.042vw, 20px)",
-              paddingBottom: "clamp(8px, 1.042vw, 20px)",
+              paddingTop:
+                "clamp(8px, calc(8px + 24 * ((100vw - 1280px) / 640)), 32px)",
+              paddingBottom:
+                "clamp(8px, calc(8px + 24 * ((100vw - 1280px) / 640)), 32px)",
             }}
           >
             {/* Левая часть: Логотип и название */}
@@ -226,7 +249,7 @@ export default function Header() {
               className="flex items-center flex-shrink-0"
               style={{ gap: "clamp(6px, 1.25vw, 24px)" }}
             >
-              <Link href="/partners" className="flex-shrink-0">
+              <Link href="/about/partners" className="flex-shrink-0">
                 <Image
                   src="/images/partners.svg"
                   alt="Партнеры"
@@ -234,14 +257,14 @@ export default function Header() {
                   height={105}
                   className="object-contain"
                   style={{
-                    width: "clamp(60px, 12.5vw, 240px)",
-                    height: "clamp(26px, 5.469vw, 105px)",
+                    width: "clamp(50px, 10.5vw, 200px)",
+                    height: "clamp(22px, 4.5vw, 88px)",
                   }}
                 />
               </Link>
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="flex-shrink-0 hover:opacity-70 transition-opacity"
+                className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
                 aria-label="Поиск"
               >
                 <Image
@@ -249,10 +272,10 @@ export default function Header() {
                   alt="Поиск"
                   width={46}
                   height={45}
-                  className="object-contain"
+                  className="object-contain pointer-events-none"
                   style={{
-                    width: "clamp(18px, 2.396vw, 46px)",
-                    height: "clamp(18px, 2.344vw, 45px)",
+                    width: "clamp(16px, 2.1vw, 40px)",
+                    height: "clamp(16px, 2.0vw, 40px)",
                   }}
                 />
               </button>
@@ -263,26 +286,42 @@ export default function Header() {
 
       {/* Версия для 1024px - упрощенный хедер с бургером */}
       <div className="hidden lg:block xl:hidden">
-        <div className="w-full px-[60px] mx-auto" style={{ height: "158px" }}>
-          <div className="flex items-center justify-between h-full">
+        <div
+          className="w-full px-[60px] mx-auto"
+          style={{
+            paddingTop:
+              "clamp(8px, calc(8px + 24 * ((100vw - 1024px) / 896)), 32px)",
+            paddingBottom:
+              "clamp(8px, calc(8px + 24 * ((100vw - 1024px) / 896)), 32px)",
+          }}
+        >
+          <div className="flex items-center justify-between">
             <Logo
-              logoSize={{ width: 98, height: 90 }}
-              fontSize="24px"
-              gap="20px"
-              lineHeight="32px"
+              logoSize={{
+                width: "clamp(49px, 6.5vw, 70px)",
+                height: "clamp(45px, 6vw, 64px)",
+              }}
+              fontSize="clamp(12px, 1.8vw, 20px)"
+              gap="clamp(14px, 1.5vw, 16px)"
+              lineHeight="clamp(17px, 2.5vw, 26px)"
             />
 
             <div className="flex items-center gap-[41px]">
-              <PartnersLink size={{ width: 187, height: 82 }} />
+              <PartnersLink
+                size={{
+                  width: "clamp(60px, 10vw, 120px)",
+                  height: "clamp(26px, 4.4vw, 53px)",
+                }}
+              />
               <SearchButton
                 onClick={() => setSearchOpen(!searchOpen)}
-                size={{ width: 35, height: 34 }}
+                size={{ width: 30, height: 29 }}
               />
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={47}
-                lineHeight={5}
-                gap={11}
+                lineWidth={40}
+                lineHeight={4}
+                gap={9}
               />
             </div>
           </div>
@@ -303,13 +342,13 @@ export default function Header() {
             <div className="flex items-center gap-[43px]">
               <SearchButton
                 onClick={() => setSearchOpen(!searchOpen)}
-                size={{ width: 32, height: 31 }}
+                size={{ width: 28, height: 27 }}
               />
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={37}
-                lineHeight={4}
-                gap={8}
+                lineWidth={32}
+                lineHeight={3}
+                gap={7}
               />
             </div>
           </div>
@@ -338,14 +377,14 @@ export default function Header() {
                 <SearchButton
                   ref={mobileSearchButtonRef}
                   onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                  size={{ width: 24, height: 24 }}
+                  size={{ width: 20, height: 20 }}
                 />
               </div>
               <BurgerButton
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                lineWidth={27}
-                lineHeight={3}
-                gap={5}
+                lineWidth={23}
+                lineHeight={2}
+                gap={4}
               />
             </div>
             <ExpandingSearch

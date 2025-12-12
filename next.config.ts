@@ -27,6 +27,7 @@ const strapiRemotePattern = parseUrlToRemotePattern(strapiUrl);
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  devIndicators: false,
   images: {
     remotePatterns: [
       {
@@ -37,6 +38,15 @@ const nextConfig: NextConfig = {
       },
       strapiRemotePattern,
     ],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/home",
+        permanent: true, // 308 редирект (постоянный)
+      },
+    ];
   },
 };
 

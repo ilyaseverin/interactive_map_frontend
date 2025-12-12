@@ -5,7 +5,7 @@ interface CategoryButtonProps {
   isActive: boolean;
   onClick: () => void;
   className?: string;
-  variant?: "mobile" | "tablet" | "desktop";
+  variant?: "mobile" | "tablet" | "desktop" | "responsive";
 }
 
 export default function CategoryButton({
@@ -13,7 +13,7 @@ export default function CategoryButton({
   isActive,
   onClick,
   className = "",
-  variant = "desktop",
+  variant = "responsive",
 }: CategoryButtonProps) {
   // Стили для разных вариантов
   const variantStyles = {
@@ -22,11 +22,13 @@ export default function CategoryButton({
     tablet:
       "px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] leading-[1.875]",
     desktop:
-      "px-[40px] xl:px-[65px] py-3 xl:py-4 min-h-[48px] xl:h-auto rounded-[9px] text-[18px] xl:text-[20px] leading-[1.219]",
+      "px-[24px] py-[16px] min-h-[48px] rounded-[9px] text-[18px] xl:text-[20px] leading-[1.219]",
+    responsive:
+      "px-[18px] md:px-[20px] lg:px-[24px] py-[8px] md:py-[12px] lg:py-[16px] h-[36px] md:min-h-[48px] lg:h-auto rounded-[8px] md:rounded-[10px] lg:rounded-[9px] text-[12px] md:text-[16px] lg:text-[18px] xl:text-[20px] leading-[1.2] md:leading-[1.875] lg:leading-[1.219]",
   };
 
   const baseStyles =
-    "font-normal font-montserrat transition-colors flex items-center justify-center md:whitespace-nowrap cursor-pointer";
+    "font-normal font-montserrat transition-colors flex items-center justify-center whitespace-nowrap cursor-pointer";
   const activeStyles = "bg-[#1D4E89] text-[#FFFEFE]";
   const inactiveStyles =
     "bg-white text-[#1D4E89] border border-[#1D4E89] hover:bg-gray-50";

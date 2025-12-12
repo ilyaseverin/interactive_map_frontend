@@ -18,18 +18,28 @@ export default function DocsPage() {
     clustering: true,
   });
 
+  // Нормализует высоту: если это число без единиц, добавляет "px"
+  const normalizeHeight = (height: string): string => {
+    if (/^\d+$/.test(height)) {
+      return `${height}px`;
+    }
+    return height;
+  };
+
   const generateEmbedCode = () => {
+    const normalizedHeight = normalizeHeight(embedCode.height);
     const params = new URLSearchParams({
       lng: embedCode.lng,
       lat: embedCode.lat,
       zoom: embedCode.zoom,
       clustering: embedCode.clustering.toString(),
+      height: normalizedHeight,
     });
 
     return `<iframe
   src="${origin || "https://your-domain.com"}/embed?${params.toString()}"
   width="${embedCode.width}"
-  height="${embedCode.height}"
+  height="${normalizedHeight}"
   frameborder="0"
   style="border: 0;"
   allowfullscreen
@@ -69,11 +79,6 @@ export default function DocsPage() {
   const copyApiCode = () =>
     copyToClipboard(`// Пример запроса
 fetch('/api/battle-glory-points')
-  .then(res => res.json())
-  .then(points => console.log(points));`);
-  const copyApiIdCode = () =>
-    copyToClipboard(`// Пример запроса с фильтрацией
-fetch('/api/battle-glory-points?point_type=памятник/мемориал')
   .then(res => res.json())
   .then(points => console.log(points));`);
 
@@ -226,18 +231,28 @@ fetch('/api/battle-glory-points?point_type=памятник/мемориал')
           {/* Предпросмотр */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              Предпросмотр
+              Интерактивный предпросмотр
             </h3>
             <div
-              className="border border-gray-300 rounded-lg overflow-hidden"
-              style={{ height: "400px" }}
+              className="border border-gray-300 rounded-lg overflow-hidden bg-gray-50"
+              style={{
+                height: normalizeHeight(embedCode.height),
+                minHeight: "400px",
+              }}
             >
               <iframe
-                src={`/embed?lng=${embedCode.lng}&lat=${embedCode.lat}&zoom=${embedCode.zoom}&clustering=${embedCode.clustering}`}
+                src={`/embed?lng=${embedCode.lng}&lat=${embedCode.lat}&zoom=${
+                  embedCode.zoom
+                }&clustering=${
+                  embedCode.clustering
+                }&height=${encodeURIComponent(
+                  normalizeHeight(embedCode.height)
+                )}`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 title="Предпросмотр карты"
+                allowFullScreen
               />
             </div>
           </div>
@@ -363,50 +378,6 @@ fetch('/api/battle-glory-points')
                 </div>
                 <button
                   onClick={copyApiCode}
-                  className={`absolute top-2 right-2 px-3 py-1 rounded text-sm transition-colors ${
-                    copied
-                      ? "bg-green-500 text-white"
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }`}
-                  disabled={copied}
-                >
-                  {copied ? "✓ Скопировано" : "Копировать"}
-                </button>
-              </div>
-            </div>
-
-            {/* GET single point */}
-            <div>
-              <div className="flex items-center space-x-2 mb-2">
-                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded">
-                  GET
-                </span>
-                <code className="text-sm text-gray-800">
-                  /api/map-points?id=1
-                </code>
-              </div>
-              <p className="text-sm text-gray-600 mb-2">
-                Получить конкретную точку по ID
-              </p>
-              <div className="relative">
-                <div className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto">
-                  <pre className="text-xs">
-                    {`// Пример запроса
-fetch('/api/map-points?id=1')
-  .then(res => res.json())
-  .then(point => console.log(point));
-
-// Ответ
-{
-  "id": "1",
-  "name": "Москва",
-  "coordinates": [37.6173, 55.7558],
-  ...
-}`}
-                  </pre>
-                </div>
-                <button
-                  onClick={copyApiIdCode}
                   className={`absolute top-2 right-2 px-3 py-1 rounded text-sm transition-colors ${
                     copied
                       ? "bg-green-500 text-white"

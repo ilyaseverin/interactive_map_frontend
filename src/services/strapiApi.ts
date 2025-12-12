@@ -12,6 +12,8 @@ import type {
   TeamResponse,
   ManagementResponse,
   ContactsResponse,
+  BrandResponse,
+  DocumentListResponse,
   PaginationArgs,
 } from "@/types/strapi";
 import { getStrapiUrl } from "@/utils/strapiUrl";
@@ -41,6 +43,9 @@ export const strapiApi = createApi({
     "Event",
     "Partners",
     "Partner",
+    "Brand",
+    "Documents",
+    "Document",
   ],
   endpoints: (builder) => ({
     getPressReleases: builder.query<
@@ -510,6 +515,49 @@ export const strapiApi = createApi({
             ]
           : [{ type: "Partners" as const, id: "LIST" }],
     }),
+
+    getBrand: builder.query<BrandResponse, void>({
+      query: () => ({
+        url: "brand",
+        params: {
+          "populate[content]": "*",
+          "populate[content][populate][logo_with_description]": "*",
+          "populate[content][populate][logo_with_description][populate][files]":
+            "true",
+          "populate[content][populate][logos]": "true",
+          "populate[content][populate][brand_colors]": "*",
+        },
+      }),
+      providesTags: [{ type: "Brand", id: "SINGLE" }],
+    }),
+
+    getDocuments: builder.query<
+      DocumentListResponse,
+      (PaginationArgs & { category?: string }) | void
+    >({
+      query: ({ page = 1, pageSize = 10, category } = {}) => ({
+        url: "documents",
+        params: {
+          "pagination[page]": page,
+          "pagination[pageSize]": pageSize,
+          ...(category ? { "filters[category][$eq]": category } : {}),
+          "populate[files]": "true",
+          "populate[attachments][populate][files]": "true",
+          sort: "publishedAt:desc",
+          publicationState: "live",
+        },
+      }),
+      providesTags: (result) =>
+        result?.data
+          ? [
+              { type: "Documents" as const, id: "LIST" },
+              ...result.data.map((item) => ({
+                type: "Document" as const,
+                id: item.slug,
+              })),
+            ]
+          : [{ type: "Documents" as const, id: "LIST" }],
+    }),
   }),
 });
 
@@ -529,6 +577,8 @@ export const {
   useGetEventsQuery,
   useGetEventBySlugQuery,
   useGetPartnersQuery,
+  useGetBrandQuery,
+  useGetDocumentsQuery,
 } = strapiApi;
 
 export type StrapiApi = typeof strapiApi;

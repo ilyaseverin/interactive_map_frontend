@@ -57,7 +57,7 @@ export default function VideoCard({
       {/* Описание - Mobile: 233x51 padding:20/9/19, Tablet: 281x66 padding:23/11/24, Desktop: 508x48 padding:22/23/27 */}
       <div className="px-[20px] pt-[9px] pb-[19px] md:px-[23px] md:pt-[11px] md:pb-[24px] xl:px-[22px] xl:pt-[23px] xl:pb-[27px]">
         {/* Заголовок */}
-        <p className="text-[12px] md:text-[16px] xl:text-[20px] font-montserrat font-normal leading-[1.219] text-black line-clamp-2 mb-[6px] md:mb-[7px] xl:mb-[10px]">
+        <p className="text-[12px] md:text-[16px] xl:text-[20px] font-montserrat font-normal leading-[1.219] text-black line-clamp-2 mb-[6px] md:mb-[7px] xl:mb-[10px] min-h-[30px] md:min-h-[39px] xl:min-h-[49px]">
           {title}
         </p>
         {/* Дата - под заголовком на всех версиях */}
