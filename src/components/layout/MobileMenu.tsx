@@ -101,7 +101,7 @@ export default function MobileMenu({
         {/* Крестик закрытия */}
         <button
           onClick={handleClose}
-          className="absolute right-[18px] md:right-[44px] top-[24px] md:top-[44px] w-[28px] md:w-[36px] h-[25px] md:h-[32px] hover:opacity-70 transition-opacity z-10"
+          className="absolute right-[18px] md:right-[44px] top-[24px] md:top-[44px] w-[28px] md:w-[36px] h-[25px] md:h-[32px] hover:opacity-70 transition-opacity z-10 cursor-pointer"
           aria-label="Закрыть меню"
         >
           <svg
@@ -127,7 +127,7 @@ export default function MobileMenu({
                           activeSubmenu === item.label ? null : item.label
                         )
                       }
-                      className={`text-[14px] md:text-[18px] font-normal font-montserrat text-left flex items-center gap-1 ${
+                      className={`text-[14px] md:text-[18px] font-normal font-montserrat text-left flex items-center gap-1 cursor-pointer ${
                         activeSubmenu === item.label
                           ? "text-[#1D4E89] border-t border-l border-r border-[#1D4E89] bg-white h-[32px] md:h-[34px] leading-[32px] rounded-t-[5px] px-[15px] py-[2px] w-fit -ml-[15px] -mt-[8.5px] -mb-[8.5px] md:-mt-[1px] md:-mb-[1px]"
                           : "text-black border-transparent h-[15px] md:h-[32px] w-full"
@@ -160,7 +160,7 @@ export default function MobileMenu({
                             <li key={subItem.href}>
                               <Link
                                 href={subItem.href}
-                                className="block text-[14px] md:text-[18px] font-normal font-montserrat text-white hover:underline"
+                                className="block text-[14px] md:text-[18px] font-normal font-montserrat text-white hover:underline cursor-pointer"
                                 style={{ lineHeight: "1.219em" }}
                                 onClick={handleClose}
                               >
@@ -175,7 +175,7 @@ export default function MobileMenu({
                 ) : (
                   <Link
                     href={item.href}
-                    className="flex items-center text-[14px] md:text-[18px] font-normal font-montserrat text-black h-[15px] md:h-[32px]"
+                    className="flex items-center text-[14px] md:text-[18px] font-normal font-montserrat text-black h-[15px] md:h-[32px] cursor-pointer"
                     onClick={handleClose}
                   >
                     {item.label}
@@ -189,7 +189,7 @@ export default function MobileMenu({
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="flex items-center text-[14px] md:text-[18px] font-normal font-montserrat text-black leading-[1.219em] h-[17px] md:h-[22px]"
+                  className="flex items-center text-[14px] md:text-[18px] font-normal font-montserrat text-black leading-[1.219em] h-[17px] md:h-[22px] cursor-pointer"
                   onClick={handleClose}
                 >
                   {item.label}

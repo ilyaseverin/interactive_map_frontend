@@ -147,8 +147,10 @@ export default function Header() {
             className="flex items-center justify-between h-full"
             style={{
               gap: "clamp(6px, 0.833vw, 16px)",
-              paddingTop: "clamp(8px, 1.042vw, 20px)",
-              paddingBottom: "clamp(8px, 1.042vw, 20px)",
+              paddingTop:
+                "clamp(8px, calc(8px + 24 * ((100vw - 1280px) / 640)), 32px)",
+              paddingBottom:
+                "clamp(8px, calc(8px + 24 * ((100vw - 1280px) / 640)), 32px)",
             }}
           >
             {/* Левая часть: Логотип и название */}
@@ -284,17 +286,33 @@ export default function Header() {
 
       {/* Версия для 1024px - упрощенный хедер с бургером */}
       <div className="hidden lg:block xl:hidden">
-        <div className="w-full px-[60px] mx-auto" style={{ height: "158px" }}>
-          <div className="flex items-center justify-between h-full">
+        <div
+          className="w-full px-[60px] mx-auto"
+          style={{
+            paddingTop:
+              "clamp(8px, calc(8px + 24 * ((100vw - 1024px) / 896)), 32px)",
+            paddingBottom:
+              "clamp(8px, calc(8px + 24 * ((100vw - 1024px) / 896)), 32px)",
+          }}
+        >
+          <div className="flex items-center justify-between">
             <Logo
-              logoSize={{ width: 98, height: 90 }}
-              fontSize="24px"
-              gap="20px"
-              lineHeight="32px"
+              logoSize={{
+                width: "clamp(49px, 6.5vw, 70px)",
+                height: "clamp(45px, 6vw, 64px)",
+              }}
+              fontSize="clamp(12px, 1.8vw, 20px)"
+              gap="clamp(14px, 1.5vw, 16px)"
+              lineHeight="clamp(17px, 2.5vw, 26px)"
             />
 
             <div className="flex items-center gap-[41px]">
-              <PartnersLink size={{ width: 160, height: 70 }} />
+              <PartnersLink
+                size={{
+                  width: "clamp(60px, 10vw, 120px)",
+                  height: "clamp(26px, 4.4vw, 53px)",
+                }}
+              />
               <SearchButton
                 onClick={() => setSearchOpen(!searchOpen)}
                 size={{ width: 30, height: 29 }}

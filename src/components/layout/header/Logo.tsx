@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type LogoProps = {
-  logoSize: { width: number; height: number };
+  logoSize: { width: number; height: number } | { width: string; height: string };
   fontSize: string;
   gap: string;
   lineHeight?: string;
@@ -16,15 +16,22 @@ export default function Logo({
   lineHeight,
   hideText = false,
 }: LogoProps) {
+  const logoWidth = typeof logoSize.width === 'number' ? logoSize.width : undefined;
+  const logoHeight = typeof logoSize.height === 'number' ? logoSize.height : undefined;
+  const logoStyle = typeof logoSize.width === 'string' || typeof logoSize.height === 'string' 
+    ? { width: logoSize.width, height: logoSize.height }
+    : undefined;
+
   return (
     <div className="flex items-center" style={{ gap }}>
       <Link href="/home" className="flex-shrink-0">
         <Image
           src="/images/logo-392dd2.png"
           alt="Патриот Центр 48"
-          width={logoSize.width}
-          height={logoSize.height}
+          width={logoWidth || 122}
+          height={logoHeight || 112}
           className="object-contain"
+          style={logoStyle}
         />
       </Link>
       <Link
