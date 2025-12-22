@@ -56,7 +56,7 @@ export default function AboutLayout({
       </div>
 
       {/* Submenu Navigation */}
-      <div className="w-full px-[19px] sm:px-[32px] md:px-[36px] lg:px-[64px] xl:px-[80px] pb-[15px] md:pb-[20px] lg:pb-[30px]">
+      <div className="w-full px-[19px] sm:px-[32px] md:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] md:pb-[30px] lg:pb-[112px]">
         {/* Mobile/Small: активный сверху, остальные снизу с wrap */}
         <div className="md:hidden">
           {subMenuItems.map((item) => {

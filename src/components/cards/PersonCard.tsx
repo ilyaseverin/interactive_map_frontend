@@ -78,7 +78,7 @@ export default function PersonCard({ person }: PersonCardProps) {
 
           <div className="flex-1 flex flex-col gap-[14px] xs:gap-[15px] sm:gap-[16px] md:gap-0 min-w-0 md:ml-[38px] lg:ml-[48px]">
             <div className="md:mb-[9px] lg:mb-[24px]">
-              <h3 className="text-[12px] xs:text-[13px] sm:text-[14px] md:text-[20px] lg:text-[32px] font-montserrat font-normal leading-[1.219] text-black">
+              <h3 className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.219] text-black">
                 <span className="block whitespace-nowrap overflow-hidden text-ellipsis max-w-[183px] xs:max-w-none md:max-w-[240px] lg:max-w-[399px]">
                   {lastName}
                 </span>
@@ -109,7 +109,7 @@ export default function PersonCard({ person }: PersonCardProps) {
                 </div>
                 <a
                   href={`mailto:${person.email}`}
-                  className="text-[12px] sm:text-[13px] md:text-[16px] lg:text-[24px] font-montserrat font-normal leading-[2.5] md:leading-[1.875] lg:leading-[1.25] text-black hover:text-[#1D4E89] transition-colors truncate"
+                  className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black hover:text-[#1D4E89] transition-colors truncate"
                 >
                   {person.email}
                 </a>
@@ -127,7 +127,7 @@ export default function PersonCard({ person }: PersonCardProps) {
                 </div>
                 <a
                   href={`tel:${person.phone}`}
-                  className="text-[12px] sm:text-[13px] md:text-[16px] lg:text-[24px] font-montserrat font-normal leading-[2.5] md:leading-[1.875] lg:leading-[1.25] text-black hover:text-[#1D4E89] transition-colors whitespace-nowrap"
+                  className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black hover:text-[#1D4E89] transition-colors whitespace-nowrap"
                 >
                   {person.phone}
                 </a>

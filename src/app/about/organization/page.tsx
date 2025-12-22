@@ -23,7 +23,7 @@ export default function OrganizationPage() {
           <div className="space-y-0 md:space-y-0 lg:space-y-0">
             {/* Introduction Text */}
             <div className="pl-0 pr-0 space-y-[20px] md:space-y-[15px] sm:space-y-[30px] lg:space-y-[40px] mb-[30px] md:mb-[40px] lg:mb-[69px]">
-              <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[35px] text-black">
+              <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black">
                 Областное бюджетное учреждение «Региональный центр подготовки
                 граждан РФ к военной службе и военно-патриотического воспитания
                 населения Липецкой области» создано на основании Постановления
@@ -33,14 +33,14 @@ export default function OrganizationPage() {
                 населения Липецкой области».
               </p>
 
-              <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[35px] text-black">
+              <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black">
                 Учреждение осуществляет функции по созданию условий для развития
                 и совершенствования системы гражданско-патриотического
                 воспитания населения Липецкой области и допризывной подготовки
                 молодежи.
               </p>
 
-              <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[35px] text-black">
+              <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black">
                 Учреждение осуществляет свою деятельность в соответствии с
                 Федеральным законом от 12 января 1996 года N 7-ФЗ «О
                 некоммерческих организациях», Законом Липецкой области от 28
@@ -63,12 +63,12 @@ export default function OrganizationPage() {
 
             {/* Goal Block */}
             <div className="mb-[30px] md:mb-[40px] lg:mb-[34px]">
-              <h2 className="text-[20px] sm:text-[28px] md:text-[30px] lg:text-[36px] xl:text-[40px] font-montserrat font-medium leading-[1.25] sm:leading-[1.1] md:leading-[1] lg:leading-[30px] text-black mb-[20px] sm:mb-[25px] md:mb-[20px] lg:mb-[38px] pl-[30px] sm:pl-[40px] md:pl-0 lg:pl-0">
+              <h2 className="text-[20px] md:text-[30px] lg:text-[40px] font-montserrat font-bold leading-[1.219] text-black mb-[20px] md:mb-[25px] lg:mb-[30px] pl-[30px] sm:pl-[40px] md:pl-0 lg:pl-0">
                 Цель деятельности Учреждения:
               </h2>
               <div className="relative">
                 <div className="absolute left-0 top-0 bottom-0 w-[8px] sm:w-[10px] lg:w-[13px] bg-[#1D4E89] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                   Развитие общественно-государственной системы патриотического и
                   духовно-нравственного воспитания детей, подростков, молодежи и
                   населения Липецкой области, способной на основе формирования
@@ -81,12 +81,12 @@ export default function OrganizationPage() {
 
             {/* Subject Block */}
             <div className="mb-[30px] md:mb-[40px] lg:mb-[75px]">
-              <h2 className="text-[20px] sm:text-[28px] md:text-[30px] lg:text-[36px] xl:text-[40px] font-montserrat font-medium leading-[1.25] sm:leading-[1.1] md:leading-[1] lg:leading-[30px] text-black mb-[20px] sm:mb-[25px] md:mb-[20px] lg:mb-[30px] pl-[30px] sm:pl-[40px] md:pl-0 lg:pl-0">
+              <h2 className="text-[20px] md:text-[30px] lg:text-[40px] font-montserrat font-bold leading-[1.219] text-black mb-[20px] md:mb-[25px] lg:mb-[30px] pl-[30px] sm:pl-[40px] md:pl-0 lg:pl-0">
                 Предмет деятельности Учреждения:
               </h2>
               <div className="relative">
                 <div className="absolute left-0 top-0 bottom-0 w-[8px] sm:w-[10px] lg:w-[13px] bg-[#1D4E89] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                   Предмет деятельности Учреждения – выполнение работ, оказание
                   услуг физическим и юридическим лицам в сфере молодежной
                   политики по направлению патриотического воспитания, в том
@@ -105,7 +105,7 @@ export default function OrganizationPage() {
                 {/* Activity 1 */}
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 w-[6px] sm:w-[8px] lg:w-[11px] bg-[#C62828] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                  <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                  <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                     Организация реализации мероприятий областной (ведомственной)
                     целевой программы и планов мероприятий, проектов и программ
                     в сфере государственной молодежной политики по направлению
@@ -116,7 +116,7 @@ export default function OrganizationPage() {
                 {/* Activity 2 */}
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 w-[6px] sm:w-[8px] lg:w-[13px] bg-[#C62828] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                  <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                  <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                     Информирование органов государственной власти, органов
                     местного самоуправления, физических и юридических лиц о
                     реализации молодежной политики по направлению
@@ -128,7 +128,7 @@ export default function OrganizationPage() {
                 {/* Activity 3 */}
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 w-[6px] sm:w-[8px] lg:w-[13px] bg-[#C62828] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                  <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                  <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                     Создание справочно-информационной базы данных о проведении
                     военно-патриотических, поисковых работ и мероприятий по
                     подготовке молодежи к военной службе;
@@ -138,7 +138,7 @@ export default function OrganizationPage() {
                 {/* Activity 4 */}
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 w-[6px] sm:w-[8px] lg:w-[13px] bg-[#C62828] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                  <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                  <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                     Организация и проведение мероприятий, направленных на
                     формирование у молодежи основ здорового образа жизни, в том
                     числе военно-спортивных соревнований, игр, слетов, сборов,
@@ -150,7 +150,7 @@ export default function OrganizationPage() {
                 {/* Activity 5 */}
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 w-[6px] sm:w-[8px] lg:w-[13px] bg-[#C62828] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                  <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                  <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                     Координация проведения поисковых работ на территории
                     Липецкой области;
                   </p>
@@ -159,7 +159,7 @@ export default function OrganizationPage() {
                 {/* Activity 6 */}
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 w-[6px] sm:w-[8px] lg:w-[13px] bg-[#C62828] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                  <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                  <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                     Содействие органам исполнительной власти Липецкой области и
                     общественным объединениям в военно-патриотическом воспитании
                     и подготовке молодежи к военной службе, проведении
@@ -171,7 +171,7 @@ export default function OrganizationPage() {
                 {/* Activity 7 */}
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 w-[6px] sm:w-[8px] lg:w-[13px] bg-[#C62828] rounded-[5px] sm:rounded-[8px] lg:rounded-[10px]"></div>
-                  <p className="text-[12px] md:text-[16px] lg:text-[22px] xl:text-[24px] font-montserrat font-medium leading-[1.667] md:leading-[1.875] lg:leading-[37px] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
+                  <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal md:font-medium leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black pl-[30px] sm:pl-[40px] md:pl-[30px] lg:pl-[33px]">
                     Информирование населения Липецкой области о деятельности
                     Учреждения выступает министерство молодёжной политики.
                   </p>
