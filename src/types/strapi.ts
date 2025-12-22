@@ -472,6 +472,30 @@ export interface ActivityComplex {
 export type ActivityComplexListResponse = StrapiResponse<ActivityComplex[]>;
 export type ActivityComplexItemResponse = StrapiResponse<ActivityComplex>;
 
+// Типы для Hero Slider
+export interface HeroSlide {
+  id: number;
+  image: StrapiImage;
+  title: string;
+  description: string;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+}
+
+export interface HeroSliderData {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  slides: HeroSlide[];
+}
+
+export interface HeroSliderResponse {
+  data: HeroSliderData | null;
+  meta: Record<string, unknown>;
+}
+
 // Общие типы
 export type PaginationArgs = {
   page?: number;

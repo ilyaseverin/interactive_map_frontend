@@ -17,6 +17,7 @@ import type {
   ActivityComplex,
   ActivityComplexListResponse,
   PaginationArgs,
+  HeroSliderResponse,
 } from "@/types/strapi";
 import { getStrapiUrl } from "@/utils/strapiUrl";
 
@@ -50,6 +51,7 @@ export const strapiApi = createApi({
     "Document",
     "ActivityComplexes",
     "ActivityComplex",
+    "HeroSlider",
   ],
   endpoints: (builder) => ({
     getPressReleases: builder.query<
@@ -591,6 +593,17 @@ export const strapiApi = createApi({
             ]
           : [{ type: "ActivityComplexes" as const, id: "LIST" }],
     }),
+
+    getHeroSlider: builder.query<HeroSliderResponse, void>({
+      query: () => ({
+        url: "hero-slider",
+        params: {
+          "populate[0]": "slides",
+          "populate[1]": "slides.image",
+        },
+      }),
+      providesTags: [{ type: "HeroSlider", id: "SINGLE" }],
+    }),
   }),
 });
 
@@ -613,6 +626,7 @@ export const {
   useGetBrandQuery,
   useGetDocumentsQuery,
   useGetActivityComplexesQuery,
+  useGetHeroSliderQuery,
 } = strapiApi;
 
 export type StrapiApi = typeof strapiApi;
