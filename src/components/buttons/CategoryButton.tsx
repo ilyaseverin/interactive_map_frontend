@@ -18,13 +18,13 @@ export default function CategoryButton({
   // Стили для разных вариантов
   const variantStyles = {
     mobile:
-      "px-[18px] py-[8px] h-[36px] rounded-[8px] text-[12px] leading-[1.2]",
+      "px-[18px] py-[8px] h-[40px] rounded-[8px] text-[12px] leading-[1.2]",
     tablet:
-      "px-[20px] py-[12px] min-h-[48px] rounded-[10px] text-[16px] leading-[1.875]",
+      "px-[20px] py-[12px] h-[48px] rounded-[10px] text-[16px] leading-[1.875]",
     desktop:
       "px-[24px] py-[16px] min-h-[48px] rounded-[9px] text-[18px] xl:text-[20px] leading-[1.219]",
     responsive:
-      "px-[18px] md:px-[20px] lg:px-[24px] py-[8px] md:py-[12px] lg:py-[16px] h-[36px] md:min-h-[48px] lg:h-auto rounded-[8px] md:rounded-[10px] lg:rounded-[9px] text-[12px] md:text-[16px] lg:text-[18px] xl:text-[20px] leading-[1.2] md:leading-[1.875] lg:leading-[1.219]",
+      "px-[18px] md:px-[20px] lg:px-[24px] py-[8px] md:py-[12px] lg:py-[16px] h-[40px] md:h-[48px] lg:h-auto rounded-[8px] md:rounded-[10px] lg:rounded-[9px] text-[12px] md:text-[16px] lg:text-[18px] xl:text-[20px] leading-[1.2] md:leading-[1.875] lg:leading-[1.219]",
   };
 
   const baseStyles =

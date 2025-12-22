@@ -7,7 +7,7 @@ import Pagination from "@/components/Pagination";
 import { useState } from "react";
 import { useGetProjectsQuery } from "@/services/strapiApi";
 import { BackButton, SecondaryButton } from "@/components/buttons";
-import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl } from "@/utils/strapiUrl";
 import { formatDate } from "@/utils/dateUtils";
 
 // Клиентский компонент

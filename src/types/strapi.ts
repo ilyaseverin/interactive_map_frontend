@@ -429,6 +429,49 @@ export interface DocumentItem {
 export type DocumentListResponse = StrapiResponse<DocumentItem[]>;
 export type DocumentItemResponse = StrapiResponse<DocumentItem>;
 
+// Типы для комплексов деятельности центра (Pages)
+export type ActivityComplexCategory =
+  | "Антимонопольный комплекс"
+  | "Антикоррупционная деятельность"
+  | "Противодействие терроризму"
+  | "Антинаркотическая кампания";
+
+export interface MediaDocument {
+  id: number;
+  title?: string;
+  description?: string;
+  file?: StrapiImage | null;
+}
+
+export interface MetaLink {
+  id: number;
+  label?: string;
+  url?: string;
+}
+
+export interface PageContent {
+  id: number;
+  body?: string;
+  attachments?: MediaDocument[];
+  links?: MetaLink[];
+}
+
+export interface ActivityComplex {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  category?: ActivityComplexCategory;
+  content?: PageContent;
+  seo?: Seo;
+}
+
+export type ActivityComplexListResponse = StrapiResponse<ActivityComplex[]>;
+export type ActivityComplexItemResponse = StrapiResponse<ActivityComplex>;
+
 // Общие типы
 export type PaginationArgs = {
   page?: number;
