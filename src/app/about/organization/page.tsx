@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { BackButton } from "@/components/buttons";
 
 export default function OrganizationPage() {
   return (
@@ -181,28 +181,10 @@ export default function OrganizationPage() {
 
             {/* Back Button - positioned at bottom */}
             <div className="flex justify-center md:justify-start mt-[30px] sm:mt-[75px] md:mt-[40px] md:pb-[40px] lg:mt-[45px] lg:pb-0 pl-[30px] sm:pl-[40px] md:pl-0 lg:pl-0 pr-[30px] sm:pr-[40px] md:pr-0 lg:pr-0">
-              <Link
+              <BackButton
                 href="/about"
-                className="flex items-center gap-[10px] px-[24px] py-[16px] h-[48px] lg:h-[56px] border border-[#C62828] rounded-[12px] text-[#C62828] text-[16px] lg:text-[20px] font-montserrat hover:bg-red-50 transition-colors"
-              >
-                <svg
-                  width="33"
-                  height="25"
-                  viewBox="0 0 33 25"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-[20px] h-[15px] sm:w-[24px] sm:h-[18px] md:w-[33px] md:h-[25px] lg:w-[33px] lg:h-[25px]"
-                >
-                  <path
-                    d="M6 13H27M6 13L13 6M6 13L13 20"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Назад
-              </Link>
+                variant="default"
+              />
             </div>
           </div>
         </div>

@@ -14,7 +14,10 @@ import type {
   ContactsResponse,
   BrandResponse,
   DocumentListResponse,
+  ActivityComplex,
+  ActivityComplexListResponse,
   PaginationArgs,
+  HeroSliderResponse,
 } from "@/types/strapi";
 import { getStrapiUrl } from "@/utils/strapiUrl";
 
@@ -46,6 +49,9 @@ export const strapiApi = createApi({
     "Brand",
     "Documents",
     "Document",
+    "ActivityComplexes",
+    "ActivityComplex",
+    "HeroSlider",
   ],
   endpoints: (builder) => ({
     getPressReleases: builder.query<
@@ -558,6 +564,46 @@ export const strapiApi = createApi({
             ]
           : [{ type: "Documents" as const, id: "LIST" }],
     }),
+
+    getActivityComplexes: builder.query<
+      ActivityComplexListResponse,
+      PaginationArgs | void
+    >({
+      query: ({ page = 1, pageSize = 10 } = {}) => ({
+        url: "pages",
+        params: {
+          "pagination[page]": page,
+          "pagination[pageSize]": pageSize,
+          "populate[content]": "*",
+          "populate[content][populate][attachments]": "*",
+          "populate[content][populate][attachments][populate][file]": "true",
+          "populate[content][populate][links]": "*",
+          sort: "publishedAt:desc",
+          publicationState: "live",
+        },
+      }),
+      providesTags: (result) =>
+        result?.data
+          ? [
+              { type: "ActivityComplexes" as const, id: "LIST" },
+              ...result.data.map((item) => ({
+                type: "ActivityComplex" as const,
+                id: item.slug,
+              })),
+            ]
+          : [{ type: "ActivityComplexes" as const, id: "LIST" }],
+    }),
+
+    getHeroSlider: builder.query<HeroSliderResponse, void>({
+      query: () => ({
+        url: "hero-slider",
+        params: {
+          "populate[0]": "slides",
+          "populate[1]": "slides.image",
+        },
+      }),
+      providesTags: [{ type: "HeroSlider", id: "SINGLE" }],
+    }),
   }),
 });
 
@@ -579,6 +625,8 @@ export const {
   useGetPartnersQuery,
   useGetBrandQuery,
   useGetDocumentsQuery,
+  useGetActivityComplexesQuery,
+  useGetHeroSliderQuery,
 } = strapiApi;
 
 export type StrapiApi = typeof strapiApi;

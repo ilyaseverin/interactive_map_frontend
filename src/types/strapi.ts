@@ -153,6 +153,21 @@ export interface BattleGloryResponse {
   };
 }
 
+// Типы для истории Боевой Славы
+export interface BattleGloryHistory {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  content?: string; // RichText как HTML строка
+}
+
+export interface BattleGloryHistoryResponse {
+  data: BattleGloryHistory | null;
+  meta: Record<string, unknown>;
+}
+
 // Типы для пресс-релизов
 export interface PressReleaseBasicInfo {
   id: number;
@@ -428,6 +443,73 @@ export interface DocumentItem {
 
 export type DocumentListResponse = StrapiResponse<DocumentItem[]>;
 export type DocumentItemResponse = StrapiResponse<DocumentItem>;
+
+// Типы для комплексов деятельности центра (Pages)
+export type ActivityComplexCategory =
+  | "Антимонопольный комплекс"
+  | "Антикоррупционная деятельность"
+  | "Противодействие терроризму"
+  | "Антинаркотическая кампания";
+
+export interface MediaDocument {
+  id: number;
+  title?: string;
+  description?: string;
+  file?: StrapiImage | null;
+}
+
+export interface MetaLink {
+  id: number;
+  label?: string;
+  url?: string;
+}
+
+export interface PageContent {
+  id: number;
+  body?: string;
+  attachments?: MediaDocument[];
+  links?: MetaLink[];
+}
+
+export interface ActivityComplex {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  title: string;
+  slug: string;
+  category?: ActivityComplexCategory;
+  content?: PageContent;
+  seo?: Seo;
+}
+
+export type ActivityComplexListResponse = StrapiResponse<ActivityComplex[]>;
+export type ActivityComplexItemResponse = StrapiResponse<ActivityComplex>;
+
+// Типы для Hero Slider
+export interface HeroSlide {
+  id: number;
+  image: StrapiImage;
+  title: string;
+  description: string;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+}
+
+export interface HeroSliderData {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  slides: HeroSlide[];
+}
+
+export interface HeroSliderResponse {
+  data: HeroSliderData | null;
+  meta: Record<string, unknown>;
+}
 
 // Общие типы
 export type PaginationArgs = {

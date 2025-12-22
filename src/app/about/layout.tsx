@@ -51,7 +51,6 @@ export default function AboutLayout({
             <BackButton
             onClick={() => router.back()}
               variant="default"
-              className="md:h-[48px] lg:py-[16px] lg:h-auto"
             />
           </div>
         </div>

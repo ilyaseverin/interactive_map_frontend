@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import Logo from "./header/Logo";
@@ -12,6 +12,7 @@ import PartnersLink from "./header/PartnersLink";
 import DropdownMenu, { type SubMenuItem } from "./header/DropdownMenu";
 import SearchForm from "@/components/forms/SearchForm";
 import ExpandingSearch from "./header/ExpandingSearch";
+import { getActivityComplexRoute } from "@/utils/activityComplexRoutes";
 
 type MenuItem = {
   label: string;
@@ -28,109 +29,128 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const mobileSearchButtonRef = useRef<HTMLButtonElement>(null);
 
-  const menuItems: MenuItem[] = [
-    {
-      label: "Новости",
-      href: "/news",
-      subMenu: [
-        { label: "Главные", href: "/news?category=main" },
-        { label: "Региональные", href: "/news?category=regional" },
-        { label: "Фотоальбомы", href: "/photo-albums?source=news" },
-        { label: "Видео", href: "/videos?source=news" },
-      ],
-    },
-    {
-      label: "Карта",
-      href: "/battle-glory",
-      subMenu: [
-        {
-          label: "История Липецкой области в годы ВОВ",
-          href: "/battle-glory/history",
-        },
-        {
-          label: "Памятники и мемориалы",
-          href: "/battle-glory?filter=monument",
-        },
-        {
-          label: "Мемориальные доски",
-          href: "/battle-glory?filter=memorial-board",
-        },
-        {
-          label: "Воинские захоронения",
-          href: "/battle-glory?filter=burial",
-        },
-      ],
-    },
-    {
-      label: "О центре",
-      href: "/about",
-      twoColumns: true,
-      subMenu: [
-        { label: "Об учреждении", href: "/about/organization" },
-        { label: "Руководство", href: "/about/management" },
-        { label: "Команда", href: "/about/team" },
-        { label: "Партнеры", href: "/about/partners" },
-        { label: "Фирменный стиль", href: "/about/brand" },
-        { label: "Антимонопольный комплекс", href: "/documents/antimonopoly" },
-        {
-          label: "Антикоррупционная деятельность",
-          href: "/documents/anticorruption",
-        },
-        {
-          label: "Противодействие терроризму",
-          href: "/documents/counterterrorism",
-        },
-        {
-          label: "Антинаркотическая кампания",
-          href: "/documents/antidrug",
-        },
-      ],
-    },
-    {
-      label: "Наши проекты",
-      href: "/projects",
-      subMenu: [
-        { label: "Проекты", href: "/projects" },
-        { label: "Фотоальбомы", href: "/photo-albums?source=projects" },
-        { label: "Видео", href: "/videos?source=projects" },
-      ],
-    },
-    {
-      label: "Для СМИ",
-      href: "/media",
-      subMenu: [
-        { label: "Пресс-релизы", href: "/press-releases" },
-        { label: "Фотоальбомы", href: "/photo-albums?source=press" },
-      ],
-    },
-    { label: "Контакты", href: "/about/contacts" },
-    { label: "Документы", href: "/documents" },
-  ];
+  // Создаем меню со статическими маршрутами
+  const { menuItems, mobileMenuItems, mobileExtraItems } = useMemo(() => {
+    const items: MenuItem[] = [
+      {
+        label: "Новости",
+        href: "/news",
+        subMenu: [
+          { label: "Главные", href: "/news?category=main" },
+          { label: "Региональные", href: "/news?category=regional" },
+          { label: "Фотоальбомы", href: "/photo-albums?source=news" },
+          { label: "Видео", href: "/videos?source=news" },
+        ],
+      },
+      {
+        label: "Карта",
+        href: "/battle-glory",
+        subMenu: [
+          {
+            label: "История Липецкой области в годы ВОВ",
+            href: "/battle-glory/history",
+          },
+          {
+            label: "Памятники и мемориалы",
+            href: "/battle-glory?filter=monument",
+          },
+          {
+            label: "Мемориальные доски",
+            href: "/battle-glory?filter=memorial-board",
+          },
+          {
+            label: "Воинские захоронения",
+            href: "/battle-glory?filter=burial",
+          },
+        ],
+      },
+      {
+        label: "О центре",
+        href: "/about",
+        twoColumns: true,
+        subMenu: [
+          { label: "Об учреждении", href: "/about/organization" },
+          { label: "Руководство", href: "/about/management" },
+          { label: "Команда", href: "/about/team" },
+          { label: "Партнеры", href: "/about/partners" },
+          { label: "Фирменный стиль", href: "/about/brand" },
+          { label: "Деятельность центра", href: "/activity" },
+          {
+            label: "Антимонопольный комплекс",
+            href: getActivityComplexRoute("Антимонопольный комплекс"),
+          },
+          {
+            label: "Антикоррупционная деятельность",
+            href: getActivityComplexRoute("Антикоррупционная деятельность"),
+          },
+          {
+            label: "Противодействие терроризму",
+            href: getActivityComplexRoute("Противодействие терроризму"),
+          },
+          {
+            label: "Антинаркотическая кампания",
+            href: getActivityComplexRoute("Антинаркотическая кампания"),
+          },
+        ],
+      },
+      {
+        label: "Наши проекты",
+        href: "/projects",
+        subMenu: [
+          { label: "Проекты", href: "/projects" },
+          { label: "Фотоальбомы", href: "/photo-albums?source=projects" },
+          { label: "Видео", href: "/videos?source=projects" },
+        ],
+      },
+      {
+        label: "Для СМИ",
+        href: "/media",
+        subMenu: [
+          { label: "Пресс-релизы", href: "/press-releases" },
+          { label: "Фотоальбомы", href: "/photo-albums?source=press" },
+        ],
+      },
+      { label: "Контакты", href: "/about/contacts" },
+      { label: "Документы", href: "/documents" },
+    ];
 
-  // Меню для мобильной версии - у "О центре" только первые 6 пунктов
-  const mobileMenuItems: MenuItem[] = menuItems.map((item) => {
-    if (item.label === "О центре" && item.subMenu) {
-      return {
-        ...item,
-        subMenu: item.subMenu.slice(0, 6), // Только первые 6 пунктов
-      };
-    }
-    return item;
-  });
+    // Меню для мобильной версии - у "О центре" только первые 6 пунктов
+    const mobileItems: MenuItem[] = items.map((item) => {
+      if (item.label === "О центре" && item.subMenu) {
+        return {
+          ...item,
+          subMenu: item.subMenu.slice(0, 6), // Только первые 6 пунктов
+        };
+      }
+      return item;
+    });
 
-  // Дополнительные пункты для мобильной версии (вынесены из "О центре")
-  const mobileExtraItems = [
-    { label: "Антимонопольный комплекс", href: "/documents/antimonopoly" },
-    {
-      label: "Противодействие терроризму",
-      href: "/documents/counterterrorism",
-    },
-    { label: "Антинаркотическая кампания", href: "/documents/antidrug" },
-    {
-      label: "Антикоррупционная деятельность",
-      href: "/documents/anticorruption",
-    },
-  ];
+    // Дополнительные пункты для мобильной версии (вынесены из "О центре")
+    const extraItems = [
+      {
+        label: "Антимонопольный комплекс",
+        href: getActivityComplexRoute("Антимонопольный комплекс"),
+      },
+      {
+        label: "Противодействие терроризму",
+        href: getActivityComplexRoute("Противодействие терроризму"),
+      },
+      {
+        label: "Антинаркотическая кампания",
+        href: getActivityComplexRoute("Антинаркотическая кампания"),
+      },
+      {
+        label: "Антикоррупционная деятельность",
+        href: getActivityComplexRoute("Антикоррупционная деятельность"),
+      },
+    ];
+
+    return {
+      menuItems: items,
+      mobileMenuItems: mobileItems,
+      mobileExtraItems: extraItems,
+    };
+  }, []);
 
   return (
     <header

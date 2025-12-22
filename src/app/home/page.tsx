@@ -98,7 +98,7 @@ export default function HomePage() {
   });
 
   // Получаем события на выбранную дату
-  const { data: eventsData, isFetching: isEventsFetching } = useGetEventsQuery({
+  const { data: eventsData } = useGetEventsQuery({
     date: selectedDateString,
     pageSize: 10,
   });
@@ -430,15 +430,15 @@ export default function HomePage() {
               label="Главные"
               isActive={selectedNewsCategory === "Главные"}
               onClick={() => setSelectedNewsCategory("Главные")}
-              variant="desktop"
+              variant="responsive"
               className="w-[117px] md:w-[178px] lg:w-auto"
             />
             <CategoryButton
               label="Региональные"
               isActive={selectedNewsCategory === "Региональные"}
               onClick={() => setSelectedNewsCategory("Региональные")}
-              variant="desktop"
-              className="w-[160px] md:w-auto lg:w-[269px] text-[13px] md:text-[18px] px-[14px] md:px-[40px]"
+              variant="responsive"
+              className="w-[160px] md:w-auto lg:w-[269px] text-[12px] md:text-[18px] px-[14px] md:px-[40px]"
             />
           </div>
 

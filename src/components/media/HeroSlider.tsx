@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
+import { useGetHeroSliderQuery } from "@/services/strapiApi";
+import { HeroSlide as HeroSlideType } from "@/types/strapi";
+import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 
 // Import Swiper styles
 import "swiper/css";
@@ -14,8 +17,8 @@ interface HeroSlide {
   image: string;
   title: string;
   description: string;
-  ctaText: string;
-  ctaLink: string;
+  ctaText?: string | null;
+  ctaLink?: string | null;
 }
 
 // Utility function to determine if title is long
@@ -37,40 +40,52 @@ const POSITIONS = {
   },
 } as const;
 
-const slides: HeroSlide[] = [
+// Дефолтные слайды (используются если нет данных из Strapi)
+const defaultSlides: HeroSlide[] = [
   {
     image: "/images/hero-bg.png",
     title: "Патриот Центр 48",
     description:
       "Региональный центр подготовки граждан Российской Федерации к военной службе и военно-патриотического воспитания населения Липецкой области",
-    ctaText: "Хочу пройти подготовку",
-    ctaLink: "/training",
+    ctaText: null,
+    ctaLink: null,
   },
   {
     image: "/images/hero-bg.png",
     title: "Военно-патриотическое воспитание",
     description:
       "Комплексная программа подготовки молодёжи к защите Отечества и формирования патриотических ценностей",
-    ctaText: "Узнать подробнее",
-    ctaLink: "/programs",
+    ctaText: null,
+    ctaLink: null,
   },
   {
     image: "/images/hero-bg.png",
     title: "Современная база подготовки",
     description:
       "Оснащенные по последнему слову техники учебные классы, стрелковые тиры и полигоны для практических занятий",
-    ctaText: "Наша инфраструктура",
-    ctaLink: "/infrastructure",
+    ctaText: null,
+    ctaLink: null,
   },
   {
     image: "/images/hero-bg.png",
     title: "Присоединяйся к нам",
     description:
       "Стань частью команды единомышленников, готовых служить Родине и развивать свои навыки в военно-прикладных дисциплинах",
-    ctaText: "Записаться на курс",
-    ctaLink: "/enrollment",
+    ctaText: null,
+    ctaLink: null,
   },
 ];
+
+// Transform Strapi slide to component slide format
+const transformSlide = (slide: HeroSlideType): HeroSlide => {
+  return {
+    image: getStrapiMediaUrl(slide.image?.url) || "/images/hero-bg.png",
+    title: slide.title,
+    description: slide.description,
+    ctaText: slide.buttonText,
+    ctaLink: slide.buttonLink,
+  };
+};
 
 // Mobile Content Component
 const MobileContent = ({ slide }: { slide: HeroSlide }) => {
@@ -98,13 +113,15 @@ const MobileContent = ({ slide }: { slide: HeroSlide }) => {
         {slide.description}
       </p>
 
-      {/* CTA Button */}
-      <Link
-        href={slide.ctaLink}
-        className="absolute left-1/2 -translate-x-1/2 top-[370px] flex items-center justify-center w-[231px] max-w-[calc(100%-40px)] h-[40px] px-[25px] py-[10px] bg-[#C62828] hover:bg-[#B71C1C] text-white text-[12px] font-medium font-montserrat leading-[1.219] rounded-[8px] transition-colors"
-      >
-        {slide.ctaText}
-      </Link>
+      {/* CTA Button - только если есть ссылка */}
+      {slide.ctaLink && slide.ctaText && (
+        <Link
+          href={slide.ctaLink}
+          className="absolute left-1/2 -translate-x-1/2 top-[370px] flex items-center justify-center w-[231px] max-w-[calc(100%-40px)] h-[40px] px-[25px] py-[10px] bg-[#C62828] hover:bg-[#B71C1C] text-white text-[12px] font-medium font-montserrat leading-[1.219] rounded-[8px] transition-colors"
+        >
+          {slide.ctaText}
+        </Link>
+      )}
     </div>
   );
 };
@@ -123,13 +140,15 @@ const TabletContent = ({ slide }: { slide: HeroSlide }) => {
         {slide.description}
       </p>
 
-      {/* CTA Button */}
-      <Link
-        href={slide.ctaLink}
-        className="inline-flex items-center justify-center h-[48px] px-5 py-3 bg-[#C62828] hover:bg-[#B71C1C] text-white text-[18px] font-medium font-montserrat leading-[1.219] rounded-[10px] transition-colors w-fit"
-      >
-        {slide.ctaText}
-      </Link>
+      {/* CTA Button - только если есть ссылка */}
+      {slide.ctaLink && slide.ctaText && (
+        <Link
+          href={slide.ctaLink}
+          className="inline-flex items-center justify-center h-[48px] px-5 py-3 bg-[#C62828] hover:bg-[#B71C1C] text-white text-[18px] font-medium font-montserrat leading-[1.219] rounded-[10px] transition-colors w-fit"
+        >
+          {slide.ctaText}
+        </Link>
+      )}
     </div>
   );
 };
@@ -147,13 +166,15 @@ const DesktopContent = ({ slide }: { slide: HeroSlide }) => (
       {slide.description}
     </p>
 
-    {/* CTA Button */}
-    <Link
-      href={slide.ctaLink}
-      className="inline-flex items-center justify-center gap-4 px-6 py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-[20px] font-medium font-montserrat rounded-[12px] transition-colors shadow-lg hover:shadow-xl w-fit"
-    >
-      {slide.ctaText}
-    </Link>
+    {/* CTA Button - только если есть ссылка */}
+    {slide.ctaLink && slide.ctaText && (
+      <Link
+        href={slide.ctaLink}
+        className="inline-flex items-center justify-center gap-4 px-6 py-4 bg-[#C62828] hover:bg-[#B71C1C] text-white text-[20px] font-medium font-montserrat rounded-[12px] transition-colors shadow-lg hover:shadow-xl w-fit"
+      >
+        {slide.ctaText}
+      </Link>
+    )}
   </div>
 );
 
@@ -179,6 +200,47 @@ const swiperConfig = {
 };
 
 export default function HeroSlider() {
+  const {
+    data: heroSliderData,
+    isLoading,
+    isError,
+    error,
+  } = useGetHeroSliderQuery();
+
+  // Логируем ошибки для отладки
+  if (isError) {
+    console.error("HeroSlider API Error:", error);
+    console.error("Error details:", JSON.stringify(error, null, 2));
+  }
+
+  // Логируем данные для отладки
+  if (heroSliderData) {
+    console.log("HeroSlider Data:", heroSliderData);
+  }
+
+  // Если данные загружаются, показываем placeholder
+  if (isLoading) {
+    return (
+      <div className="w-full mx-auto px-[19px] sm:px-[37px] lg:px-[60px] mt-4 sm:mt-7 mb-8 sm:mb-12 lg:mb-[61px]">
+        <div className="w-full h-[471px] sm:h-[841px] lg:h-[685px] rounded-[10px] sm:rounded-[20px] lg:rounded-[26px] bg-gray-200 animate-pulse" />
+      </div>
+    );
+  }
+
+  // Если произошла ошибка или нет данных, используем дефолтные слайды
+  const slides =
+    isError ||
+    !heroSliderData?.data?.slides ||
+    heroSliderData.data.slides.length === 0
+      ? defaultSlides
+      : heroSliderData.data.slides.map(transformSlide);
+
+  if (isError) {
+    console.warn(
+      "HeroSlider: Failed to load data from Strapi. Using default slides."
+    );
+  }
+
   return (
     <div className="w-full mx-auto px-[19px] sm:px-[37px] lg:px-[60px] mt-4 sm:mt-7 mb-8 sm:mb-12 lg:mb-[61px]">
       <section className="w-full mx-auto">

@@ -1,5 +1,39 @@
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { BackButton } from "@/components/buttons";
+import { getStrapiApiUrl } from "@/utils/strapiUrl";
+import type { BattleGloryHistory } from "@/types/strapi";
+import { parseContentParagraphs } from "@/utils/textUtils";
+
+export const fetchCache = "force-no-store";
+
+// Получить историю из Strapi
+async function getBattleGloryHistory(): Promise<BattleGloryHistory | null> {
+  try {
+    const res = await fetch(
+      `${getStrapiApiUrl("battle-glory-history")}?publicationState=live`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.error("Failed to fetch battle glory history:", res.status);
+      return null;
+    }
+
+    const data = await res.json();
+
+    if (!data.data) {
+      return null;
+    }
+
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching battle glory history:", error);
+    return null;
+  }
+}
 
 export const metadata: Metadata = {
   title: "История Липецкой области в годы ВОВ | Карта Боевой Славы",
@@ -25,7 +59,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HistoryPage() {
+export default async function HistoryPage() {
+  const history = await getBattleGloryHistory();
+
+  // Разбиваем контент на параграфы
+  const contentParagraphs = parseContentParagraphs(history?.content);
+
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
       {/* Основной контент */}
@@ -42,64 +81,68 @@ export default function HistoryPage() {
 
         {/* Белая карточка с контентом */}
         <div className="bg-white/90 rounded-[10px] md:rounded-[15px] p-[19px] md:p-[36px] lg:px-[80px] lg:py-[60px] mb-[83px]">
-          <h1 className="text-[20px] md:text-[30px] lg:text-[36px] font-bold font-montserrat text-black leading-[1.219] mb-[23px] md:mb-[30px]">
-            История Липецкой области в годы Великой Отечественной войны
-          </h1>
-
-          <div className="prose max-w-none">
-            <p className="text-[14px] md:text-[16px] lg:text-[18px] text-gray-700 mb-4 md:mb-6 leading-relaxed">
-              Липецкая область внесла значительный вклад в победу в Великой
-              Отечественной войне. С территории области на фронт ушли тысячи
-              липчан, многие из которых не вернулись домой.
-            </p>
-
-            <h2 className="text-[18px] md:text-[24px] lg:text-[28px] font-semibold text-gray-900 mt-6 md:mt-8 mb-4 md:mb-6">
-              Статистика по муниципальным образованиям
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
-              <div className="bg-red-50 p-4 md:p-6 rounded-lg border border-red-200">
-                <h3 className="font-semibold text-gray-900 mb-2 md:mb-3 text-[16px] md:text-[18px]">
-                  Липецк
-                </h3>
-                <p className="text-sm md:text-base text-gray-600 mb-1">
-                  Ушедших на фронт: данные уточняются
-                </p>
-                <p className="text-sm md:text-base text-gray-600">
-                  Погибших: данные уточняются
-                </p>
+          {/* Мобилка/планшет: заголовок и кнопка */}
+          <div className="lg:hidden">
+            <div className="flex items-center justify-between mb-[28px]">
+              <h1 className="text-[20px] md:text-[30px] font-bold font-montserrat text-black leading-[1.219]">
+                История Липецкой области в годы Великой Отечественной войны
+              </h1>
+              <div className="flex-shrink-0">
+                <div className="md:hidden">
+                  <BackButton
+                    href="/battle-glory"
+                    variant="icon"
+                    ariaLabel="Назад к карте"
+                  />
+                </div>
+                <div className="hidden md:block">
+                  <BackButton href="/battle-glory" />
+                </div>
               </div>
+            </div>
+          </div>
 
-              <div className="bg-red-50 p-4 md:p-6 rounded-lg border border-red-200">
-                <h3 className="font-semibold text-gray-900 mb-2 md:mb-3 text-[16px] md:text-[18px]">
-                  Елец
-                </h3>
-                <p className="text-sm md:text-base text-gray-600 mb-1">
-                  Ушедших на фронт: данные уточняются
-                </p>
-                <p className="text-sm md:text-base text-gray-600">
-                  Погибших: данные уточняются
-                </p>
+          {/* Десктоп: заголовок слева, кнопка справа */}
+          <div className="hidden lg:block">
+            <div className="flex items-start justify-between mb-[23px]">
+              <h1 className="text-[40px] font-bold font-montserrat text-black leading-[1.219]">
+                История Липецкой области в годы Великой Отечественной войны
+              </h1>
+              <div className="flex-shrink-0">
+                <BackButton href="/battle-glory" />
               </div>
+            </div>
+          </div>
 
-              <div className="bg-red-50 p-4 md:p-6 rounded-lg border border-red-200">
-                <h3 className="font-semibold text-gray-900 mb-2 md:mb-3 text-[16px] md:text-[18px]">
-                  Другие районы
-                </h3>
-                <p className="text-sm md:text-base text-gray-600">
-                  Данные собираются и будут добавлены позднее
+          {/* Текст истории */}
+          {contentParagraphs.length > 0 && (
+            <div className="xl:px-[40px] 2xl:px-[96px] pt-[25px] md:pt-[40px] lg:pt-[64px]">
+              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px]">
+                {contentParagraphs.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {contentParagraphs.length === 0 && (
+            <div className="xl:px-[40px] 2xl:px-[96px] pt-[25px] md:pt-[40px] lg:pt-[64px]">
+              <div className="text-center py-[40px] md:py-[60px] lg:py-[80px]">
+                <p className="text-[16px] md:text-[20px] lg:text-[24px] font-normal md:font-medium font-montserrat text-[#666666] leading-[1.5]">
+                  В стадии наполнения
                 </p>
               </div>
             </div>
+          )}
 
-            <div className="mt-8 md:mt-12 p-6 md:p-8 bg-gray-100 rounded-lg">
-              <p className="text-sm md:text-base text-gray-600 italic">
-                Раздел находится в разработке. Здесь будет представлена
-                подробная информация об истории Липецкой области в годы Великой
-                Отечественной войны с детальной статистикой по муниципальным
-                образованиям.
-              </p>
-            </div>
+          {/* Нижняя часть: кнопка назад */}
+          <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between gap-6 pt-[25px] md:pt-[40px] lg:pt-[64px]">
+            <BackButton href="/battle-glory" />
           </div>
         </div>
       </main>
