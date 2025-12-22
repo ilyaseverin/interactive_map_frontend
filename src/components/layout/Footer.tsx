@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getActivityComplexRoute } from "@/utils/activityComplexRoutes";
 
 export default function Footer() {
   return (
@@ -106,25 +107,25 @@ export default function Footer() {
 
           {/* Верхняя строка ссылок - абсолютное позиционирование от контейнера */}
           <Link
-            href="/documents/antimonopoly"
+            href={getActivityComplexRoute("Антимонопольный комплекс")}
             className="absolute left-[261px] top-[74px] text-[20px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
           >
             Антимонопольный комплекс
           </Link>
           <Link
-            href="/documents/antidrug"
+            href={getActivityComplexRoute("Антинаркотическая кампания")}
             className="absolute left-[633px] top-[74px] text-[20px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
           >
             Антинаркотическая кампания
           </Link>
           <Link
-            href="/documents/counterterrorism"
+            href={getActivityComplexRoute("Противодействие терроризму")}
             className="absolute left-[1016px] top-[74px] text-[20px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
           >
             Противодействие терроризму
           </Link>
           <Link
-            href="/documents/anticorruption"
+            href={getActivityComplexRoute("Антикоррупционная деятельность")}
             className="absolute left-[1403px] top-[74px] text-[20px] font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity"
           >
             Антикоррупционная деятельность
@@ -308,25 +309,27 @@ export default function Footer() {
                   Документы
                 </Link>
                 <Link
-                  href="/documents/antimonopoly"
+                  href={getActivityComplexRoute("Антимонопольный комплекс")}
                   className="text-sm font-normal font-montserrat text-[#000000] hover:opacity-70 transition-opacity"
                 >
                   Антимонопольный комплекс
                 </Link>
                 <Link
-                  href="/documents/counterterrorism"
+                  href={getActivityComplexRoute("Противодействие терроризму")}
                   className="text-sm font-normal font-montserrat text-[#000000] hover:opacity-70 transition-opacity"
                 >
                   Противодействие терроризму
                 </Link>
                 <Link
-                  href="/documents/antidrug"
+                  href={getActivityComplexRoute("Антинаркотическая кампания")}
                   className="text-sm font-normal font-montserrat text-[#000000] hover:opacity-70 transition-opacity"
                 >
                   Антинаркотическая кампания
                 </Link>
                 <Link
-                  href="/documents/anticorruption"
+                  href={getActivityComplexRoute(
+                    "Антикоррупционная деятельность"
+                  )}
                   className="text-sm font-normal font-montserrat text-[#000000] hover:opacity-70 transition-opacity"
                 >
                   Антикоррупционная деятельность
@@ -491,25 +494,27 @@ export default function Footer() {
               {/* Верхняя строка ссылок */}
               <div className="flex flex-wrap justify-center items-center gap-x-6 lg:gap-x-8 gap-y-2 mb-4">
                 <Link
-                  href="/documents/antimonopoly"
+                  href={getActivityComplexRoute("Антимонопольный комплекс")}
                   className="text-base lg:text-lg font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity whitespace-nowrap"
                 >
                   Антимонопольный комплекс
                 </Link>
                 <Link
-                  href="/documents/antidrug"
+                  href={getActivityComplexRoute("Антинаркотическая кампания")}
                   className="text-base lg:text-lg font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity whitespace-nowrap"
                 >
                   Антинаркотическая кампания
                 </Link>
                 <Link
-                  href="/documents/counterterrorism"
+                  href={getActivityComplexRoute("Противодействие терроризму")}
                   className="text-base lg:text-lg font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity whitespace-nowrap"
                 >
                   Противодействие терроризму
                 </Link>
                 <Link
-                  href="/documents/anticorruption"
+                  href={getActivityComplexRoute(
+                    "Антикоррупционная деятельность"
+                  )}
                   className="text-base lg:text-lg font-normal font-montserrat text-[#000000] leading-[1.219em] hover:opacity-70 transition-opacity whitespace-nowrap"
                 >
                   Антикоррупционная деятельность
