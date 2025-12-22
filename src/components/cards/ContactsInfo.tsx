@@ -54,9 +54,9 @@ export default function ContactsInfo({
                 {phones.map((phone, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px] mb-[35px] sm:mb-[32px] md:mb-[40px] lg:mb-[48px] xl:mb-[64px] last:mb-0"
+                    className="flex items-center gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px] mb-[35px] sm:mb-[32px] md:mb-[40px] lg:mb-[48px] xl:mb-[64px] last:mb-0"
                   >
-                    <div className="w-[15px] h-[15px] sm:w-[48px] sm:h-[48px] md:w-[56px] md:h-[56px] lg:w-[64px] lg:h-[64px] xl:w-[68px] xl:h-[68px] flex-shrink-0 mt-[2px] sm:mt-0">
+                    <div className="w-[15px] h-[15px] sm:w-[48px] sm:h-[48px] md:w-[56px] md:h-[56px] lg:w-[64px] lg:h-[64px] xl:w-[68px] xl:h-[68px] flex-shrink-0">
                       <Image
                         src="/images/contacts/phone-icon.png"
                         alt="Телефон"

@@ -29,35 +29,34 @@ export default function AboutLayout({
     >
       {/* Breadcrumb Navigation */}
       <div className="w-full px-[19px] sm:px-[32px] md:px-[36px] lg:px-[64px] xl:px-[80px] pt-[15px] sm:pt-[20px] lg:pt-[40px] pb-[16px] sm:pb-[18px] lg:pb-[21px] xl:pb-[39px]">
-        <div className="flex items-center justify-between">
-          <Breadcrumbs
-            items={[
-              { label: "Главная", href: "/" },
-              { label: "О центре", href: "/about" },
-            ]}
-          />
+        <div className="flex items-center justify-between gap-[10px]">
+          <div className="flex-1 min-w-0">
+            <Breadcrumbs
+              items={[
+                { label: "Главная", href: "/" },
+                { label: "О центре", href: "/about" },
+              ]}
+            />
+          </div>
 
           {/* Back button - mobile: только иконка */}
-          <div className="md:hidden">
+          <div className="flex-shrink-0 md:hidden">
             <BackButton
-            onClick={() => router.back()}
+              onClick={() => router.back()}
               variant="icon"
               ariaLabel="Назад"
-              />
+            />
           </div>
 
           {/* Back button - tablet и desktop */}
-          <div className="hidden md:block">
-            <BackButton
-            onClick={() => router.back()}
-              variant="default"
-            />
+          <div className="hidden md:block flex-shrink-0">
+            <BackButton onClick={() => router.back()} variant="default" />
           </div>
         </div>
       </div>
 
       {/* Submenu Navigation */}
-      <div className="w-full px-[19px] sm:px-[32px] md:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] md:pb-[30px] lg:pb-[112px]">
+      <div className="w-full px-[19px] sm:px-[32px] md:px-[36px] lg:px-[64px] xl:px-[80px] pb-[15px] md:pb-[20px] lg:pb-[30px]">
         {/* Mobile/Small: активный сверху, остальные снизу с wrap */}
         <div className="md:hidden">
           {subMenuItems.map((item) => {
