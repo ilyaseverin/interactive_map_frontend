@@ -19,7 +19,7 @@ export default function BrandPage() {
     return (
       <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
         <div className="flex justify-center items-center py-20">
-          <div className="text-[12px] md:text-base text-gray-600">
+          <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
             Загрузка...
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function BrandPage() {
     return (
       <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
         <div className="flex justify-center items-center py-20">
-          <div className="text-[12px] md:text-base text-gray-600">
+          <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
             Не удалось загрузить данные фирменного стиля. Попробуйте обновить
             страницу.
           </div>
@@ -52,7 +52,7 @@ export default function BrandPage() {
         height={22}
         className="w-[18px] h-[18px] md:w-[18px] md:h-[18px] lg:w-[22px] lg:h-[22px]"
       />
-      <span className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-black leading-[1.219]">
+      <span className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal leading-[1.219] text-black">
         {formatDate(date)}
       </span>
     </div>
@@ -208,7 +208,7 @@ export default function BrandPage() {
           (!content?.logos || content.logos.length === 0) &&
           (!content?.brand_colors || content.brand_colors.length === 0) && (
             <div className="flex justify-center items-center py-20">
-              <div className="text-[12px] md:text-base text-gray-600">
+              <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
                 Данные фирменного стиля пока не добавлены
               </div>
             </div>

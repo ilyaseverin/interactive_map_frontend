@@ -15,7 +15,9 @@ export default function TeamPage() {
     return (
       <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
         <div className="flex justify-center items-center py-20">
-          <div className="text-xl text-gray-600">Загрузка...</div>
+          <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
+            Загрузка...
+          </div>
         </div>
       </div>
     );
@@ -25,7 +27,7 @@ export default function TeamPage() {
     return (
       <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
         <div className="flex justify-center items-center py-20">
-          <div className="text-xl text-gray-600">
+          <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
             Не удалось загрузить данные команды. Попробуйте обновить страницу.
           </div>
         </div>
@@ -39,7 +41,7 @@ export default function TeamPage() {
       <div className="mb-[30px] space-y-[20px] xs:space-y-[22px] sm:space-y-[25px] md:space-y-[25px] lg:space-y-[65px]">
         {teamData.length === 0 ? (
           <div className="flex justify-center items-center py-20">
-            <div className="text-xl text-gray-600">
+            <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
               Данные команды не найдены
             </div>
           </div>

@@ -15,7 +15,9 @@ export default function ManagementPage() {
     return (
       <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
         <div className="flex justify-center items-center py-20">
-          <div className="text-xl text-gray-600">Загрузка...</div>
+          <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
+            Загрузка...
+          </div>
         </div>
       </div>
     );
@@ -25,7 +27,7 @@ export default function ManagementPage() {
     return (
       <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[64px] xl:px-[80px] pb-[30px] lg:pb-[194px]">
         <div className="flex justify-center items-center py-20">
-          <div className="text-xl text-gray-600">
+          <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
             Не удалось загрузить данные руководства. Попробуйте обновить
             страницу.
           </div>
@@ -40,17 +42,16 @@ export default function ManagementPage() {
       <div className="mb-[30px] space-y-[20px] xs:space-y-[22px] sm:space-y-[25px] md:space-y-[25px] lg:space-y-[65px]">
         {managementData.length === 0 ? (
           <div className="flex justify-center items-center py-20">
-            <div className="text-xl text-gray-600">
+            <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
               Данные руководства не найдены
             </div>
           </div>
         ) : (
           managementData.map((person) => {
             // Формируем URL изображения
-            const imageUrl = getResponsiveImageUrl(
-              person.photo,
-              "medium"
-            ) || "/images/management/placeholder.jpg";
+            const imageUrl =
+              getResponsiveImageUrl(person.photo, "medium") ||
+              "/images/management/placeholder.jpg";
 
             return (
               <PersonCard
@@ -76,7 +77,7 @@ export default function ManagementPage() {
           onClick={() => router.back()}
           variant="default"
           className="mx-auto md:mx-0 md:ml-[36px] w-[124px] md:w-auto"
-            />
+        />
       </div>
     </div>
   );
