@@ -37,7 +37,9 @@ export default function ContactsPage() {
       <div className="w-full min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          <p className="mt-4 text-gray-600">Загрузка контактов...</p>
+          <p className="mt-4 text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
+            Загрузка контактов...
+          </p>
         </div>
       </div>
     );
@@ -46,8 +48,10 @@ export default function ContactsPage() {
   return (
     <div className="w-full">
       {isError && (
-        <div className="mb-6 rounded-lg bg-yellow-100 px-4 py-3 text-yellow-800">
-          Не удалось загрузить актуальные контакты. Показаны резервные данные.
+        <div className="mb-6 rounded-lg bg-yellow-100 px-4 py-3">
+          <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-yellow-800">
+            Не удалось загрузить актуальные контакты. Показаны резервные данные.
+          </p>
         </div>
       )}
       {/* Контактная информация */}
