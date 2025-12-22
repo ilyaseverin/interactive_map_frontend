@@ -39,7 +39,11 @@ export default function PartnersPage() {
   if (isPartnersLoading) {
     return (
       <div className="w-full max-w-[1920px] mx-auto px-[35px] sm:px-[36px] lg:px-[80px] pb-[30px] lg:pb-[194px]">
-        <div className="text-center py-12">Загрузка...</div>
+        <div className="flex justify-center items-center py-20">
+          <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
+            Загрузка...
+          </div>
+        </div>
       </div>
     );
   }
@@ -67,7 +71,11 @@ export default function PartnersPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">Партнеры не найдены</div>
+          <div className="flex justify-center items-center py-20">
+            <div className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-gray-600">
+              Партнеры не найдены
+            </div>
+          </div>
         )}
       </div>
 
