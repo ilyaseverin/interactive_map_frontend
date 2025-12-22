@@ -3,21 +3,22 @@ import { ActivityComplexCategory } from "@/types/strapi";
 /**
  * Маппинг категорий комплексов на их URL-маршруты
  */
-export const ACTIVITY_COMPLEX_ROUTES: Record<ActivityComplexCategory, string> = {
-  "Антимонопольный комплекс": "/antimonopoly",
-  "Антикоррупционная деятельность": "/anticorruption",
-  "Противодействие терроризму": "/counterterrorism",
-  "Антинаркотическая кампания": "/antidrug",
-};
+export const ACTIVITY_COMPLEX_ROUTES: Record<ActivityComplexCategory, string> =
+  {
+    "Антимонопольный комплекс": "/activity/antimonopoly",
+    "Антикоррупционная деятельность": "/activity/anticorruption",
+    "Противодействие терроризму": "/activity/counterterrorism",
+    "Антинаркотическая кампания": "/activity/antidrug",
+  };
 
 /**
  * Обратный маппинг: URL -> категория
  */
 export const ROUTE_TO_CATEGORY: Record<string, ActivityComplexCategory> = {
-  "/antimonopoly": "Антимонопольный комплекс",
-  "/anticorruption": "Антикоррупционная деятельность",
-  "/counterterrorism": "Противодействие терроризму",
-  "/antidrug": "Антинаркотическая кампания",
+  "/activity/antimonopoly": "Антимонопольный комплекс",
+  "/activity/anticorruption": "Антикоррупционная деятельность",
+  "/activity/counterterrorism": "Противодействие терроризму",
+  "/activity/antidrug": "Антинаркотическая кампания",
 };
 
 /**
@@ -32,7 +33,8 @@ export function getActivityComplexRoute(
 /**
  * Получить категорию по URL маршруту
  */
-export function getCategoryByRoute(route: string): ActivityComplexCategory | null {
+export function getCategoryByRoute(
+  route: string
+): ActivityComplexCategory | null {
   return ROUTE_TO_CATEGORY[route] || null;
 }
-
