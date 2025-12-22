@@ -153,6 +153,21 @@ export interface BattleGloryResponse {
   };
 }
 
+// Типы для истории Боевой Славы
+export interface BattleGloryHistory {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  content?: string; // RichText как HTML строка
+}
+
+export interface BattleGloryHistoryResponse {
+  data: BattleGloryHistory | null;
+  meta: Record<string, unknown>;
+}
+
 // Типы для пресс-релизов
 export interface PressReleaseBasicInfo {
   id: number;

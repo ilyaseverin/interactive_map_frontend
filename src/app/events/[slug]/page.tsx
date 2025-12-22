@@ -13,6 +13,7 @@ import {
 } from "@/utils/strapiUrl";
 import { formatFileSize } from "@/utils/fileSize";
 import { buildKeywords } from "@/utils/seoKeywords";
+import { parseContentParagraphs } from "@/utils/textUtils";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -264,31 +265,10 @@ export default async function EventDetailPage({
   // Аттачменты
   const attachments = event.additional_materials?.attachments || [];
 
-  // Разбиваем описание на параграфы (может быть HTML или обычный текст)
-  const description = event.content_info?.description || "";
-  let contentParagraphs: string[] = [];
-
-  if (description) {
-    // Если это HTML с тегами <p>, извлекаем параграфы
-    if (description.includes("<p>") || description.includes("</p>")) {
-      const pRegex = /<p[^>]*>([\s\S]*?)<\/p>/gi;
-      const matches = description.matchAll(pRegex);
-      contentParagraphs = Array.from(matches)
-        .map((match) => match[1].trim().replace(/<[^>]+>/g, "")) // Удаляем вложенные HTML теги
-        .filter((p) => p);
-
-      // Если параграфы не найдены, пытаемся разбить по другим тегам или \n\n
-      if (contentParagraphs.length === 0) {
-        contentParagraphs = description
-          .replace(/<[^>]+>/g, "\n") // Заменяем HTML теги на переносы строк
-          .split("\n\n")
-          .filter((p) => p.trim());
-      }
-    } else {
-      // Обычный текст - разбиваем по \n\n
-      contentParagraphs = description.split("\n\n").filter((p) => p.trim());
-    }
-  }
+  // Разбиваем описание на параграфы
+  const contentParagraphs = parseContentParagraphs(
+    event.content_info?.description
+  );
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">

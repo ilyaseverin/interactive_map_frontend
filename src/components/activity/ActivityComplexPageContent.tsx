@@ -4,6 +4,7 @@ import { BackButton } from "@/components/buttons";
 import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 import DownloadLink from "@/components/DownloadLink";
 import { formatFileSize } from "@/utils/fileSize";
+import { parseContentParagraphs } from "@/utils/textUtils";
 
 interface ActivityComplexPageContentProps {
   complex: ActivityComplex;
@@ -12,16 +13,8 @@ interface ActivityComplexPageContentProps {
 export default function ActivityComplexPageContent({
   complex,
 }: ActivityComplexPageContentProps) {
-  // Функция для рендеринга HTML контента
-  const renderContent = (html: string | undefined) => {
-    if (!html) return null;
-    return (
-      <div
-        className="prose prose-lg max-w-none [&_p]:text-[12px] md:[&_p]:text-[16px] lg:[&_p]:text-[24px] [&_p]:font-normal md:[&_p]:font-medium [&_p]:font-montserrat [&_p]:text-black [&_p]:leading-[1.666] md:[&_p]:leading-[1.5625] lg:[&_p]:leading-[1.458] [&_p]:mb-[20px] md:[&_p]:mb-[25px] lg:[&_p]:mb-[30px] [&_h1]:text-[20px] md:[&_h1]:text-[28px] lg:[&_h1]:text-[36px] [&_h1]:font-bold [&_h1]:font-montserrat [&_h1]:text-black [&_h1]:mb-[15px] md:[&_h1]:mb-[20px] lg:[&_h1]:mb-[25px] [&_h2]:text-[18px] md:[&_h2]:text-[24px] lg:[&_h2]:text-[30px] [&_h2]:font-semibold [&_h2]:font-montserrat [&_h2]:text-black [&_h2]:mb-[12px] md:[&_h2]:mb-[16px] lg:[&_h2]:mb-[20px] [&_ul]:list-disc [&_ul]:pl-[20px] md:[&_ul]:pl-[30px] [&_ol]:list-decimal [&_ol]:pl-[20px] md:[&_ol]:pl-[30px] [&_li]:text-[12px] md:[&_li]:text-[16px] lg:[&_li]:text-[24px] [&_li]:mb-[10px] [&_a]:text-[#1d4e89] [&_a]:underline [&_a]:hover:opacity-70"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    );
-  };
+  // Разбиваем контент на параграфы
+  const contentParagraphs = parseContentParagraphs(complex.content?.body);
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
@@ -70,10 +63,17 @@ export default function ActivityComplexPageContent({
           </div>
 
           {/* Content Body */}
-          {complex.content?.body && (
+          {contentParagraphs.length > 0 && (
             <div className="xl:px-[40px] 2xl:px-[96px] pt-[25px] md:pt-[40px] lg:pt-[64px]">
-              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px]">
-                {renderContent(complex.content.body)}
+              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px]">
+                {contentParagraphs.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
               </div>
             </div>
           )}

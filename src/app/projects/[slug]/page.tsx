@@ -14,6 +14,7 @@ import {
 import { formatFileSize } from "@/utils/fileSize";
 import { formatDate } from "@/utils/dateUtils";
 import { buildKeywords } from "@/utils/seoKeywords";
+import { parseContentParagraphs } from "@/utils/textUtils";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -205,10 +206,9 @@ export default async function ProjectDetailPage({
   // Аттачменты обработаны
 
   // Разбиваем контент на параграфы
-  const contentParagraphs =
+  const contentParagraphs = parseContentParagraphs(
     project.content_info?.content
-      ?.split("\n\n")
-      .filter((p: string) => p.trim()) || [];
+  );
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">

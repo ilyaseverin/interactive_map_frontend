@@ -12,6 +12,7 @@ import {
 } from "@/utils/strapiUrl";
 import { formatDate } from "@/utils/dateUtils";
 import { buildKeywords } from "@/utils/seoKeywords";
+import { parseContentParagraphs } from "@/utils/textUtils";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -190,8 +191,9 @@ export default async function NewsDetailPage({
     : undefined;
 
   // Разбиваем контент на параграфы
-  const contentParagraphs =
-    news.content_info?.content?.split("\n\n").filter((p) => p.trim()) || [];
+  const contentParagraphs = parseContentParagraphs(
+    news.content_info?.content
+  );
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
