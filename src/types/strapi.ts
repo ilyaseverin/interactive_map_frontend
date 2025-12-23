@@ -511,6 +511,28 @@ export interface HeroSliderResponse {
   meta: Record<string, unknown>;
 }
 
+// Типы для страницы организации
+export interface OrganizationData {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  center_photo?: StrapiImage | null;
+  introduction_texts?: string[];
+  goal_title?: string;
+  goal_text?: string;
+  subject_title?: string;
+  subject_text?: string;
+  activities_title?: string;
+  activities?: string[];
+}
+
+export interface OrganizationResponse {
+  data: OrganizationData | null;
+  meta: Record<string, unknown>;
+}
+
 // Общие типы
 export type PaginationArgs = {
   page?: number;
