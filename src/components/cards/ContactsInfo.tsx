@@ -7,6 +7,26 @@ interface ContactsInfoProps {
   website: string;
 }
 
+// Функция для извлечения номера телефона из строки
+const extractPhoneNumber = (phoneString: string): string => {
+  // Удаляем все символы кроме цифр, + и скобок
+  const cleaned = phoneString.replace(/[^\d+()\s-]/g, "");
+  // Извлекаем номер (убираем все кроме цифр и +)
+  const number = cleaned.replace(/[^\d+]/g, "");
+  return number;
+};
+
+// Функция для форматирования URL сайта
+const formatWebsiteUrl = (website: string): string => {
+  if (!website) return "";
+  // Если уже есть протокол, возвращаем как есть
+  if (website.startsWith("http://") || website.startsWith("https://")) {
+    return website;
+  }
+  // Добавляем https://
+  return `https://${website}`;
+};
+
 export default function ContactsInfo({
   address,
   phones,
@@ -51,57 +71,85 @@ export default function ContactsInfo({
                 </div>
 
                 {/* Телефоны - Mobile: icon 15x15, gap 25px, font 12px, mb 35px */}
-                {phones.map((phone, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px] mb-[35px] sm:mb-[32px] md:mb-[40px] lg:mb-[48px] xl:mb-[64px] last:mb-0"
-                  >
+                {phones.map((phone, index) => {
+                  const phoneNumber = extractPhoneNumber(phone);
+                  const telLink = phoneNumber
+                    ? `tel:${phoneNumber}`
+                    : undefined;
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px] mb-[35px] sm:mb-[32px] md:mb-[40px] lg:mb-[48px] xl:mb-[64px] last:mb-0"
+                    >
+                      <div className="w-[15px] h-[15px] sm:w-[48px] sm:h-[48px] md:w-[56px] md:h-[56px] lg:w-[64px] lg:h-[64px] xl:w-[68px] xl:h-[68px] flex-shrink-0">
+                        <Image
+                          src="/images/contacts/phone-icon.png"
+                          alt="Телефон"
+                          width={68}
+                          height={68}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      {telLink ? (
+                        <a
+                          href={telLink}
+                          className="text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-normal font-montserrat text-black leading-[1.219] flex-1 hover:text-[#1D4E89] hover:underline transition-colors cursor-pointer"
+                        >
+                          {phone}
+                        </a>
+                      ) : (
+                        <p className="text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-normal font-montserrat text-black leading-[1.219] flex-1">
+                          {phone}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Сайт - Mobile: icon 15x15, gap 25px, font 12px, mb 35px */}
+                {website && (
+                  <div className="flex items-center gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px] mb-[35px] sm:mb-[32px] md:mb-[40px] lg:mb-[48px] xl:mb-[64px]">
                     <div className="w-[15px] h-[15px] sm:w-[48px] sm:h-[48px] md:w-[56px] md:h-[56px] lg:w-[64px] lg:h-[64px] xl:w-[68px] xl:h-[68px] flex-shrink-0">
                       <Image
-                        src="/images/contacts/phone-icon.png"
-                        alt="Телефон"
+                        src="/images/contacts/website-icon.png"
+                        alt="Сайт"
                         width={68}
                         height={68}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-normal font-montserrat text-black leading-[1.219] flex-1">
-                      {phone}
-                    </p>
+                    <a
+                      href={formatWebsiteUrl(website)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-normal font-montserrat text-black leading-[1.219] flex-1 hover:text-[#1D4E89] hover:underline transition-colors cursor-pointer"
+                    >
+                      {website}
+                    </a>
                   </div>
-                ))}
-
-                {/* Сайт - Mobile: icon 15x15, gap 25px, font 12px, mb 35px */}
-                <div className="flex items-center gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px] mb-[35px] sm:mb-[32px] md:mb-[40px] lg:mb-[48px] xl:mb-[64px]">
-                  <div className="w-[15px] h-[15px] sm:w-[48px] sm:h-[48px] md:w-[56px] md:h-[56px] lg:w-[64px] lg:h-[64px] xl:w-[68px] xl:h-[68px] flex-shrink-0">
-                    <Image
-                      src="/images/contacts/website-icon.png"
-                      alt="Сайт"
-                      width={68}
-                      height={68}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <p className="text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-normal font-montserrat text-black leading-[1.219] flex-1">
-                    {website}
-                  </p>
-                </div>
+                )}
 
                 {/* Email - Mobile: icon 15x15, gap 25px, font 12px */}
-                <div className="flex items-center gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px]">
-                  <div className="w-[15px] h-[15px] sm:w-[48px] sm:h-[48px] md:w-[56px] md:h-[56px] lg:w-[64px] lg:h-[64px] xl:w-[68px] xl:h-[68px] flex-shrink-0">
-                    <Image
-                      src="/images/contacts/email-icon.png"
-                      alt="Email"
-                      width={68}
-                      height={68}
-                      className="w-full h-full object-cover"
-                    />
+                {email && (
+                  <div className="flex items-center gap-[25px] sm:gap-[24px] md:gap-[32px] lg:gap-[48px] xl:gap-[64px]">
+                    <div className="w-[15px] h-[15px] sm:w-[48px] sm:h-[48px] md:w-[56px] md:h-[56px] lg:w-[64px] lg:h-[64px] xl:w-[68px] xl:h-[68px] flex-shrink-0">
+                      <Image
+                        src="/images/contacts/email-icon.png"
+                        alt="Email"
+                        width={68}
+                        height={68}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <a
+                      href={`mailto:${email}`}
+                      className="text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-normal font-montserrat text-black leading-[1.219] flex-1 hover:text-[#1D4E89] hover:underline transition-colors cursor-pointer"
+                    >
+                      {email}
+                    </a>
                   </div>
-                  <p className="text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] font-normal font-montserrat text-black leading-[1.219] flex-1">
-                    {email}
-                  </p>
-                </div>
+                )}
               </div>
             </div>
           </div>

@@ -47,13 +47,6 @@ export default function ContactsPage() {
 
   return (
     <div className="w-full">
-      {isError && (
-        <div className="mb-6 rounded-lg bg-yellow-100 px-4 py-3">
-          <p className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal text-yellow-800">
-            Не удалось загрузить актуальные контакты. Показаны резервные данные.
-          </p>
-        </div>
-      )}
       {/* Контактная информация */}
       <ContactsInfo
         address={contacts.address}
