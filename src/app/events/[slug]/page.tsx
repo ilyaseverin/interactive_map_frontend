@@ -406,10 +406,11 @@ export default async function EventDetailPage({
                   }
                 }
 
-                // Название файла
+                // Название файла: берем исходное имя файла в приоритете, чтобы сохранить расширение
                 const fileName =
-                  attachment.title ||
                   file.name ||
+                  (file as { filename?: string }).filename ||
+                  attachment.title ||
                   `document${file.ext || ".pdf"}`;
 
                 // Размер файла

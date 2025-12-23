@@ -22,6 +22,22 @@ async function fetchAllData(filters: string[]): Promise<BattleGloryResponse> {
       cache: "no-store",
     });
 
+    // На проде Strapi может вернуть 404, если коллекция отсутствует/не опубликована.
+    // Не роняем весь запрос, а возвращаем пустой результат.
+    if (response.status === 404) {
+      return {
+        data: [],
+        meta: {
+          pagination: {
+            total: 0,
+            pageSize: 0,
+            pageCount: 0,
+            page: 1,
+          },
+        },
+      };
+    }
+
     if (!response.ok) {
       throw new Error(`Strapi API error: ${response.status}`);
     }

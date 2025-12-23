@@ -79,7 +79,7 @@ export default function SearchResultCard({
                   href={parentUrl}
                   className="text-[14px] md:text-[16px] lg:text-[18px] font-normal font-inter text-[#1D4E89] hover:underline"
                 >
-                  Из: {item.parentTitle}
+                  Источник: {item.parentTitle}
                 </Link>
               </div>
             )}

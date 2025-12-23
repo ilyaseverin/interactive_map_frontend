@@ -73,6 +73,27 @@ async function searchStrapiContent(
     }
   );
 
+  // На проде Strapi может вернуть 404, если коллекция отсутствует/не опубликована.
+  // Не роняем весь поиск, а возвращаем пустой результат.
+  if (response.status === 404) {
+    // brand - singletype, остальные эндпоинты возвращают коллекции
+    if (endpoint === "brand") {
+      return { data: null };
+    }
+
+    return {
+      data: [],
+      meta: {
+        pagination: {
+          page: DEFAULT_PAGE,
+          pageSize: DEFAULT_PAGE_SIZE,
+          pageCount: 0,
+          total: 0,
+        },
+      },
+    };
+  }
+
   if (!response.ok) {
     throw new Error(`Strapi API error: ${response.status}`);
   }
@@ -109,15 +130,9 @@ const findMatchingDocuments = (
 
   return attachments
     .filter((attachment) => {
-      const docTitle = attachment.title || "";
-      const docDescription = attachment.description || "";
       const fileName = attachment.file?.name || "";
 
-      return (
-        containsSearchTerm(docTitle, searchTerm) ||
-        (hasDescription && containsSearchTerm(docDescription, searchTerm)) ||
-        containsSearchTerm(fileName, searchTerm)
-      );
+      return containsSearchTerm(fileName, searchTerm);
     })
     .map((attachment) => ({
       title: attachment.title || "",
@@ -190,92 +205,87 @@ export async function GET(request: Request) {
     const searchTerm = query.trim();
 
     // Параллельный поиск во всех типах контента
-    const [newsData, projectsData, pressReleasesData, eventsData, documentsData, brandData] =
-      await Promise.all([
-        // Новости
-        searchStrapiContent("news", {
-          "filters[$or][0][title][$containsi]": searchTerm,
-          "filters[$or][1][content_info][excerpt][$containsi]": searchTerm,
-          "filters[$or][2][content_info][content][$containsi]": searchTerm,
-          "populate[basic_info]": "*",
-          "populate[content_info]": "*",
-          "populate[media][populate][cover]": "true",
-          sort: "basic_info.published_at_date:desc",
-        }),
-        // Проекты
-        searchStrapiContent("projects", {
-          "filters[$or][0][title][$containsi]": searchTerm,
-          "filters[$or][1][summary][excerpt][$containsi]": searchTerm,
-          "filters[$or][2][content_info][content][$containsi]": searchTerm,
-          "filters[$or][3][attachments_block][attachments][title][$containsi]":
-            searchTerm,
-          "filters[$or][4][attachments_block][attachments][description][$containsi]":
-            searchTerm,
-          "filters[$or][5][attachments_block][attachments][file][name][$containsi]":
-            searchTerm,
-          "populate[basic_info]": "*",
-          "populate[summary]": "*",
-          "populate[content_info]": "*",
-          "populate[media][populate][cover]": "true",
-          "populate[attachments_block][populate][attachments][populate][file]":
-            "true",
-          sort: "publishedAt:desc",
-        }),
-        // Пресс-релизы
-        searchStrapiContent("press-releases", {
-          "filters[$or][0][title][$containsi]": searchTerm,
-          "filters[$or][1][content_info][excerpt][$containsi]": searchTerm,
-          "filters[$or][2][content_info][content][$containsi]": searchTerm,
-          "filters[$or][3][attachments_block][attachments][title][$containsi]":
-            searchTerm,
-          "filters[$or][4][attachments_block][attachments][description][$containsi]":
-            searchTerm,
-          "filters[$or][5][attachments_block][attachments][file][name][$containsi]":
-            searchTerm,
-          "populate[basic_info]": "*",
-          "populate[content_info]": "*",
-          "populate[media][populate][cover]": "true",
-          "populate[attachments_block][populate][attachments][populate][file]":
-            "true",
-          sort: "basic_info.published_at_date:desc",
-        }),
-        // События
-        searchStrapiContent("events", {
-          "filters[$or][0][title][$containsi]": searchTerm,
-          "filters[$or][1][content_info][description][$containsi]": searchTerm,
-          "filters[$or][2][location_info][location][$containsi]": searchTerm,
-          "filters[$or][3][additional_materials][attachments][title][$containsi]":
-            searchTerm,
-          "filters[$or][4][additional_materials][attachments][description][$containsi]":
-            searchTerm,
-          "filters[$or][5][additional_materials][attachments][file][name][$containsi]":
-            searchTerm,
-          "populate[basic_info]": "*",
-          "populate[content_info][populate][cover]": "true",
-          "populate[content_info][populate][gallery]": "true",
-          "populate[location_info]": "*",
-          "populate[additional_materials][populate][attachments][populate][file]":
-            "true",
-          sort: "basic_info.datetime_start:desc",
-        }),
-        // Документы из коллекции documents
-        searchStrapiContent("documents", {
-          "filters[$or][0][title][$containsi]": searchTerm,
-          "filters[$or][1][description][$containsi]": searchTerm,
-          "filters[$or][2][files][name][$containsi]": searchTerm,
-          "filters[$or][3][attachments][files][name][$containsi]": searchTerm,
-          "populate[files]": "true",
-          "populate[attachments][populate][files]": "true",
-          sort: "publishedAt:desc",
-        }),
-        // Brand (для поиска по файлам)
-        searchStrapiContent("brand", {
-          "populate[content]": "*",
-          "populate[content][populate][logo_with_description]": "*",
-          "populate[content][populate][logo_with_description][populate][files]": "true",
-          "populate[content][populate][logos]": "true",
-        }),
-      ]);
+    const [
+      newsData,
+      projectsData,
+      pressReleasesData,
+      eventsData,
+      documentsData,
+      brandData,
+    ] = await Promise.all([
+      // Новости
+      searchStrapiContent("news", {
+        "filters[$or][0][title][$containsi]": searchTerm,
+        "filters[$or][1][content_info][excerpt][$containsi]": searchTerm,
+        "filters[$or][2][content_info][content][$containsi]": searchTerm,
+        "populate[basic_info]": "*",
+        "populate[content_info]": "*",
+        "populate[media][populate][cover]": "true",
+        sort: "basic_info.published_at_date:desc",
+      }),
+      // Проекты
+      searchStrapiContent("projects", {
+        "filters[$or][0][title][$containsi]": searchTerm,
+        "filters[$or][1][summary][excerpt][$containsi]": searchTerm,
+        "filters[$or][2][content_info][content][$containsi]": searchTerm,
+        "filters[$or][3][attachments_block][attachments][file][name][$containsi]":
+          searchTerm,
+        "populate[basic_info]": "*",
+        "populate[summary]": "*",
+        "populate[content_info]": "*",
+        "populate[media][populate][cover]": "true",
+        "populate[attachments_block][populate][attachments][populate][file]":
+          "true",
+        sort: "publishedAt:desc",
+      }),
+      // Пресс-релизы
+      searchStrapiContent("press-releases", {
+        "filters[$or][0][title][$containsi]": searchTerm,
+        "filters[$or][1][content_info][excerpt][$containsi]": searchTerm,
+        "filters[$or][2][content_info][content][$containsi]": searchTerm,
+        "filters[$or][3][attachments_block][attachments][file][name][$containsi]":
+          searchTerm,
+        "populate[basic_info]": "*",
+        "populate[content_info]": "*",
+        "populate[media][populate][cover]": "true",
+        "populate[attachments_block][populate][attachments][populate][file]":
+          "true",
+        sort: "basic_info.published_at_date:desc",
+      }),
+      // События
+      searchStrapiContent("events", {
+        "filters[$or][0][title][$containsi]": searchTerm,
+        "filters[$or][1][content_info][description][$containsi]": searchTerm,
+        "filters[$or][2][location_info][location][$containsi]": searchTerm,
+        "filters[$or][3][additional_materials][attachments][file][name][$containsi]":
+          searchTerm,
+        "populate[basic_info]": "*",
+        "populate[content_info][populate][cover]": "true",
+        "populate[content_info][populate][gallery]": "true",
+        "populate[location_info]": "*",
+        "populate[additional_materials][populate][attachments][populate][file]":
+          "true",
+        sort: "basic_info.datetime_start:desc",
+      }),
+      // Документы из коллекции documents
+      searchStrapiContent("documents", {
+        "filters[$or][0][title][$containsi]": searchTerm,
+        "filters[$or][1][description][$containsi]": searchTerm,
+        "filters[$or][2][files][name][$containsi]": searchTerm,
+        "filters[$or][3][attachments][files][name][$containsi]": searchTerm,
+        "populate[files]": "true",
+        "populate[attachments][populate][files]": "true",
+        sort: "publishedAt:desc",
+      }),
+      // Brand (для поиска по файлам)
+      searchStrapiContent("brand", {
+        "populate[content]": "*",
+        "populate[content][populate][logo_with_description]": "*",
+        "populate[content][populate][logo_with_description][populate][files]":
+          "true",
+        "populate[content][populate][logos]": "true",
+      }),
+    ]);
 
     // Объединяем результаты в один массив
     const searchResults: SearchResultItem[] = [];
@@ -450,19 +460,27 @@ export async function GET(request: Request) {
       documentsData.data.forEach((item: DocumentItem) => {
         // Проверяем, соответствует ли документ поисковому запросу
         const titleMatch = containsSearchTerm(item.title, searchTerm);
-        const descriptionMatch = containsSearchTerm(item.description, searchTerm);
-        
+        const descriptionMatch = containsSearchTerm(
+          item.description,
+          searchTerm
+        );
+
         // Проверяем файлы документа
         const filesMatch = item.files?.some((file) =>
           containsSearchTerm(file.name, searchTerm)
         );
-        
+
         // Проверяем файлы в attachments
         const attachmentsFilesMatch = item.attachments?.files?.some((file) =>
           containsSearchTerm(file.name, searchTerm)
         );
 
-        if (titleMatch || descriptionMatch || filesMatch || attachmentsFilesMatch) {
+        if (
+          filesMatch ||
+          attachmentsFilesMatch ||
+          titleMatch ||
+          descriptionMatch
+        ) {
           // Для документов из коллекции documents показываем только файлы, не заголовок
           // Если документ найден по title/description, показываем все его файлы
           // Если найден только по имени файла, показываем только соответствующие файлы
@@ -471,10 +489,16 @@ export async function GET(request: Request) {
           if (item.files) {
             item.files.forEach((file, index) => {
               // Показываем файл, если он соответствует поиску ИЛИ документ найден по title/description
-              if (containsSearchTerm(file.name, searchTerm) || titleMatch || descriptionMatch) {
+              if (
+                containsSearchTerm(file.name, searchTerm) ||
+                titleMatch ||
+                descriptionMatch
+              ) {
                 const fileUrl = file.url ? `${STRAPI_URL}${file.url}` : "";
                 const fileName = file.name || "Документ";
-                const fileSize = file.size ? formatFileSize(file.size) : undefined;
+                const fileSize = file.size
+                  ? formatFileSize(file.size)
+                  : undefined;
 
                 searchResults.push({
                   id: `document-file-${item.id}-${index}`,
@@ -496,10 +520,16 @@ export async function GET(request: Request) {
           if (item.attachments?.files) {
             item.attachments.files.forEach((file, index) => {
               // Показываем файл, если он соответствует поиску ИЛИ документ найден по title/description
-              if (containsSearchTerm(file.name, searchTerm) || titleMatch || descriptionMatch) {
+              if (
+                containsSearchTerm(file.name, searchTerm) ||
+                titleMatch ||
+                descriptionMatch
+              ) {
                 const fileUrl = file.url ? `${STRAPI_URL}${file.url}` : "";
                 const fileName = file.name || "Документ";
-                const fileSize = file.size ? formatFileSize(file.size) : undefined;
+                const fileSize = file.size
+                  ? formatFileSize(file.size)
+                  : undefined;
 
                 searchResults.push({
                   id: `document-attachment-${item.id}-${index}`,
