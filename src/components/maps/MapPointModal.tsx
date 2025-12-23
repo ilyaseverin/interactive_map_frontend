@@ -28,7 +28,7 @@ interface MapPointModalProps {
 
 interface GalleryGridProps {
   images: StrapiImage[];
-  video: StrapiImage | null;
+  videos: StrapiImage[];
   strapiUrl: string;
   title: string;
   onImageClick: (index: number) => void;
@@ -38,15 +38,13 @@ interface GalleryGridProps {
 // Компонент галереи с grid-раскладкой
 const GalleryGrid: React.FC<GalleryGridProps> = ({
   images,
-  video,
+  videos,
   strapiUrl,
   title,
   onImageClick,
   onClose,
 }) => {
-  // Вычисляем индекс видео (после всех изображений)
-  const videoIndex = images.length;
-  const hasVideo = video !== null;
+  const hasVideos = videos.length > 0;
 
   return (
     <div
@@ -104,41 +102,47 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
           })}
 
           {/* Видео */}
-          {hasVideo && (
-            <div
-              className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
-              onClick={() => onImageClick(videoIndex)}
-            >
-              <video
-                src={getStrapiMediaUrl(video.url) || `${strapiUrl}${video.url}`}
-                poster={
-                  video.previewUrl
-                    ? getStrapiMediaUrl(video.previewUrl) ||
-                      `${strapiUrl}${video.previewUrl}`
-                    : undefined
-                }
-                muted
-                playsInline
-                preload="metadata"
-                className="w-full h-full object-cover rounded-lg pointer-events-none"
-              />
-              {/* Иконка воспроизведения */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                <div className="bg-white/30 backdrop-blur-sm rounded-full p-3">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="text-white drop-shadow-lg"
-                  >
-                    <path d="M8 5v14l11-7z" fill="currentColor" />
-                  </svg>
+          {videos.map((video, videoIndex) => {
+            const globalIndex = images.length + videoIndex;
+            return (
+              <div
+                key={videoIndex}
+                className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-150"
+                onClick={() => onImageClick(globalIndex)}
+              >
+                <video
+                  src={
+                    getStrapiMediaUrl(video.url) || `${strapiUrl}${video.url}`
+                  }
+                  poster={
+                    video.previewUrl
+                      ? getStrapiMediaUrl(video.previewUrl) ||
+                        `${strapiUrl}${video.previewUrl}`
+                      : undefined
+                  }
+                  muted
+                  playsInline
+                  preload="metadata"
+                  className="w-full h-full object-cover rounded-lg pointer-events-none"
+                />
+                {/* Иконка воспроизведения */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <div className="bg-white/30 backdrop-blur-sm rounded-full p-3">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-white drop-shadow-lg"
+                    >
+                      <path d="M8 5v14l11-7z" fill="currentColor" />
+                    </svg>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })}
         </div>
       </div>
     </div>
@@ -229,10 +233,10 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
   );
 
   const images = useMemo(() => point?.images || [], [point?.images]);
-  const video = useMemo(() => point?.video || null, [point?.video]);
+  const videos = useMemo(() => point?.videos || [], [point?.videos]);
   const hasImages = images.length > 0;
-  const hasVideo = video !== null;
-  const hasMedia = hasImages || hasVideo;
+  const hasVideos = videos.length > 0;
+  const hasMedia = hasImages || hasVideos;
 
   const lightboxSlides = useMemo(() => {
     const slides: Array<
@@ -257,7 +261,7 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
     });
 
     // Добавляем видео
-    if (hasVideo && video) {
+    videos.forEach((video) => {
       const videoUrl =
         getStrapiMediaUrl(video.url) || `${STRAPI_URL}${video.url}`;
       const posterUrl = video.previewUrl
@@ -277,10 +281,10 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
           },
         ],
       });
-    }
+    });
 
     return slides;
-  }, [images, video, STRAPI_URL, point?.title, hasVideo]);
+  }, [images, videos, STRAPI_URL, point?.title]);
 
   // Обработчики событий
   const handleSliderClick = useCallback(
@@ -593,7 +597,7 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
       {hasMedia && galleryOpen && (
         <GalleryGrid
           images={images}
-          video={video}
+          videos={videos}
           strapiUrl={STRAPI_URL}
           title={point.title}
           onImageClick={handleImageClick}

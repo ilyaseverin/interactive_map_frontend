@@ -39,7 +39,9 @@ async function fetchAllData(filters: string[]): Promise<BattleGloryResponse> {
     }
 
     if (!response.ok) {
-      throw new Error(`Strapi API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Strapi API error ${response.status}:`, errorText);
+      throw new Error(`Strapi API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();

@@ -136,7 +136,9 @@ export default function MobileMenu({
                       <span>{item.label}</span>
                       <svg
                         className={`w-[12px] h-[12px] md:w-[14px] md:h-[14px] transition-transform duration-200 flex-shrink-0 ${
-                          activeSubmenu === item.label ? "rotate-180" : "rotate-0"
+                          activeSubmenu === item.label
+                            ? "rotate-180"
+                            : "rotate-0"
                         }`}
                         viewBox="0 0 12 12"
                         fill="none"
@@ -175,7 +177,7 @@ export default function MobileMenu({
                 ) : (
                   <Link
                     href={item.href}
-                    className="flex items-center text-[14px] md:text-[18px] font-normal font-montserrat text-black h-[15px] md:h-[32px] cursor-pointer"
+                    className="flex items-center text-[14px] md:text-[18px] font-normal font-montserrat text-black h-[15px] md:h-[32px] cursor-pointer hover:underline transition-colors"
                     onClick={handleClose}
                   >
                     {item.label}

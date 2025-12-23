@@ -137,7 +137,7 @@ export interface BattleGloryPoint {
   updatedAt: string;
   publishedAt: string;
   images?: StrapiImage[] | null;
-  video: StrapiImage | null;
+  videos?: StrapiImage[] | null;
 }
 
 // Ответ API для точек Боевой Славы
