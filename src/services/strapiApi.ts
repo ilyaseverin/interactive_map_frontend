@@ -18,6 +18,7 @@ import type {
   ActivityComplexListResponse,
   PaginationArgs,
   HeroSliderResponse,
+  OrganizationResponse,
 } from "@/types/strapi";
 import { getStrapiUrl } from "@/utils/strapiUrl";
 
@@ -52,6 +53,7 @@ export const strapiApi = createApi({
     "ActivityComplexes",
     "ActivityComplex",
     "HeroSlider",
+    "Organization",
   ],
   endpoints: (builder) => ({
     getPressReleases: builder.query<
@@ -604,6 +606,16 @@ export const strapiApi = createApi({
       }),
       providesTags: [{ type: "HeroSlider", id: "SINGLE" }],
     }),
+
+    getAbout: builder.query<OrganizationResponse, void>({
+      query: () => ({
+        url: "about",
+        params: {
+          "populate[center_photo]": "true",
+        },
+      }),
+      providesTags: [{ type: "Organization", id: "SINGLE" }],
+    }),
   }),
 });
 
@@ -627,6 +639,7 @@ export const {
   useGetDocumentsQuery,
   useGetActivityComplexesQuery,
   useGetHeroSliderQuery,
+  useGetAboutQuery,
 } = strapiApi;
 
 export type StrapiApi = typeof strapiApi;
