@@ -152,7 +152,7 @@ export default function Pagination({
               className={`inline-flex items-center justify-center w-[35px] h-[35px] md:w-[51px] md:h-[48px] lg:w-auto lg:min-w-[56px] lg:px-[24px] lg:py-[16px] rounded-[8px] md:rounded-[10px] lg:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-montserrat transition-all duration-150 leading-[1.219] active:scale-95 ${
                 currentPage === pageNum
                   ? "bg-[#C62828] text-[#EDF3F7] font-medium"
-                  : "bg-white text-black border border-[#C62828] hover:bg-gray-50 font-normal"
+                  : "bg-white text-black border border-[#C62828] hover:bg-[#C62828] hover:text-white font-normal"
               }`}
             >
               {pageNum}

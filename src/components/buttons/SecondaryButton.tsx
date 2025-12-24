@@ -21,7 +21,7 @@ export default function SecondaryButton({
   };
 
   const baseStyles =
-    "inline-flex items-center justify-center bg-white text-[#C62828] font-normal font-montserrat border border-[#C62828] hover:bg-gray-50 transition-colors whitespace-nowrap";
+    "inline-flex items-center justify-center bg-white text-[#C62828] font-normal font-montserrat border border-[#C62828] hover:bg-[#C62828] hover:text-white transition-colors whitespace-nowrap";
 
   return (
     <Link href={href} className={`${variantStyles[variant]} ${baseStyles} ${className}`}>
