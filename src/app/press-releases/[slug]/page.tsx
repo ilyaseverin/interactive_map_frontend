@@ -320,8 +320,7 @@ export default async function PressReleaseDetailPage({
                     key={index}
                     className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
                     dangerouslySetInnerHTML={{ __html: paragraph }}
-                  >
-                  </p>
+                  ></p>
                 ))}
               </div>
             )}
