@@ -3,7 +3,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { BackButton } from "@/components/buttons";
 import { getStrapiApiUrl } from "@/utils/strapiUrl";
 import type { BattleGloryHistory } from "@/types/strapi";
-import { parseContentParagraphs } from "@/utils/textUtils";
+import { parseContentParagraphsHtml } from "@/utils/textUtils";
 
 export const fetchCache = "force-no-store";
 
@@ -63,7 +63,7 @@ export default async function HistoryPage() {
   const history = await getBattleGloryHistory();
 
   // Разбиваем контент на параграфы
-  const contentParagraphs = parseContentParagraphs(history?.content);
+  const contentParagraphs = parseContentParagraphsHtml(history?.content);
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
@@ -117,13 +117,13 @@ export default async function HistoryPage() {
           {/* Текст истории */}
           {contentParagraphs.length > 0 && (
             <div className="xl:px-[40px] 2xl:px-[96px] pt-[25px] md:pt-[40px] lg:pt-[64px]">
-              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px]">
+              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px] [&_a]:underline [&_a]:text-[#1d4e89] [&_a:hover]:opacity-70">
                 {contentParagraphs.map((paragraph, index) => (
                   <p
                     key={index}
                     className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
+                    dangerouslySetInnerHTML={{ __html: paragraph }}
                   >
-                    {paragraph}
                   </p>
                 ))}
               </div>

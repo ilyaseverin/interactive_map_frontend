@@ -4,7 +4,7 @@ import { BackButton } from "@/components/buttons";
 import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 import DownloadLink from "@/components/DownloadLink";
 import { formatFileSize } from "@/utils/fileSize";
-import { parseContentParagraphs } from "@/utils/textUtils";
+import { parseContentParagraphsHtml } from "@/utils/textUtils";
 
 interface ActivityComplexPageContentProps {
   complex: ActivityComplex;
@@ -14,7 +14,7 @@ export default function ActivityComplexPageContent({
   complex,
 }: ActivityComplexPageContentProps) {
   // Разбиваем контент на параграфы
-  const contentParagraphs = parseContentParagraphs(complex.content?.body);
+  const contentParagraphs = parseContentParagraphsHtml(complex.content?.body);
 
   return (
     <div className="min-h-screen bg-[#F1F2F3]">
@@ -65,13 +65,13 @@ export default function ActivityComplexPageContent({
           {/* Content Body */}
           {contentParagraphs.length > 0 && (
             <div className="xl:px-[40px] 2xl:px-[96px] pt-[25px] md:pt-[40px] lg:pt-[64px]">
-              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px]">
+              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px] [&_a]:underline [&_a]:text-[#1d4e89] [&_a:hover]:opacity-70">
                 {contentParagraphs.map((paragraph, index) => (
                   <p
                     key={index}
                     className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
+                    dangerouslySetInnerHTML={{ __html: paragraph }}
                   >
-                    {paragraph}
                   </p>
                 ))}
               </div>
