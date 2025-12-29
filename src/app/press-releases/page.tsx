@@ -1,11 +1,10 @@
 "use client";
 
 import type { PressReleaseListResponse } from "@/types/strapi";
-import Link from "next/link";
 import PressReleaseCard from "@/components/cards/PressReleaseCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Pagination from "@/components/Pagination";
-import { BackButton } from "@/components/buttons";
+import { BackButton, SecondaryButton } from "@/components/buttons";
 import { useState } from "react";
 import { useGetPressReleasesQuery } from "@/services/strapiApi";
 import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
@@ -40,50 +39,40 @@ export default function PressReleasesPage() {
           className="px-[19px] md:px-[34px] lg:px-[69px] mb-[15px] md:mb-[20px] lg:mb-[27px]"
         />
 
-        {/* Заголовок и кнопки */}
-        <div className="px-[19px] md:px-[34px] lg:px-[69px] relative mb-[15px] md:mb-[30px] lg:mb-[27px]">
-          {/* Заголовок и кнопка Назад */}
-          <div className="flex items-center justify-between mb-[15px] md:mb-0">
-            {/* Заголовок */}
-            <h1 className="text-[20px] md:text-[30px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219] md:mb-[20px]">
-              Пресс-релизы
-            </h1>
+        {/* Заголовок и Кнопка Назад */}
+        <div className="px-[19px] md:px-[34px] lg:px-[69px] flex flex-col md:flex-row md:items-start md:justify-between mb-[10px] md:mb-[20px] lg:mb-[27px] relative">
+          {/* Заголовок */}
+          <h1 className="text-[20px] md:text-[30px] lg:text-[40px] font-bold font-montserrat text-black leading-[1.219] mb-0 md:mb-0">
+            Пресс-релизы
+          </h1>
 
-            {/* Кнопка Назад - мобильная версия (только иконка) */}
-            <div className="md:hidden">
-              <BackButton href="/home" variant="icon" />
-            </div>
-
-            {/* Кнопки - планшет и десктоп, справа */}
-            <div className="hidden md:flex items-center gap-[15px]">
-              {/* Кнопка Назад - планшет и десктоп */}
-              <BackButton href="/home" variant="default" />
-
-              {/* Кнопка К фотоальбомам - только на десктопе */}
-              <Link
-                href="/photo-albums?source=press"
-                className="hidden lg:inline-flex items-center justify-center px-[24px] py-[16px] h-[48px] text-[#C62828] border border-[#C62828] text-[20px] font-normal font-montserrat rounded-[12px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
-              >
-                К фотоальбомам
-              </Link>
-            </div>
+          {/* Кнопка Назад */}
+          <div className="absolute top-1/2 -translate-y-1/2 right-[19px] md:static md:translate-y-0">
+            <BackButton href="/home" variant="red" />
           </div>
+        </div>
 
-          {/* Кнопка К фотоальбомам - мобильная версия */}
-          <Link
-            href="/photo-albums?source=press"
-            className="md:hidden inline-flex items-center justify-center px-[25px] py-[10px] h-[35px] text-[#C62828] border border-[#C62828] text-[12px] font-normal font-montserrat rounded-[8px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
-          >
+        {/* Кнопка К фотоальбомам - мобильная версия */}
+        <div className="px-[19px] md:hidden flex gap-[5px] pt-[10px] mb-[20px] max-w-full overflow-hidden">
+          <SecondaryButton href="/photo-albums?source=press" variant="mobile" className="min-w-0 flex-shrink">
             К фотоальбомам
-          </Link>
+          </SecondaryButton>
+        </div>
 
-          {/* Кнопка К фотоальбомам - только на планшете, слева ниже */}
-          <Link
-            href="/photo-albums?source=press"
-            className="hidden md:inline-flex lg:hidden items-center justify-center px-[24px] py-[16px] h-[48px] text-[#C62828] border border-[#C62828] text-[16px] font-normal font-montserrat rounded-[10px] hover:bg-[#C62828] hover:text-white transition-colors leading-[1.219]"
-          >
+        {/* Кнопка К фотоальбомам - планшет */}
+        <div className="hidden md:flex lg:hidden px-[34px] flex-row gap-[14px] mb-[40px] flex-wrap">
+          <SecondaryButton href="/photo-albums?source=press" variant="tablet">
             К фотоальбомам
-          </Link>
+          </SecondaryButton>
+        </div>
+
+        {/* Кнопка К фотоальбомам - десктоп */}
+        <div className="hidden lg:flex px-[69px] flex-row items-start justify-end gap-0 mb-[50px]">
+          <div className="flex gap-[15px] flex-wrap">
+            <SecondaryButton href="/photo-albums?source=press" variant="desktop">
+              К фотоальбомам
+            </SecondaryButton>
+          </div>
         </div>
 
         {/* Блок пресс-релизов */}
