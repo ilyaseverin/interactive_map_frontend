@@ -57,44 +57,53 @@ export default function PartnerCard({
         </h3>
 
         {/* VK Link - Tablet: at 429, icon 43x43, gap 18px | Desktop: at 492.99, icon 53x53, gap 16px */}
-        <a
-          href={vkUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-[4px] sm:gap-[8px] md:gap-[18px] lg:gap-[16px] mb-[8px] sm:mb-[12px] md:mb-[10px] lg:mb-[10px] group"
-        >
-          <div className="w-[25px] h-[25px] sm:w-[38px] sm:h-[38px] md:w-[43px] md:h-[43px] lg:w-[53px] lg:h-[53px] relative flex-shrink-0">
-            <Image
-              src="/images/partners/vk-icon.png"
-              alt="VK"
-              fill
-              className="object-contain"
-            />
-          </div>
-          <span className="text-[10px] sm:text-[14px] md:text-[20px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
-            {vkText}
-          </span>
-        </a>
+        {websiteUrl && websiteUrl !== "#" && websiteText && (
+          <a
+            href={websiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-[4px] sm:gap-[8px] md:gap-[18px] lg:gap-[16px] mb-[8px] sm:mb-[12px] md:mb-[10px] lg:mb-[10px] group"
+          >
+            <div className="w-[25px] h-[25px] sm:w-[38px] sm:h-[38px] md:w-[43px] md:h-[43px] lg:w-[53px] lg:h-[53px] relative flex-shrink-0">
+              <Image
+                src="/images/partners/vk-icon.png"
+                alt="VK"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <span className="text-[10px] sm:text-[14px] md:text-[20px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
+              {websiteText}
+            </span>
+          </a>
+        )}
 
         {/* Website Link - Tablet: at 482, icon 44x44, gap 14px | Desktop: at 555.99, icon 58x58, gap 11px */}
-        <a
-          href={websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-[5px] sm:gap-[8px] md:gap-[14px] lg:gap-[11px] group"
-        >
-          <div className="w-[23px] h-[23px] sm:w-[35px] sm:h-[35px] md:w-[44px] md:h-[44px] lg:w-[58px] lg:h-[58px] relative flex-shrink-0">
-            <Image
-              src="/images/partners/link-icon.png"
-              alt="Website"
-              fill
-              className="object-contain"
-            />
-          </div>
-          <span className="text-[10px] sm:text-[14px] md:text-[20px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
-            {websiteText}
-          </span>
-        </a>
+        {vkUrl &&
+          vkUrl !== "#" &&
+          vkText &&
+          websiteUrl &&
+          websiteUrl !== "#" &&
+          websiteText && (
+            <a
+              href={vkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-[5px] sm:gap-[8px] md:gap-[14px] lg:gap-[11px] group"
+            >
+              <div className="w-[23px] h-[23px] sm:w-[35px] sm:h-[35px] md:w-[44px] md:h-[44px] lg:w-[58px] lg:h-[58px] relative flex-shrink-0">
+                <Image
+                  src="/images/partners/link-icon.png"
+                  alt="Website"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-[10px] sm:text-[14px] md:text-[20px] lg:text-[20px] font-normal font-montserrat text-black group-hover:text-[#1D4E89] transition-colors leading-[1.219] truncate">
+                {vkText}
+              </span>
+            </a>
+          )}
       </div>
     </article>
   );

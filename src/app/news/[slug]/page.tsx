@@ -12,7 +12,7 @@ import {
 } from "@/utils/strapiUrl";
 import { formatDate } from "@/utils/dateUtils";
 import { buildKeywords } from "@/utils/seoKeywords";
-import { parseContentParagraphs } from "@/utils/textUtils";
+import { parseContentParagraphsHtml } from "@/utils/textUtils";
 
 // Полностью отключаем кэширование для гарантированной генерации metadata
 export const dynamic = "force-dynamic";
@@ -191,7 +191,7 @@ export default async function NewsDetailPage({
     : undefined;
 
   // Разбиваем контент на параграфы
-  const contentParagraphs = parseContentParagraphs(
+  const contentParagraphs = parseContentParagraphsHtml(
     news.content_info?.content
   );
 
@@ -274,14 +274,13 @@ export default async function NewsDetailPage({
           {/* Текст новости */}
           <div className="xl:px-[40px] 2xl:px-[96px]">
             {contentParagraphs.length > 0 && (
-              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px]">
+              <div className="mb-[25px] md:mb-[40px] lg:mb-[46px] space-y-[36px] [&_a]:underline [&_a]:text-[#1d4e89] [&_a:hover]:opacity-70">
                 {contentParagraphs.map((paragraph, index) => (
                   <p
                     key={index}
                     className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
-                  >
-                    {paragraph}
-                  </p>
+                    dangerouslySetInnerHTML={{ __html: paragraph }}
+                  ></p>
                 ))}
               </div>
             )}
