@@ -78,7 +78,7 @@ export default function Pagination({
       "md:hidden inline-flex items-center justify-center w-[35px] h-[35px] rounded-[7px] transition-all duration-150";
     const stateClass = isDisabled
       ? "bg-[#DBDBDB] cursor-not-allowed"
-      : "bg-[#C62828] hover:bg-[#B71C1C] active:scale-95";
+      : "bg-[#C62828] hover:bg-[#B71C1C] active:scale-95 cursor-pointer";
 
     const imgSrc = isDisabled
       ? "/images/pagination-prev-mobile-disabled.svg"
@@ -124,7 +124,7 @@ export default function Pagination({
         className={`hidden md:inline-flex items-center justify-center px-[20px] py-[12px] md:w-[132px] md:h-[48px] lg:w-auto lg:px-[24px] lg:py-[16px] rounded-[10px] lg:rounded-[12px] text-[16px] lg:text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
           currentPage === 1
             ? "bg-[#DBDBDB] text-[#B8B8B8] cursor-not-allowed"
-            : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C]"
+            : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C] cursor-pointer"
         }`}
       >
         Назад
@@ -149,7 +149,7 @@ export default function Pagination({
             <button
               key={pageNum}
               onClick={() => onPageChange(pageNum)}
-              className={`inline-flex items-center justify-center w-[35px] h-[35px] md:w-[51px] md:h-[48px] lg:w-auto lg:min-w-[56px] lg:px-[24px] lg:py-[16px] rounded-[8px] md:rounded-[10px] lg:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-montserrat transition-all duration-150 leading-[1.219] active:scale-95 ${
+              className={`inline-flex items-center justify-center w-[35px] h-[35px] md:w-[51px] md:h-[48px] lg:w-auto lg:min-w-[56px] lg:px-[24px] lg:py-[16px] rounded-[8px] md:rounded-[10px] lg:rounded-[10px] text-[12px] md:text-[16px] lg:text-[20px] font-montserrat transition-all duration-150 leading-[1.219] active:scale-95 cursor-pointer ${
                 currentPage === pageNum
                   ? "bg-[#C62828] text-[#EDF3F7] font-medium"
                   : "bg-white text-black border border-[#C62828] hover:bg-[#C62828] hover:text-white font-normal"
@@ -171,7 +171,7 @@ export default function Pagination({
         className={`hidden md:inline-flex items-center justify-center px-[20px] py-[12px] md:w-[132px] md:h-[48px] lg:w-auto lg:px-[24px] lg:py-[16px] rounded-[10px] lg:rounded-[12px] text-[16px] lg:text-[20px] font-medium font-montserrat transition-colors leading-[1.219] ${
           currentPage === totalPages
             ? "bg-[#DBDBDB] text-[#B8B8B8] cursor-not-allowed"
-            : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C]"
+            : "bg-[#C62828] text-[#EDF3F7] hover:bg-[#B71C1C] cursor-pointer"
         }`}
       >
         Вперед
