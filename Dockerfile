@@ -28,6 +28,10 @@ ENV NEXT_PUBLIC_STRAPI_URL=${NEXT_PUBLIC_STRAPI_URL}
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 ENV NEXT_DISABLE_SOURCEMAPS 1
 
+# Очищаем любые старые артефакты сборки перед новой сборкой
+RUN rm -rf .next || true
+
+# Выполняем сборку с очисткой кэша Next.js
 RUN npm run build && \
     ([ -d .next/cache ] && rm -rf .next/cache || true) && \
     ([ -d .next/standalone ] || (echo "ERROR: .next/standalone not found! Build may have failed." && exit 1)) && \
