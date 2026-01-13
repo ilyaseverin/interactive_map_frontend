@@ -5,6 +5,7 @@ import { getStrapiMediaUrl } from "@/utils/strapiUrl";
 import DownloadLink from "@/components/DownloadLink";
 import { formatFileSize } from "@/utils/fileSize";
 import { parseContentParagraphsHtml } from "@/utils/textUtils";
+import { sanitizeHref } from "@/utils/safeUrl";
 
 interface ActivityComplexPageContentProps {
   complex: ActivityComplex;
@@ -117,17 +118,40 @@ export default function ActivityComplexPageContent({
           {complex.content?.links && complex.content.links.length > 0 && (
             <div className="xl:px-[40px] 2xl:px-[96px]">
               <div className="flex flex-col gap-[10px] mb-[25px] md:mb-[40px] lg:mb-[64px]">
-                {complex.content.links.map((link) => (
-                  <a
-                    key={link.id}
-                    href={link.url || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#1d4e89] hover:opacity-70 transition-opacity underline"
-                  >
-                    {link.label || link.url}
-                  </a>
-                ))}
+                {complex.content.links.map((link) => {
+                  const safeHref = sanitizeHref(link.url, {
+                    allowRelative: false,
+                    allowHash: false,
+                    allowMailto: true,
+                    allowTel: true,
+                  });
+
+                  const label = link.label || link.url;
+                  if (!safeHref) {
+                    // Avoid rendering clickable XSS vectors from CMS.
+                    return (
+                      <span
+                        key={link.id}
+                        className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#737373]"
+                        title="Небезопасная ссылка скрыта"
+                      >
+                        {label || "Ссылка"}
+                      </span>
+                    );
+                  }
+
+                  return (
+                    <a
+                      key={link.id}
+                      href={safeHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[12px] md:text-[16px] lg:text-[20px] font-normal font-montserrat text-[#1d4e89] hover:opacity-70 transition-opacity underline"
+                    >
+                      {label || safeHref}
+                    </a>
+                  );
+                })}
               </div>
             </div>
           )}

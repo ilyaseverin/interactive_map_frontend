@@ -194,7 +194,7 @@ export async function GET(request: Request) {
         meta: {
           pagination: {
             page: DEFAULT_PAGE,
-            pageSize,
+            pageSize: DEFAULT_PAGE_SIZE,
             pageCount: 0,
             total: 0,
           },
@@ -202,7 +202,12 @@ export async function GET(request: Request) {
       });
     }
 
-    const searchTerm = query.trim();
+    const searchTerm = query.trim().slice(0, 100); // anti-DoS: cap query length
+    const safePage = Number.isFinite(page) && page > 0 ? page : DEFAULT_PAGE;
+    const safePageSize =
+      Number.isFinite(pageSize) && pageSize > 0
+        ? Math.min(pageSize, 50) // anti-DoS: cap page size
+        : DEFAULT_PAGE_SIZE;
 
     // Параллельный поиск во всех типах контента
     const [
@@ -614,17 +619,17 @@ export async function GET(request: Request) {
 
     // Применяем пагинацию на сервере
     const total = searchResults.length;
-    const pageCount = Math.ceil(total / pageSize);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
+    const pageCount = Math.ceil(total / safePageSize);
+    const startIndex = (safePage - 1) * safePageSize;
+    const endIndex = startIndex + safePageSize;
     const paginatedResults = searchResults.slice(startIndex, endIndex);
 
     const searchResponse: SearchResponse = {
       data: paginatedResults,
       meta: {
         pagination: {
-          page,
-          pageSize,
+          page: safePage,
+          pageSize: safePageSize,
           pageCount,
           total,
         },

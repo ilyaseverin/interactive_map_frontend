@@ -15,6 +15,7 @@ import {
   getResponsiveImageUrl,
   getStrapiMediaUrl,
 } from "@/utils/strapiUrl";
+import { sanitizeHref } from "@/utils/safeUrl";
 import { BATTLE_GLORY_TYPE_ICONS } from "./constants/battleGlory";
 
 // Import Swiper styles
@@ -319,17 +320,20 @@ const MapPointModal: React.FC<MapPointModalProps> = ({ point, onClose }) => {
               position.coords.latitude,
               position.coords.longitude
             );
-            window.open(url, "_blank");
+            const safeUrl = sanitizeHref(url, { allowRelative: false });
+            if (safeUrl) window.open(safeUrl, "_blank", "noopener,noreferrer");
           },
           (error) => {
             console.warn("Не удалось получить текущее местоположение:", error);
             const url = buildRouteUrl(lat, lng);
-            window.open(url, "_blank");
+            const safeUrl = sanitizeHref(url, { allowRelative: false });
+            if (safeUrl) window.open(safeUrl, "_blank", "noopener,noreferrer");
           }
         );
       } else {
         const url = buildRouteUrl(lat, lng);
-        window.open(url, "_blank");
+        const safeUrl = sanitizeHref(url, { allowRelative: false });
+        if (safeUrl) window.open(safeUrl, "_blank", "noopener,noreferrer");
       }
     },
     [point?.coordinates]
