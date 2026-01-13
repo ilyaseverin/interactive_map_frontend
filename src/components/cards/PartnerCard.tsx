@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { sanitizeHref } from "@/utils/safeUrl";
 
 interface PartnerCardProps {
   title: string;
@@ -19,6 +20,21 @@ export default function PartnerCard({
   vkText,
   className = "",
 }: PartnerCardProps) {
+  const safeWebsiteUrl =
+    sanitizeHref(websiteUrl, {
+      allowRelative: false,
+      allowHash: false,
+      allowMailto: false,
+      allowTel: false,
+    }) ?? "";
+  const safeVkUrl =
+    sanitizeHref(vkUrl, {
+      allowRelative: false,
+      allowHash: false,
+      allowMailto: false,
+      allowTel: false,
+    }) ?? "";
+
   return (
     <article className={`relative w-full max-w-[574px] mx-auto ${className}`}>
       {/* Shadow - Desktop: 524.91x603 at 22.04, 23, blur 75px */}
@@ -57,9 +73,9 @@ export default function PartnerCard({
         </h3>
 
         {/* VK Link - Tablet: at 429, icon 43x43, gap 18px | Desktop: at 492.99, icon 53x53, gap 16px */}
-        {websiteUrl && websiteUrl !== "#" && websiteText && (
+        {safeWebsiteUrl && websiteText && (
           <a
-            href={websiteUrl}
+            href={safeWebsiteUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-[4px] sm:gap-[8px] md:gap-[18px] lg:gap-[16px] mb-[8px] sm:mb-[12px] md:mb-[10px] lg:mb-[10px] group"
@@ -80,13 +96,12 @@ export default function PartnerCard({
 
         {/* Website Link - Tablet: at 482, icon 44x44, gap 14px | Desktop: at 555.99, icon 58x58, gap 11px */}
         {vkUrl &&
-          vkUrl !== "#" &&
+          safeVkUrl &&
           vkText &&
-          websiteUrl &&
-          websiteUrl !== "#" &&
+          safeWebsiteUrl &&
           websiteText && (
             <a
-              href={vkUrl}
+              href={safeVkUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-[5px] sm:gap-[8px] md:gap-[14px] lg:gap-[11px] group"

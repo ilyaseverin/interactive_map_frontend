@@ -3,6 +3,7 @@
 import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
 import { useRef, useEffect } from "react";
 import Image from "next/image";
+import { sanitizeHref } from "@/utils/safeUrl";
 
 interface MediaModalProps {
   isOpen: boolean;
@@ -107,6 +108,22 @@ export default function MediaModal({
     return url;
   };
 
+  const safeMediaUrl =
+    sanitizeHref(mediaUrl, {
+      allowRelative: true,
+      allowHash: false,
+      allowMailto: false,
+      allowTel: false,
+    }) ?? "";
+
+  const safeIframeUrl = (raw: string) =>
+    sanitizeHref(raw, {
+      allowRelative: false,
+      allowHash: false,
+      allowMailto: false,
+      allowTel: false,
+    }) ?? "";
+
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       {/* Фон затемнения */}
@@ -164,7 +181,7 @@ export default function MediaModal({
                     // Видео контент
                     isVKVideo ? (
                       <iframe
-                        src={getVKEmbedUrl(mediaUrl)}
+                        src={safeIframeUrl(getVKEmbedUrl(mediaUrl))}
                         className="w-full h-full border-0"
                         allow="autoplay; encrypted-media; fullscreen; picture-in-picture;"
                         allowFullScreen
@@ -174,14 +191,14 @@ export default function MediaModal({
                     ) : mediaUrl.includes("youtube.com") ||
                       mediaUrl.includes("youtu.be") ? (
                       <iframe
-                        src={getYouTubeEmbedUrl(mediaUrl)}
+                        src={safeIframeUrl(getYouTubeEmbedUrl(mediaUrl))}
                         className="w-full h-full"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                       />
                     ) : mediaUrl.includes("rutube.ru") ? (
                       <iframe
-                        src={getRutubeEmbedUrl(mediaUrl)}
+                        src={safeIframeUrl(getRutubeEmbedUrl(mediaUrl))}
                         className="w-full h-full"
                         allow="autoplay; fullscreen; picture-in-picture"
                         allowFullScreen
@@ -189,7 +206,7 @@ export default function MediaModal({
                     ) : (
                       <video
                         ref={videoRef}
-                        src={mediaUrl}
+                        src={safeMediaUrl}
                         controls
                         className="w-full h-full object-contain"
                         autoPlay
@@ -200,7 +217,7 @@ export default function MediaModal({
                   ) : (
                     // Изображение
                     <Image
-                      src={mediaUrl}
+                      src={safeMediaUrl}
                       alt={alt}
                       fill
                       className="object-cover"
@@ -234,7 +251,8 @@ export default function MediaModal({
                       onClick={async () => {
                         try {
                           // Загружаем медиа как blob
-                          const response = await fetch(mediaUrl);
+                          if (!safeMediaUrl) throw new Error("Unsafe media URL");
+                          const response = await fetch(safeMediaUrl);
                           const blob = await response.blob();
 
                           // Создаем URL для blob
@@ -258,7 +276,13 @@ export default function MediaModal({
                         } catch (error) {
                           console.error("Ошибка при скачивании:", error);
                           // Fallback - открываем в новой вкладке
-                          window.open(mediaUrl, "_blank");
+                          if (safeMediaUrl) {
+                            window.open(
+                              safeMediaUrl,
+                              "_blank",
+                              "noopener,noreferrer"
+                            );
+                          }
                         }
                       }}
                       className="flex items-center justify-center gap-[5px] sm:gap-[5px] lg:gap-[10px] px-[20px] sm:px-[24px] lg:px-[24px] py-0 sm:py-0 lg:py-[16px] h-[40px] sm:h-[47px] lg:h-auto bg-[#C62828] text-[#EDF3F7] text-[12px] sm:text-[16px] lg:text-[20px] font-montserrat font-medium rounded-[12px] hover:bg-[#B71C1C] active:scale-95 transition-all duration-150 shrink-0 w-full sm:w-full sm:max-w-[260px] self-center sm:self-center lg:w-auto lg:self-auto"

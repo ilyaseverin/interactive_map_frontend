@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { sanitizeHref } from "@/utils/safeUrl";
 
 interface ContactsInfoProps {
   address: string;
@@ -16,15 +17,23 @@ const extractPhoneNumber = (phoneString: string): string => {
   return number;
 };
 
-// Функция для форматирования URL сайта
+// Функция для форматирования URL сайта (и отсечения небезопасных схем)
 const formatWebsiteUrl = (website: string): string => {
   if (!website) return "";
-  // Если уже есть протокол, возвращаем как есть
-  if (website.startsWith("http://") || website.startsWith("https://")) {
-    return website;
-  }
-  // Добавляем https://
-  return `https://${website}`;
+  const trimmed = website.trim();
+  const withScheme =
+    trimmed.startsWith("http://") || trimmed.startsWith("https://")
+      ? trimmed
+      : `https://${trimmed}`;
+
+  return (
+    sanitizeHref(withScheme, {
+      allowRelative: false,
+      allowHash: false,
+      allowMailto: false,
+      allowTel: false,
+    }) ?? ""
+  );
 };
 
 export default function ContactsInfo({

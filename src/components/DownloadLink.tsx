@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React from "react";
+import { sanitizeHref } from "@/utils/safeUrl";
 
 interface DownloadLinkProps {
   url: string;
@@ -31,11 +32,23 @@ export default function DownloadLink({
   hideIcon = false,
   isImage = false,
 }: DownloadLinkProps) {
+  const safeUrl =
+    sanitizeHref(url, {
+      allowRelative: true,
+      allowHash: false,
+      allowMailto: false,
+      allowTel: false,
+    }) ?? "";
+
   const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(url);
+      if (!safeUrl) {
+        throw new Error("Unsafe download URL");
+      }
+
+      const response = await fetch(safeUrl);
       if (!response.ok) throw new Error("Failed to download");
 
       const blob = await response.blob();
@@ -49,14 +62,16 @@ export default function DownloadLink({
       document.body.removeChild(a);
     } catch (error) {
       console.error("Download failed:", error);
-      window.open(url, "_blank");
+      if (safeUrl) {
+        window.open(safeUrl, "_blank", "noopener,noreferrer");
+      }
     }
   };
 
   if (hideIcon) {
     return (
       <a
-        href={url}
+        href={safeUrl || "#"}
         onClick={handleDownload}
         className="flex flex-col gap-[3px] hover:opacity-80 transition-opacity group cursor-pointer"
       >
@@ -77,7 +92,7 @@ export default function DownloadLink({
 
   return (
     <a
-      href={url}
+      href={safeUrl || "#"}
       onClick={handleDownload}
       className="flex items-center gap-[14px] md:gap-[16px] lg:gap-[18px] hover:opacity-80 transition-opacity group cursor-pointer"
     >
