@@ -109,25 +109,23 @@ export default function HomePage() {
   >("Главные");
 
   // Получаем новости (первые 3, выбранная категория)
-  const { data: newsData, isLoading: isNewsLoading } = useGetNewsQuery({
+  const { data: newsData } = useGetNewsQuery({
     page: 1,
     pageSize: 3,
     category: selectedNewsCategory,
   });
 
   // Получаем проекты (первые 6)
-  const { data: projectsData, isLoading: isProjectsLoading } =
-    useGetProjectsQuery({
-      page: 1,
-      pageSize: 6,
-    });
+  const { data: projectsData } = useGetProjectsQuery({
+    page: 1,
+    pageSize: 6,
+  });
 
   // Получаем партнеров
-  const { data: partnersData, isLoading: isPartnersLoading } =
-    useGetPartnersQuery({
-      page: 1,
-      pageSize: 100,
-    });
+  const { data: partnersData } = useGetPartnersQuery({
+    page: 1,
+    pageSize: 100,
+  });
 
   // Извлекаем уникальные даты с событиями для подсветки в календаре
   // Используем локальное время для определения даты события

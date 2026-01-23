@@ -5,7 +5,7 @@ import ContactsInfo from "@/components/cards/ContactsInfo";
 import { useGetContactsQuery } from "@/services/strapiApi";
 
 export default function ContactsPage() {
-  const { data, isFetching, isError } = useGetContactsQuery();
+  const { data, isFetching } = useGetContactsQuery();
   const contactsData = data?.data ?? null;
 
   // Статические данные как fallback (из макета)

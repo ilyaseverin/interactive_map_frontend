@@ -45,8 +45,6 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
   onImageClick,
   onClose,
 }) => {
-  const hasVideos = videos.length > 0;
-
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-90 z-[100] overflow-y-auto"

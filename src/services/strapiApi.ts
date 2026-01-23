@@ -14,7 +14,6 @@ import type {
   ContactsResponse,
   BrandResponse,
   DocumentListResponse,
-  ActivityComplex,
   ActivityComplexListResponse,
   PaginationArgs,
   HeroSliderResponse,
