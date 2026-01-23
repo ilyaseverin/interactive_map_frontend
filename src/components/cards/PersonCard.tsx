@@ -115,23 +115,25 @@ export default function PersonCard({ person }: PersonCardProps) {
                 </a>
               </div>
 
-              <div className="flex items-center gap-[7px] xs:gap-[8px] sm:gap-[9px] md:gap-[10px] lg:gap-[13px] min-w-0 md:ml-[40px] lg:ml-[53px]">
-                <div className="flex-shrink-0 w-[29.82px] h-[29.82px] xs:w-[30px] xs:h-[30px] sm:w-[30px] sm:h-[30px] md:w-[29.82px] md:h-[29.82px] lg:w-[40px] lg:h-[40px]">
-                  <Image
-                    src="/images/management/phone-icon-direct.png"
-                    alt="Phone"
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-contain"
-                  />
+              {person.phone && person.phone.trim() !== "" && (
+                <div className="flex items-center gap-[7px] xs:gap-[8px] sm:gap-[9px] md:gap-[10px] lg:gap-[13px] min-w-0 md:ml-[40px] lg:ml-[53px]">
+                  <div className="flex-shrink-0 w-[29.82px] h-[29.82px] xs:w-[30px] xs:h-[30px] sm:w-[30px] sm:h-[30px] md:w-[29.82px] md:h-[29.82px] lg:w-[40px] lg:h-[40px]">
+                    <Image
+                      src="/images/management/phone-icon-direct.png"
+                      alt="Phone"
+                      width={40}
+                      height={40}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <a
+                    href={`tel:${person.phone}`}
+                    className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black hover:text-[#1D4E89] transition-colors whitespace-nowrap"
+                  >
+                    {person.phone}
+                  </a>
                 </div>
-                <a
-                  href={`tel:${person.phone}`}
-                  className="text-[12px] md:text-[16px] lg:text-[24px] font-montserrat font-normal leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] text-black hover:text-[#1D4E89] transition-colors whitespace-nowrap"
-                >
-                  {person.phone}
-                </a>
-              </div>
+              )}
             </div>
           </div>
         </div>
