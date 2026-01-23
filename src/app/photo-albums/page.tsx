@@ -8,7 +8,6 @@ import type {
   ProjectItem,
   ProjectListResponse,
 } from "@/types/strapi";
-import Link from "next/link";
 import PhotoAlbumCard from "@/components/cards/PhotoAlbumCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Pagination from "@/components/Pagination";

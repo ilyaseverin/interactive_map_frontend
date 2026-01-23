@@ -5,7 +5,10 @@ import { getStrapiApiUrl } from "@/utils/strapiUrl";
 import type { BattleGloryHistory } from "@/types/strapi";
 import { parseContentParagraphsHtml } from "@/utils/textUtils";
 
-export const fetchCache = "force-no-store";
+// Используем ISR (Incremental Static Regeneration) с ревалидацией каждые 5 минут
+// Это оптимально для контента из CMS, который не меняется часто
+// Также используем теги кэша для возможности ручной ревалидации через webhook
+export const revalidate = 300; // 5 минут
 
 // Получить историю из Strapi
 async function getBattleGloryHistory(): Promise<BattleGloryHistory | null> {
@@ -13,7 +16,10 @@ async function getBattleGloryHistory(): Promise<BattleGloryHistory | null> {
     const res = await fetch(
       `${getStrapiApiUrl("battle-glory-history")}?publicationState=live`,
       {
-        cache: "no-store",
+        next: {
+          revalidate: 300, // 5 минут - разумный баланс между свежестью и производительностью
+          tags: ["battle-glory-history"], // Тег для ручной ревалидации через revalidateTag()
+        },
       }
     );
 
@@ -123,8 +129,7 @@ export default async function HistoryPage() {
                     key={index}
                     className="text-[12px] md:text-[16px] lg:text-[24px] font-normal md:font-medium font-montserrat text-black leading-[1.666] md:leading-[1.5625] lg:leading-[1.458] whitespace-pre-line"
                     dangerouslySetInnerHTML={{ __html: paragraph }}
-                  >
-                  </p>
+                  ></p>
                 ))}
               </div>
             </div>

@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useGetNewsQuery } from "@/services/strapiApi";
 import { BackButton, CategoryButton, SecondaryButton } from "@/components/buttons";
-import { getResponsiveImageUrl, getStrapiMediaUrl } from "@/utils/strapiUrl";
+import { getResponsiveImageUrl } from "@/utils/strapiUrl";
 import { withSearchParams } from "@/utils/withSearchParams";
 import { formatDate } from "@/utils/dateUtils";
 
