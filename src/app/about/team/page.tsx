@@ -60,7 +60,7 @@ export default function TeamPage() {
                   name: member.full_name,
                   position: member.basic_info.position,
                   email: member.basic_info.email || "cpv48@mail.ru",
-                  phone: member.basic_info.phone || "+7 (912)-345-67-89",
+                  phone: member.basic_info.phone || "",
                   image: imageUrl,
                   description: member.bio,
                 }}
